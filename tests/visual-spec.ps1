@@ -40,6 +40,11 @@ Assert-True ($html.Contains('class="formation-ripple"')) 'Missing formation eye 
 Assert-True ($html.Contains('@media(prefers-reduced-motion:reduce)')) 'Missing reduced-motion treatment'
 Assert-True ($html.Contains('function setUsed(value)')) 'Missing reusable usage-state updater'
 Assert-True ($html.Contains("setUsed(Number(btn.dataset.used))")) 'Usage buttons do not call the updater'
+Assert-True ($html.Contains('--aura-cyan:#8fe7ee')) 'Missing Nascent Soul cyan theme token'
+Assert-True ($html.Contains('--jade:#4fd6a2')) 'Missing jade sword theme token'
+Assert-True ($html.Contains('--geng-gold:#d9bd67')) 'Missing Great Geng gold theme token'
+Assert-True ($html.Contains('class="nascent-aura"')) 'Missing Nascent Soul aura layer'
+Assert-True ($html.Contains('url("assets/hanli-nangong-background.png")')) 'Face-to-face background must remain active'
 
 if ($failures.Count -gt 0) {
     $failures | ForEach-Object { Write-Host "FAIL: $_" -ForegroundColor Red }

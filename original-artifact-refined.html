@@ -19,6 +19,14 @@
 @keyframes spin{to{rotate:360deg}}@keyframes spinReverse{to{rotate:-360deg}}@keyframes dash{to{stroke-dashoffset:-56}}@keyframes cut{to{background-position:80px 0}}@keyframes railFlow{to{background-position:78px 0}}@keyframes particleOrbit{to{rotate:360deg;filter:drop-shadow(0 0 6px #dfc963)}}@keyframes formationRipple{0%{scale:.72;opacity:.85}70%,100%{scale:1.48;opacity:0}}@keyframes fog{50%{translate:8% -3px;opacity:.65}}@keyframes mist{50%{translate:110px 15px;opacity:.45}}@keyframes floatFormation{50%{translate:0 -2px}}@keyframes thunderTrace{50%{opacity:.25;translate:0 6px}}@keyframes gengPulse{50%{scale:1.015;filter:drop-shadow(0 0 calc(8px + var(--used)*11px) rgba(223,201,99,.42))}}@keyframes wingHover{50%{translate:-50% -1px}}@keyframes wingBeat{50%{scale:1.02 .98;opacity:.9}}
 @media(max-width:900px){.showcase{grid-template-columns:1fr}.display{min-height:440px}.head{display:block}.head p{margin-top:10px}.widget{transform:scale(.88)}}@media(max-width:560px){.page{padding:24px 12px}.display{min-height:355px}.widget{transform:scale(.66)}.head h1{font-size:26px}.notes{padding:22px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}.widget,.wing-core,.wind-thunder-wings,.lightning{transition:none!important}}
 .wing-asset{filter:grayscale(1) brightness(1.55) contrast(1.12)}
+.widget{--aura-cyan:#8fe7ee;--aura-ice:#d9fbff;--jade:#4fd6a2;--jade-deep:#0b745e;--geng-gold:#d9bd67;--ink:#031315;--deep-cyan:#082b31;background-image:linear-gradient(90deg,rgba(2,18,20,.86) 0,rgba(2,20,22,.5) 29%,rgba(3,15,18,.03) 53%,rgba(3,15,18,.04) 73%,rgba(2,17,19,.34) 100%),linear-gradient(0deg,rgba(2,14,17,.9) 0,rgba(2,14,17,.56) 23%,transparent 55%),url("assets/hanli-nangong-background.png");background-size:cover;background-position:center 47%;box-shadow:0 28px 72px rgba(0,0,0,.58),0 0 30px rgba(79,214,162,.08),inset 0 0 65px rgba(3,17,19,calc(.28 + var(--used)*.2))}
+.widget:before{background:radial-gradient(ellipse at 56% 38%,transparent 0 21%,rgba(3,20,23,.06) 39%,rgba(2,15,18,calc(.18 + var(--used)*.18)) 100%),linear-gradient(90deg,rgba(2,18,20,.82) 0 29%,transparent 51% 73%,rgba(2,17,19,.34) 100%),linear-gradient(0deg,rgba(2,14,17,.88) 0 22%,transparent 54%)}
+.widget:after{border-color:rgba(217,189,103,.66);box-shadow:inset 0 0 22px rgba(143,231,238,.08),inset 0 -38px 46px rgba(1,10,12,.24)}
+.nascent-aura{position:absolute;z-index:2;inset:0;pointer-events:none;overflow:hidden;opacity:calc(.16 + var(--used)*.1)}
+.nascent-aura:before,.nascent-aura:after{content:"";position:absolute;left:17%;top:34%;width:72%;height:46%;border-radius:50%;filter:blur(8px);mix-blend-mode:screen}
+.nascent-aura:before{background:conic-gradient(from 205deg at 38% 55%,transparent 0 20%,rgba(143,231,238,.24) 24%,transparent 31% 63%,rgba(79,214,162,.2) 68%,transparent 75%);animation:auraDrift 11s ease-in-out infinite}
+.nascent-aura:after{background:radial-gradient(ellipse,rgba(217,251,255,.16),transparent 66%);animation:auraBreathe 7s ease-in-out infinite reverse}
+@keyframes auraDrift{50%{translate:3% -2%;rotate:3deg;opacity:.76}}@keyframes auraBreathe{50%{scale:1.08 .94;opacity:.45}}
 </style>
 </head>
 <body><main class="page">
@@ -27,7 +35,7 @@
 <section class="showcase">
  <div class="display">
   <div class="widget balance-high" id="widget">
-   <i class="fog"></i>
+   <i class="fog"></i><i class="nascent-aura" aria-hidden="true"></i>
    <div class="top"><span class="brand">眭劳模的 Codex</span><span class="tools"><b class="plan">PLUS</b><button class="unlock" aria-label="解锁窗口"><svg viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5 7V5a3 3 0 016 0v2"/></svg></button></span></div>
    <div class="content">
     <div class="core">
