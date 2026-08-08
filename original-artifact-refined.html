@@ -40,6 +40,7 @@
 .qingzhu-formation{position:absolute;z-index:4;left:71px;top:24px;width:24px;height:104px;pointer-events:none;animation:none;filter:none}.main-sword-asset{width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.66;mix-blend-mode:screen;mask-image:linear-gradient(#000 0 82%,transparent 100%);filter:drop-shadow(0 0 5px var(--jade)) drop-shadow(0 0 10px rgba(217,189,103,.35));animation:mainSwordBreathe 5.6s ease-in-out infinite}.percent{z-index:8;margin-top:9px;color:#f5fbf2;text-shadow:0 3px 7px #000,0 0 18px rgba(143,231,238,.4)}
 @keyframes swordSpirit{50%{translate:0 -1.5px;filter:drop-shadow(0 0 6px var(--jade))}}@keyframes formationCore{50%{scale:1.12 .88;opacity:.68}}@keyframes mainSwordBreathe{50%{translate:0 -2px;opacity:.76;filter:drop-shadow(0 0 7px var(--jade)) drop-shadow(0 0 13px rgba(217,189,103,.42))}}
 @keyframes wingBeatV2{50%{scale:1 1.02;opacity:.9}}
+@media(prefers-reduced-motion:reduce){.ring,.formation-sword::before,.wing-asset,.lightning,.formation-runes,.formation-particles,.formation-core,.main-sword-asset,.progress-rail:after,.nascent-aura,.nascent-aura:before,.nascent-aura:after,.fog{animation:none!important}.widget,.wind-thunder-wings,.wing-core,.lightning,.formation-sword{transition:none!important}}
 </style>
 </head>
 <body><main class="page">
@@ -47,7 +48,7 @@
 <div class="head"><h1>风雷化翼 · 七十二剑归阵</h1><p>青竹蜂云剑守住余额阵眼，大庚剑阵沉入金绿法环，风雷翅化作进度游标。人物与数据分层呈现，保留月下对视的画面中心。</p></div>
 <section class="showcase">
  <div class="display">
-  <div class="widget balance-high" id="widget">
+  <div class="widget" id="widget">
    <i class="fog"></i><i class="nascent-aura" aria-hidden="true"></i>
    <div class="top"><span class="brand">眭劳模的 Codex</span><span class="tools"><b class="plan">PLUS</b><button class="unlock" aria-label="解锁窗口"><svg viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5 7V5a3 3 0 016 0v2"/></svg></button></span></div>
    <div class="content">
@@ -69,7 +70,7 @@
  </div>
  <aside class="notes"><h2>三件法宝如何落位</h2>
   <div class="item"><span class="sigil">剑</span><div><h3>青竹蜂云剑</h3><p>一柄青玉主剑与六柄副剑立于阵眼，材质纹理、淡金雷纹和微弱浮动共同形成动画建模层次。</p></div></div>
-  <div class="item"><span class="sigil">翅</span><div><h3>风雷翅</h3><p>银白双翼旋转为竖向游标，直接卡在用量轨道上并随消耗移动；青白风雷为主，淡金辟邪神雷点亮羽缘。</p></div></div>
+  <div class="item"><span class="sigil">翅</span><div><h3>风雷翅</h3><p>冰蓝双翼横向展开为额度游标，中心光核卡在用量分界并随消耗移动；青白风雷为主，淡金辟邪神雷点亮羽缘。</p></div></div>
   <div class="item"><span class="sigil">庚</span><div><h3>大庚剑阵</h3><p>金绿同心阵盘托住余额，底部金丝杀阵承载五小时额度；消耗越高，阵纹与金丝越盛。</p></div></div>
   <div class="controls"><strong>查看消耗联动</strong><div class="buttons"><button class="active" data-used=".2">已用 20%</button><button data-used=".55">已用 55%</button><button data-used=".85">已用 85%</button></div></div>
   <div class="verdict">画面优先级：先读余额，再看到青玉剑阵和风雷双翼，最后感受背景人物与金丝动态。保持华丽，但不牺牲桌面常驻的可读性。</div>
@@ -80,14 +81,16 @@ const widget=document.querySelector('#widget');
 const percent=document.querySelector('#percent');
 const used=document.querySelector('#used');
 function setUsed(value){
-  const safe=Math.max(0,Math.min(1,value));
+  const numeric=Number.isFinite(Number(value))?Number(value):0;
+  const safe=Math.max(0,Math.min(1,numeric));
   const remaining=1-safe;
-  const balanceClass=remaining>=.7?'balance-high':remaining>=.3?'balance-mid':'balance-low';
-  widget.classList.remove('balance-high','balance-mid','balance-low');
-  widget.classList.add(balanceClass);
+  const litSwordCount=Math.round(remaining*12);
   widget.style.setProperty('--used',safe);
-  percent.textContent=Math.round((1-safe)*100)+'%';
+  percent.textContent=Math.round(remaining*100)+'%';
   used.textContent='已用 '+Math.round(safe*100)+'%';
+  document.querySelectorAll('.formation-sword').forEach((sword,index)=>{
+    sword.classList.toggle('is-lit',index<litSwordCount);
+  });
 }
 document.querySelectorAll('[data-used]').forEach(btn=>btn.addEventListener('click',()=>{
   document.querySelectorAll('[data-used]').forEach(item=>item.classList.remove('active'));

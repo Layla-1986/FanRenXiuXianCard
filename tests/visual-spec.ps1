@@ -52,6 +52,10 @@ Assert-True ($html.Contains('--jade:#4fd6a2')) 'Missing jade sword theme token'
 Assert-True ($html.Contains('--geng-gold:#d9bd67')) 'Missing Great Geng gold theme token'
 Assert-True ($html.Contains('class="nascent-aura"')) 'Missing Nascent Soul aura layer'
 Assert-True ($html.Contains('url("assets/hanli-nangong-background.png")')) 'Face-to-face background must remain active'
+Assert-True ($html.Contains('const litSwordCount=Math.round(remaining*12)')) 'Lit sword count must be derived from remaining quota'
+Assert-True ($html.Contains("sword.classList.toggle('is-lit',index<litSwordCount)")) 'Sword slots are not updated from the calculated count'
+Assert-True ($html.Contains('Number.isFinite(Number(value))')) 'setUsed must guard non-finite input'
+Assert-True ($html.Contains('.ring,.formation-sword::before,.wing-asset,.lightning')) 'Reduced-motion selector does not cover all continuous artifact animation'
 
 if ($failures.Count -gt 0) {
     $failures | ForEach-Object { Write-Host "FAIL: $_" -ForegroundColor Red }
