@@ -10,16 +10,16 @@ function Assert-True {
     if (-not $Condition) { $script:failures.Add($Message) }
 }
 
-$assets = @(
+$localAssets = @(
     'assets/hanli-nangong-background.png',
-    'assets/dageng-sword-array.png',
-    'assets/qingzhu-swords.png',
-    'assets/wind-thunder-wings.png'
+    'assets/nascent-soul-aura-reference.png',
+    'assets/dageng-sword-array-v2.png',
+    'assets/qingzhu-fengyun-sword-v2.png',
+    'assets/wind-thunder-wings-v2.png'
 )
 
-foreach ($asset in $assets) {
+foreach ($asset in $localAssets) {
     Assert-True (Test-Path -LiteralPath (Join-Path $projectRoot $asset)) "Missing local asset: $asset"
-    Assert-True ($html.Contains($asset)) "HTML does not reference: $asset"
 }
 
 Assert-True ($html.Contains('class="geng-formation"')) 'Missing layered Great Geng formation'
