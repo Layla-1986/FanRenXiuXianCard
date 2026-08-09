@@ -1,101 +1,146 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>风雷化翼 · 七十二剑归阵</title>
-<style>
-:root{color-scheme:dark}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:#07100e;color:#eee9d8;font-family:"Microsoft YaHei UI",sans-serif}body{background:radial-gradient(circle at 12% 8%,#345147 0,transparent 30%),radial-gradient(circle at 92% 30%,#263f3b 0,transparent 34%),linear-gradient(145deg,#15241f,#07100e 72%)}
-.page{max-width:1120px;margin:auto;padding:34px 24px 52px}.kicker{color:#d4b761;font:13px "STKaiti","KaiTi";letter-spacing:.32em}.head{display:flex;justify-content:space-between;align-items:end;gap:28px;margin:8px 0 26px}.head h1{margin:0;font:400 32px "STKaiti","KaiTi";letter-spacing:.16em}.head p{max-width:520px;margin:0;color:#9eb0a8;font-size:12px;line-height:1.8}.showcase{display:grid;grid-template-columns:minmax(520px,1.2fr) minmax(320px,.8fr);gap:24px;align-items:stretch}.display{min-height:520px;border:1px solid rgba(221,191,101,.2);border-radius:28px;display:grid;place-items:center;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 58%,rgba(102,150,132,.22),transparent 55%),linear-gradient(145deg,rgba(255,255,255,.06),rgba(255,255,255,.012));box-shadow:0 40px 90px rgba(0,0,0,.28)}.display:before{content:"";position:absolute;width:440px;height:80px;border-radius:50%;background:rgba(198,222,210,.1);filter:blur(25px);animation:mist 14s ease-in-out infinite}.scale-note{position:absolute;bottom:22px;color:#84978f;font-size:11px;letter-spacing:.08em}
-.widget{--used:.2;--danger:0;width:480px;height:270px;position:relative;overflow:hidden;border-radius:11px 32px 11px 32px;color:#f8f4e9;background-image:linear-gradient(90deg,rgba(2,12,13,.9) 0,rgba(2,13,14,.62) 29%,rgba(3,10,12,.06) 56%,rgba(2,10,12,.08) 72%,rgba(2,11,13,.5) 100%),linear-gradient(0deg,rgba(2,10,11,.9) 0,rgba(2,10,11,.55) 24%,transparent 57%),url("assets/hanli-nangong-background.png");background-size:cover;background-position:center 47%;box-shadow:0 28px 72px rgba(0,0,0,.58),inset 0 0 65px rgba(3,11,10,calc(.28 + var(--used)*.2));isolation:isolate;transition:box-shadow .7s ease}.widget:before{content:"";position:absolute;inset:0;z-index:1;background:radial-gradient(ellipse at 53% 38%,transparent 0 22%,rgba(3,14,14,.08) 42%,rgba(2,10,10,calc(.2 + var(--used)*.2)) 100%),linear-gradient(105deg,rgba(4,16,15,.5),transparent 41% 72%,rgba(4,14,14,.22));pointer-events:none}.widget:after{content:"";position:absolute;inset:0;z-index:30;border:1px solid rgba(225,194,99,.66);border-radius:inherit;pointer-events:none;box-shadow:inset 0 0 22px rgba(214,179,84,.09),inset 0 -38px 46px rgba(1,8,8,.2)}
-.fog{position:absolute;z-index:2;left:-12%;right:-12%;bottom:40px;height:48px;background:radial-gradient(ellipse,rgba(179,207,195,.16),transparent 68%);filter:blur(8px);animation:fog 12s ease-in-out infinite}.top{position:absolute;z-index:20;left:24px;right:18px;top:16px;display:flex;justify-content:space-between;align-items:center}.brand{font:500 20px "STKaiti","KaiTi";letter-spacing:.2em;color:#f3ead1;text-shadow:0 2px 9px #000,0 0 16px rgba(238,218,157,.22)}.tools{display:flex;align-items:center;gap:8px}.plan{font:10px Georgia;color:#e8cd79;text-shadow:0 1px 5px #000}.unlock{width:28px;height:28px;padding:0;border:1px solid rgba(229,199,104,.58);border-radius:9px;background:rgba(4,16,16,.76);color:#edd684;display:grid;place-items:center;cursor:pointer;backdrop-filter:blur(5px)}.unlock svg{width:14px;fill:none;stroke:currentColor;stroke-width:1.4}.unlock:hover{background:#5c4927;box-shadow:0 0 15px rgba(231,196,91,.25)}
-.content{position:absolute;z-index:10;left:20px;right:19px;top:52px;bottom:16px;display:grid;grid-template-columns:166px 1fr;gap:12px}.core{position:relative;display:grid;place-items:center;padding-bottom:24px}.core-shade{position:absolute;z-index:0;inset:8px 3px 16px;border-radius:50%;background:radial-gradient(circle,rgba(5,24,20,.22),rgba(2,11,11,.68) 72%,transparent 74%);filter:blur(1px)}
-.geng-formation{position:absolute;z-index:1;left:3px;top:13px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle,rgba(112,214,146,.14),rgba(7,25,18,.32) 48%,transparent 70%);opacity:calc(.72 + var(--used)*.24);filter:drop-shadow(0 0 calc(5px + var(--used)*10px) rgba(223,201,99,.32));animation:gengPulse 6s ease-in-out infinite}.geng-texture{position:absolute;inset:-3px;width:166px;height:166px;object-fit:cover;object-position:center 47%;mix-blend-mode:screen;opacity:.28;mask-image:radial-gradient(circle,#000 0 59%,transparent 76%);filter:saturate(.72) hue-rotate(-8deg) brightness(1.08)}.formation-rings,.formation-runes,.formation-particles,.formation-ripple,.formation-swords{position:absolute;inset:0;border-radius:50%;pointer-events:none}.formation-rings{inset:10px;border:1px solid rgba(223,201,99,.78);background:repeating-conic-gradient(from 9deg,rgba(112,214,146,.42) 0 1deg,transparent 1deg 14deg,rgba(223,201,99,.3) 14deg 15deg,transparent 15deg 30deg);mask:radial-gradient(circle,transparent 0 70%,#000 71% 76%,transparent 77%);box-shadow:0 0 12px rgba(112,214,146,.28),inset 0 0 18px rgba(112,214,146,.18);animation:spin 18s linear infinite}.formation-rings:before,.formation-rings:after{content:"";position:absolute;border-radius:50%}.formation-rings:before{inset:15px;border:1px solid rgba(112,214,146,.62);box-shadow:0 0 8px rgba(112,214,146,.26)}.formation-rings:after{inset:31px;border:1px dashed rgba(241,227,154,.5)}.formation-runes{inset:4px;background:repeating-conic-gradient(from 0deg,rgba(241,227,154,.85) 0 1.2deg,transparent 1.2deg 27deg);mask:radial-gradient(circle,transparent 0 80%,#000 81% 84%,transparent 85%);filter:drop-shadow(0 0 3px rgba(223,201,99,.55));animation:spinReverse 27s linear infinite}.formation-particles{inset:13px;background:radial-gradient(circle at 50% 2%,#f1e39a 0 1px,transparent 2px),radial-gradient(circle at 98% 50%,#70d692 0 1px,transparent 2px),radial-gradient(circle at 50% 98%,#dfc963 0 1px,transparent 2px),radial-gradient(circle at 2% 50%,#70d692 0 1px,transparent 2px);filter:drop-shadow(0 0 4px #70d692);animation:particleOrbit 9s linear infinite}.formation-ripple{inset:47px;border:1px solid rgba(112,214,146,.72);box-shadow:0 0 10px rgba(112,214,146,.4),inset 0 0 10px rgba(223,201,99,.25);animation:formationRipple 3.6s ease-out infinite}.formation-swords{z-index:3}.formation-sword{position:absolute;left:77px;top:2px;width:6px;height:30px;transform-origin:3px 78px;clip-path:polygon(35% 0,65% 0,65% 15%,100% 23%,68% 28%,72% 75%,50% 100%,28% 75%,32% 28%,0 23%,35% 15%);background:linear-gradient(90deg,#745f2d,#f1e39a 43%,#eaffd9 52%,#70d692 66%,#6c5728);opacity:.16;filter:drop-shadow(0 0 2px rgba(223,201,99,.5));transition:opacity .65s ease,filter .65s ease}.formation-sword:nth-child(2){transform:rotate(30deg)}.formation-sword:nth-child(3){transform:rotate(60deg)}.formation-sword:nth-child(4){transform:rotate(90deg)}.formation-sword:nth-child(5){transform:rotate(120deg)}.formation-sword:nth-child(6){transform:rotate(150deg)}.formation-sword:nth-child(7){transform:rotate(180deg)}.formation-sword:nth-child(8){transform:rotate(210deg)}.formation-sword:nth-child(9){transform:rotate(240deg)}.formation-sword:nth-child(10){transform:rotate(270deg)}.formation-sword:nth-child(11){transform:rotate(300deg)}.formation-sword:nth-child(12){transform:rotate(330deg)}.balance-high .formation-sword:nth-child(-n+10),.balance-mid .formation-sword:nth-child(-n+5),.balance-low .formation-sword:nth-child(-n+2){opacity:1;filter:drop-shadow(0 0 5px #e7dc67) drop-shadow(0 0 10px #79d98e)}
-.qingzhu-formation{position:absolute;z-index:3;left:19px;top:24px;width:132px;height:142px;animation:floatFormation 5s ease-in-out infinite;filter:drop-shadow(0 0 calc(4px + var(--used)*8px) rgba(100,231,162,.5))}.qingzhu-texture{position:absolute;inset:-19px 8px -17px;width:116px;height:177px;object-fit:cover;object-position:center 17%;mix-blend-mode:screen;opacity:.22;clip-path:inset(0 0 28% 0);filter:saturate(1.15) contrast(1.08)}.main-sword,.minor-sword{position:absolute;left:64px;top:18px;width:8px;height:96px;translate:-50% 0;clip-path:polygon(50% 0,70% 8%,73% 64%,100% 70%,65% 74%,61% 100%,39% 100%,35% 74%,0 70%,27% 64%,30% 8%);background:linear-gradient(90deg,#416c48,#c6ffb1 42%,#efffc7 51%,#64c17b 59%,#244b36);box-shadow:0 0 9px #b9f56e,0 0 20px rgba(124,227,119,.45);opacity:.72}.main-sword:after,.minor-sword:after{content:"";position:absolute;left:3px;top:12px;width:1px;height:47px;background:#f3d45e;box-shadow:0 0 4px #f7e07d;animation:thunderTrace 1.8s steps(2,end) infinite}.minor-sword{top:30px;width:5px;height:58px;opacity:.62;transform-origin:2.5px 58px}.minor-sword.s1{transform:translate(-43px,6px) rotate(-23deg)}.minor-sword.s2{transform:translate(-25px,-12px) rotate(-12deg)}.minor-sword.s3{transform:translate(-10px,-21px) rotate(-4deg)}.minor-sword.s4{transform:translate(10px,-21px) rotate(4deg)}.minor-sword.s5{transform:translate(25px,-12px) rotate(12deg)}.minor-sword.s6{transform:translate(43px,6px) rotate(23deg)}
-.percent{position:relative;z-index:8;margin-top:9px;font:58px/.95 Georgia;color:#fbf7e9;text-shadow:0 3px 7px #000,0 0 18px rgba(129,232,202,.34)}.core-label{position:absolute;z-index:9;bottom:19px;padding:2px 7px;border-radius:8px;background:rgba(3,15,14,.54);font-size:9px;color:#e5ebe5;letter-spacing:.08em;text-shadow:0 1px 4px #000}
-.data{display:flex;flex-direction:column;justify-content:flex-end;padding-bottom:1px}.wing-meter{position:relative;height:72px;margin-bottom:1px}.progress-rail{position:absolute;z-index:4;left:4%;right:4%;top:42px;height:4px;border-radius:8px;background:linear-gradient(90deg,rgba(116,86,59,.72) 0 calc(var(--used)*100%),var(--aura-cyan) calc(var(--used)*100%) 82%,var(--jade) 94%,var(--geng-gold) 100%);box-shadow:0 0 5px rgba(143,231,238,.52),0 0 calc(4px + var(--used)*7px) rgba(79,214,162,.3)}.progress-rail:after{content:"";position:absolute;inset:-1px 0;background:repeating-linear-gradient(118deg,transparent 0 22px,rgba(217,251,255,.72) 23px 24px,transparent 25px 42px);opacity:calc(.2 + var(--used)*.55);animation:railFlow 2.8s linear infinite}.wind-thunder-wings{position:absolute;z-index:9;left:calc(4% + var(--used)*92%);top:27px;width:72px;height:34px;translate:-50% 0;opacity:.72;transform-origin:50% 50%;transition:left .65s cubic-bezier(.2,.8,.2,1);filter:drop-shadow(0 0 calc(4px + var(--used)*5px) rgba(143,231,238,.72))}.wing-asset{display:block;width:100%;height:100%;overflow:visible;mix-blend-mode:screen;filter:saturate(.92) hue-rotate(-4deg) brightness(1.08) contrast(1.04);transform-origin:50% 50%;animation:wingBeatV2 3.8s ease-in-out infinite}.wing-core{position:absolute;z-index:10;left:50%;top:50%;width:8px;height:8px;translate:-50% -50%;rotate:45deg;background:linear-gradient(135deg,var(--geng-gold),var(--aura-ice) 48%,var(--jade));clip-path:polygon(50% 0,100% 50%,50% 100%,0 50%);filter:drop-shadow(0 0 5px var(--aura-cyan))}.lightning{position:absolute;z-index:10;left:calc(4% + var(--used)*92%);top:24px;width:72px;height:40px;translate:-50% 0;overflow:visible;pointer-events:none;transition:left .65s cubic-bezier(.2,.8,.2,1)}.lightning path{fill:none;stroke-linecap:round}.lightning .silver{stroke:var(--aura-ice);stroke-width:1.2;stroke-dasharray:7 11;opacity:calc(.24 + var(--used)*.52);animation:dash 1.9s linear infinite}.lightning .gold{stroke:var(--geng-gold);stroke-width:1;stroke-dasharray:3 17;opacity:calc(.08 + var(--used)*.48);animation:dash 1.55s linear infinite reverse}
-.stats{display:flex;justify-content:space-between;font-size:9px;color:#eef1eb;text-shadow:0 1px 4px #000}.stats .used{color:#f1d16e}.geng-meter{position:relative;height:34px;margin-top:7px;border-top:1px solid rgba(226,210,159,.16);border-bottom:1px solid rgba(226,210,159,.11);overflow:hidden}.geng-meter:before,.geng-meter:after{content:"";position:absolute;left:-10%;right:-10%;top:16px;height:1px;transform:skewX(-22deg);animation:cut 2.7s linear infinite}.geng-meter:before{background:repeating-linear-gradient(90deg,rgba(232,199,76,.04) 0 3px,rgba(245,214,92,calc(.23 + var(--used)*.7)) 4px 6px,transparent 7px 12px);box-shadow:0 -4px rgba(238,202,79,calc(var(--used)*.22)),0 4px rgba(238,202,79,calc(var(--used)*.3))}.geng-meter:after{top:8px;background:repeating-linear-gradient(115deg,transparent 0 29px,rgba(238,218,115,calc(.13 + var(--used)*.55)) 30px 31px,transparent 32px 48px);animation-duration:1.7s;animation-direction:reverse}.geng-meter span{position:absolute;z-index:2;left:0;top:9px;padding-right:8px;background:rgba(4,15,14,.82);color:#d1dad4;font-size:9px}.geng-meter b{position:absolute;z-index:2;right:0;top:6px;padding-left:8px;background:rgba(4,15,14,.78);font:19px Georgia;color:#e8cc70}.foot{display:flex;justify-content:space-between;margin-top:6px;color:rgba(235,241,236,.72);font-size:8px;text-shadow:0 1px 3px #000}
-.notes{border:1px solid rgba(221,191,101,.18);border-radius:28px;padding:28px;background:linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.012));box-shadow:0 30px 80px rgba(0,0,0,.2)}.notes h2{margin:0 0 18px;font:400 24px "STKaiti","KaiTi";letter-spacing:.14em;color:#e5d5a2}.item{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:16px 0;border-bottom:1px solid rgba(221,213,181,.1)}.item:last-of-type{border:0}.sigil{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;border:1px solid rgba(214,178,70,.5);color:#dabb5d;font:15px "KaiTi"}.item h3{margin:0 0 5px;font:400 16px "STKaiti","KaiTi";letter-spacing:.08em}.item p{margin:0;color:#9eada6;font-size:11px;line-height:1.7}.controls{margin-top:24px}.controls strong{display:block;margin-bottom:10px;color:#d8cfb2;font-size:11px;font-weight:400;letter-spacing:.12em}.buttons{display:flex;gap:8px}.buttons button{flex:1;padding:8px 5px;border:1px solid rgba(215,182,80,.28);border-radius:9px;background:rgba(8,21,18,.66);color:#abbab3;cursor:pointer;font-size:10px}.buttons button.active{border-color:#d5b24e;background:#514529;color:#f2dd91;box-shadow:0 0 12px rgba(218,180,70,.15)}.verdict{margin-top:18px;padding:13px 15px;border-left:2px solid #c9a33e;background:rgba(202,164,57,.06);color:#b9c5bf;font-size:11px;line-height:1.7}
-@keyframes spin{to{rotate:360deg}}@keyframes spinReverse{to{rotate:-360deg}}@keyframes dash{to{stroke-dashoffset:-56}}@keyframes cut{to{background-position:80px 0}}@keyframes railFlow{to{background-position:78px 0}}@keyframes particleOrbit{to{rotate:360deg;filter:drop-shadow(0 0 6px #dfc963)}}@keyframes formationRipple{0%{scale:.72;opacity:.85}70%,100%{scale:1.48;opacity:0}}@keyframes fog{50%{translate:8% -3px;opacity:.65}}@keyframes mist{50%{translate:110px 15px;opacity:.45}}@keyframes floatFormation{50%{translate:0 -2px}}@keyframes thunderTrace{50%{opacity:.25;translate:0 6px}}@keyframes gengPulse{50%{scale:1.015;filter:drop-shadow(0 0 calc(8px + var(--used)*11px) rgba(223,201,99,.42))}}@keyframes wingHover{50%{translate:-50% -1px}}@keyframes wingBeat{50%{scale:1.02 .98;opacity:.9}}
-@media(max-width:900px){.showcase{grid-template-columns:1fr}.display{min-height:440px}.head{display:block}.head p{margin-top:10px}.widget{transform:scale(.88)}}@media(max-width:560px){.page{padding:24px 12px}.display{min-height:355px}.widget{transform:scale(.66)}.head h1{font-size:26px}.notes{padding:22px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;scroll-behavior:auto!important}.widget,.wing-core,.wind-thunder-wings,.lightning{transition:none!important}}
-.widget{--aura-cyan:#8fe7ee;--aura-ice:#d9fbff;--jade:#4fd6a2;--jade-deep:#0b745e;--geng-gold:#d9bd67;--ink:#031315;--deep-cyan:#082b31;background-image:linear-gradient(90deg,rgba(2,18,20,.86) 0,rgba(2,20,22,.5) 29%,rgba(3,15,18,.03) 53%,rgba(3,15,18,.04) 73%,rgba(2,17,19,.34) 100%),linear-gradient(0deg,rgba(2,14,17,.9) 0,rgba(2,14,17,.56) 23%,transparent 55%),url("assets/hanli-nangong-background.png");background-size:cover;background-position:center 47%;box-shadow:0 28px 72px rgba(0,0,0,.58),0 0 30px rgba(79,214,162,.08),inset 0 0 65px rgba(3,17,19,calc(.28 + var(--used)*.2))}
-.widget:before{background:radial-gradient(ellipse at 56% 38%,transparent 0 21%,rgba(3,20,23,.06) 39%,rgba(2,15,18,calc(.18 + var(--used)*.18)) 100%),linear-gradient(90deg,rgba(2,18,20,.82) 0 29%,transparent 51% 73%,rgba(2,17,19,.34) 100%),linear-gradient(0deg,rgba(2,14,17,.88) 0 22%,transparent 54%)}
-.widget:after{border-color:rgba(217,189,103,.66);box-shadow:inset 0 0 22px rgba(143,231,238,.08),inset 0 -38px 46px rgba(1,10,12,.24)}
-.nascent-aura{position:absolute;z-index:2;inset:0;pointer-events:none;overflow:hidden;opacity:calc(.16 + var(--used)*.1)}
-.nascent-aura:before,.nascent-aura:after{content:"";position:absolute;left:17%;top:34%;width:72%;height:46%;border-radius:50%;filter:blur(8px);mix-blend-mode:screen}
-.nascent-aura:before{background:conic-gradient(from 205deg at 38% 55%,transparent 0 20%,rgba(143,231,238,.24) 24%,transparent 31% 63%,rgba(79,214,162,.2) 68%,transparent 75%);animation:auraDrift 11s ease-in-out infinite}
-.nascent-aura:after{background:radial-gradient(ellipse,rgba(217,251,255,.16),transparent 66%);animation:auraBreathe 7s ease-in-out infinite reverse}
-@keyframes auraDrift{50%{translate:3% -2%;rotate:3deg;opacity:.76}}@keyframes auraBreathe{50%{scale:1.08 .94;opacity:.45}}
-.geng-formation{position:absolute;z-index:1;left:8px;top:17px;width:150px;height:150px;border-radius:50%;background:radial-gradient(circle,rgba(143,231,238,.14),rgba(4,35,34,.24) 46%,transparent 72%);opacity:calc(.8 + var(--used)*.16);filter:drop-shadow(0 0 calc(6px + var(--used)*9px) rgba(79,214,162,.36));animation:gengPulse 6s ease-in-out infinite}
-.formation-disc{position:absolute;inset:7px;transform:perspective(320px) rotateX(58deg) scaleY(1.36);transform-style:preserve-3d;transform-origin:50% 54%;border-radius:50%;pointer-events:none}
-.geng-texture{position:absolute;inset:-22px;width:180px;height:180px;object-fit:contain;object-position:center;mix-blend-mode:screen;opacity:.42;mask-image:radial-gradient(circle,#000 0 63%,rgba(0,0,0,.72) 71%,transparent 79%);filter:saturate(1.08) hue-rotate(7deg) brightness(1.08)}
-.ring{position:absolute;border-radius:50%;border:1px solid var(--aura-cyan);box-shadow:0 0 9px rgba(143,231,238,.34),inset 0 0 12px rgba(79,214,162,.18)}
-.ring:before{content:"";position:absolute;inset:-2px;border-radius:50%;background:repeating-conic-gradient(from 4deg,rgba(217,189,103,.66) 0 1deg,transparent 1deg 17deg);mask:radial-gradient(circle,transparent 0 89%,#000 90% 94%,transparent 95%)}
-.ring-outer{inset:2px;animation:spin 18s linear infinite}.ring-middle{inset:20px;border-color:var(--geng-gold);animation:spinReverse 24s linear infinite}.ring-inner{inset:39px;border-style:dashed;animation:spin 12s linear infinite}
-.formation-runes{inset:3px;background:repeating-conic-gradient(from 0deg,rgba(217,189,103,.84) 0 1deg,transparent 1deg 14deg,rgba(143,231,238,.45) 14deg 15deg,transparent 15deg 30deg);mask:radial-gradient(circle,transparent 0 81%,#000 82% 85%,transparent 86%);filter:drop-shadow(0 0 3px rgba(217,189,103,.46));animation:spinReverse 28s linear infinite}
-.formation-particles{inset:9px;background:radial-gradient(circle at 50% 2%,var(--aura-ice) 0 1px,transparent 2px),radial-gradient(circle at 98% 50%,var(--jade) 0 1px,transparent 2px),radial-gradient(circle at 50% 98%,var(--geng-gold) 0 1px,transparent 2px),radial-gradient(circle at 2% 50%,var(--aura-cyan) 0 1px,transparent 2px);filter:drop-shadow(0 0 4px var(--aura-cyan));animation:particleOrbit 10s linear infinite}
-.formation-swords{position:absolute;inset:0;z-index:3;border-radius:0;pointer-events:none}.formation-sword{position:absolute;width:6px;height:30px;left:auto;top:auto;transform-origin:50% 50%;clip-path:none;background:none;opacity:1;filter:none;transition:none}.formation-sword:before{content:"";position:absolute;inset:0;clip-path:polygon(50% 0,70% 11%,72% 66%,100% 72%,66% 76%,58% 100%,42% 100%,34% 76%,0 72%,28% 66%,30% 11%);background:linear-gradient(90deg,#15483f,var(--jade) 38%,var(--aura-ice) 51%,#67e6bd 61%,#173d38);opacity:.16;filter:drop-shadow(0 0 2px rgba(217,189,103,.45));transform-origin:50% 50%;animation:swordSpirit 5.8s ease-in-out infinite;animation-delay:calc(var(--slot)*-.31s);transition:opacity .55s ease,filter .55s ease}.formation-sword:after{content:"";position:absolute;left:3px;top:6px;width:1px;height:18px;background:var(--geng-gold);opacity:.18;box-shadow:0 0 3px var(--geng-gold);transition:opacity .55s ease}.formation-sword.is-lit:before{opacity:.96;filter:drop-shadow(0 0 5px var(--jade)) drop-shadow(0 0 9px rgba(143,231,238,.55))}.formation-sword.is-lit:after{opacity:.82}
-.formation-sword:nth-child(1){--slot:0;left:72px;top:4px;transform:rotate(0deg)}.formation-sword:nth-child(2){--slot:1;left:105px;top:12px;transform:rotate(30deg)}.formation-sword:nth-child(3){--slot:2;left:130px;top:31px;transform:rotate(60deg)}.formation-sword:nth-child(4){--slot:3;left:140px;top:62px;transform:rotate(90deg)}.formation-sword:nth-child(5){--slot:4;left:130px;top:94px;transform:rotate(120deg)}.formation-sword:nth-child(6){--slot:5;left:105px;top:113px;transform:rotate(150deg)}.formation-sword:nth-child(7){--slot:6;left:72px;top:121px;transform:rotate(180deg)}.formation-sword:nth-child(8){--slot:7;left:39px;top:113px;transform:rotate(210deg)}.formation-sword:nth-child(9){--slot:8;left:14px;top:94px;transform:rotate(240deg)}.formation-sword:nth-child(10){--slot:9;left:4px;top:62px;transform:rotate(270deg)}.formation-sword:nth-child(11){--slot:10;left:14px;top:31px;transform:rotate(300deg)}.formation-sword:nth-child(12){--slot:11;left:39px;top:12px;transform:rotate(330deg)}
-.formation-core{position:absolute;z-index:4;left:50%;top:50%;width:42px;height:24px;translate:-50% -50%;border:1px solid rgba(143,231,238,.62);border-radius:50%;background:radial-gradient(circle,var(--aura-ice),rgba(79,214,162,.34) 28%,transparent 69%);box-shadow:0 0 14px rgba(79,214,162,.55),inset 0 0 10px rgba(217,189,103,.32);animation:formationCore 3.8s ease-in-out infinite}
-.qingzhu-formation{position:absolute;z-index:4;left:71px;top:24px;width:24px;height:104px;pointer-events:none;animation:none;filter:none}.main-sword-asset{width:100%;height:100%;object-fit:cover;object-position:center 30%;opacity:.66;mix-blend-mode:screen;mask-image:linear-gradient(#000 0 82%,transparent 100%);filter:drop-shadow(0 0 5px var(--jade)) drop-shadow(0 0 10px rgba(217,189,103,.35));animation:mainSwordBreathe 5.6s ease-in-out infinite}.percent{z-index:8;margin-top:9px;color:#f5fbf2;text-shadow:0 3px 7px #000,0 0 18px rgba(143,231,238,.4)}
-@keyframes swordSpirit{50%{translate:0 -1.5px;filter:drop-shadow(0 0 6px var(--jade))}}@keyframes formationCore{50%{scale:1.12 .88;opacity:.68}}@keyframes mainSwordBreathe{50%{translate:0 -2px;opacity:.76;filter:drop-shadow(0 0 7px var(--jade)) drop-shadow(0 0 13px rgba(217,189,103,.42))}}
-@keyframes wingBeatV2{50%{scale:1 1.02;opacity:.9}}
-@media(prefers-reduced-motion:reduce){.ring,.formation-sword::before,.wing-asset,.lightning,.formation-runes,.formation-particles,.formation-core,.main-sword-asset,.progress-rail:after,.nascent-aura,.nascent-aura:before,.nascent-aura:after,.fog{animation:none!important}.widget,.wind-thunder-wings,.wing-core,.lightning,.formation-sword{transition:none!important}}
-</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>墨海剑墟 · 法宝封印图卷</title>
+  <link rel="stylesheet" href="styles/mortal-seal-card.css">
+  <script src="scripts/quota-card.js" defer></script>
 </head>
-<body><main class="page">
-<div class="kicker">CODEX 灵力法器 · 凡人意象精修</div>
-<div class="head"><h1>风雷化翼 · 七十二剑归阵</h1><p>青竹蜂云剑守住余额阵眼，大庚剑阵沉入金绿法环，风雷翅化作进度游标。人物与数据分层呈现，保留月下对视的画面中心。</p></div>
-<section class="showcase">
- <div class="display">
-  <div class="widget" id="widget">
-   <i class="fog"></i><i class="nascent-aura" aria-hidden="true"></i>
-   <div class="top"><span class="brand">眭劳模的 Codex</span><span class="tools"><b class="plan">PLUS</b><button class="unlock" aria-label="解锁窗口"><svg viewBox="0 0 16 16"><rect x="3" y="7" width="10" height="7" rx="2"/><path d="M5 7V5a3 3 0 016 0v2"/></svg></button></span></div>
-   <div class="content">
-    <div class="core">
-     <i class="core-shade"></i>
-     <div class="geng-formation" aria-hidden="true"><div class="formation-disc"><img class="geng-texture" src="assets/dageng-sword-array-v2.png" alt=""><i class="ring ring-outer"></i><i class="ring ring-middle"></i><i class="ring ring-inner"></i><i class="formation-runes"></i><i class="formation-particles"></i></div><span class="formation-swords"><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i><i class="formation-sword"></i></span><i class="formation-core"></i></div>
-     <div class="qingzhu-formation" aria-hidden="true"><img class="main-sword-asset" src="assets/qingzhu-fengyun-sword-v2.png" alt=""></div>
-     <span class="percent" id="percent">80%</span><span class="core-label">七日额度余量</span>
-    </div>
-    <div class="data">
-     <div class="wing-meter"><i class="progress-rail" aria-hidden="true"></i><div class="wind-thunder-wings" aria-label="风雷翅进度游标" role="img"><svg class="wing-asset" viewBox="0 100 1536 820" preserveAspectRatio="xMidYMid meet" aria-hidden="true"><image href="assets/wind-thunder-wings-v2.png" x="0" y="0" width="1536" height="1024"/></svg><i class="wing-core"></i></div><svg class="lightning" viewBox="0 0 86 40" aria-hidden="true"><path class="silver" d="M3 23l16-5 10 6 14-13 14 13 10-6 16 5M8 31l17-5 10 6 8-9 8 9 10-6 17 5"/><path class="gold" d="M9 18l14 4 9-6 11 8 11-8 9 6 14-4"/></svg></div>
-     <div class="stats"><span class="used" id="used">已用 20%</span><span>8月4日 18:30 重置</span></div>
-     <div class="geng-meter"><span>五小时额度 · 大庚剑阵</span><b>58%</b></div>
-     <div class="foot"><span>余3日6时 · 剑阵灵盈</span><span>方才更新</span></div>
-    </div>
-   </div>
-  </div>
-  <span class="scale-note">展示尺寸 480 × 270 · 适配高清桌面卡片屏</span>
- </div>
- <aside class="notes"><h2>三件法宝如何落位</h2>
-  <div class="item"><span class="sigil">剑</span><div><h3>青竹蜂云剑</h3><p>一柄青玉主剑与六柄副剑立于阵眼，材质纹理、淡金雷纹和微弱浮动共同形成动画建模层次。</p></div></div>
-  <div class="item"><span class="sigil">翅</span><div><h3>风雷翅</h3><p>冰蓝双翼横向展开为额度游标，中心光核卡在用量分界并随消耗移动；青白风雷为主，淡金辟邪神雷点亮羽缘。</p></div></div>
-  <div class="item"><span class="sigil">庚</span><div><h3>大庚剑阵</h3><p>金绿同心阵盘托住余额，底部金丝杀阵承载五小时额度；消耗越高，阵纹与金丝越盛。</p></div></div>
-  <div class="controls"><strong>查看消耗联动</strong><div class="buttons"><button class="active" data-used=".2">已用 20%</button><button data-used=".55">已用 55%</button><button data-used=".85">已用 85%</button></div></div>
-  <div class="verdict">画面优先级：先读余额，再看到青玉剑阵和风雷双翼，最后感受背景人物与金丝动态。保持华丽，但不牺牲桌面常驻的可读性。</div>
- </aside>
-</section></main>
-<script>
-const widget=document.querySelector('#widget');
-const percent=document.querySelector('#percent');
-const used=document.querySelector('#used');
-function setUsed(value){
-  const numeric=Number.isFinite(Number(value))?Number(value):0;
-  const safe=Math.max(0,Math.min(1,numeric));
-  const remaining=1-safe;
-  const litSwordCount=Math.round(remaining*12);
-  widget.style.setProperty('--used',safe);
-  percent.textContent=Math.round(remaining*100)+'%';
-  used.textContent='已用 '+Math.round(safe*100)+'%';
-  document.querySelectorAll('.formation-sword').forEach((sword,index)=>{
-    sword.classList.toggle('is-lit',index<litSwordCount);
-  });
-}
-document.querySelectorAll('[data-used]').forEach(btn=>btn.addEventListener('click',()=>{
-  document.querySelectorAll('[data-used]').forEach(item=>item.classList.remove('active'));
-  btn.classList.add('active');
-  setUsed(Number(btn.dataset.used));
-}));
-setUsed(.2);
-</script></body></html>
+<body>
+  <main class="page-shell">
+    <header class="showcase-intro">
+      <p class="showcase-kicker">CODEX · 灵力法器</p>
+      <h1>墨海剑墟</h1>
+      <p class="showcase-summary">以大庚剑阵镇守余量，青竹蜂云剑立于阵眼，风雷双翅循灵脉而行。</p>
+    </header>
+
+    <section class="showcase" aria-labelledby="showcaseTitle">
+      <h2 class="visually-hidden" id="showcaseTitle">凡人修仙主题 Codex 用量悬浮卡片</h2>
+
+      <div class="display-stage">
+        <div class="stage-halo" aria-hidden="true"></div>
+        <div class="stage-card">
+          <article class="seal-card" id="widget" style="--used: .2" data-used-state="calm" aria-label="Codex 用量法宝封印图卷">
+            <div class="portrait-scene" aria-hidden="true"></div>
+            <div class="scene-veil" aria-hidden="true"></div>
+            <div class="scene-mist scene-mist--one" aria-hidden="true"></div>
+            <div class="scene-mist scene-mist--two" aria-hidden="true"></div>
+
+            <header class="card-mark">
+              <div class="account-mark">
+                <span class="account-name">眭劳模的 Codex</span>
+                <span class="account-caption">元婴灵府 · 法宝封印</span>
+              </div>
+              <div class="account-actions">
+                <span class="plan-mark">PLUS</span>
+                <button class="seal-lock" id="unlockButton" type="button" aria-label="解锁悬浮窗" aria-pressed="false">
+                  <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path class="lock-shackle" d="M7.5 10V7.4a4.5 4.5 0 0 1 9 0V10" />
+                    <path d="M6.2 10h11.6v9H6.2z" />
+                    <path d="M12 13.1v3" />
+                  </svg>
+                </button>
+              </div>
+            </header>
+
+            <div class="seal-formation" aria-hidden="true">
+              <div class="formation-bloom"></div>
+              <div class="formation-plane">
+                <i class="formation-ring formation-ring--outer"></i>
+                <i class="formation-ring formation-ring--middle"></i>
+                <i class="formation-ring formation-ring--inner"></i>
+                <i class="formation-axis formation-axis--one"></i>
+                <i class="formation-axis formation-axis--two"></i>
+                <div class="formation-runes">
+                  <b>临</b><b>兵</b><b>斗</b><b>者</b><b>皆</b><b>阵</b><b>列</b><b>前</b>
+                </div>
+                <div class="formation-swords">
+                  <i class="formation-sword" data-sword-index="0" style="--angle: 0deg; --radius: 61px; --delay: .04s"></i>
+                  <i class="formation-sword" data-sword-index="1" style="--angle: 30deg; --radius: 67px; --delay: .09s"></i>
+                  <i class="formation-sword" data-sword-index="2" style="--angle: 60deg; --radius: 63px; --delay: .14s"></i>
+                  <i class="formation-sword" data-sword-index="3" style="--angle: 90deg; --radius: 69px; --delay: .19s"></i>
+                  <i class="formation-sword" data-sword-index="4" style="--angle: 120deg; --radius: 64px; --delay: .24s"></i>
+                  <i class="formation-sword" data-sword-index="5" style="--angle: 150deg; --radius: 68px; --delay: .29s"></i>
+                  <i class="formation-sword" data-sword-index="6" style="--angle: 180deg; --radius: 62px; --delay: .34s"></i>
+                  <i class="formation-sword" data-sword-index="7" style="--angle: 210deg; --radius: 66px; --delay: .39s"></i>
+                  <i class="formation-sword" data-sword-index="8" style="--angle: 240deg; --radius: 63px; --delay: .44s"></i>
+                  <i class="formation-sword" data-sword-index="9" style="--angle: 270deg; --radius: 69px; --delay: .49s"></i>
+                  <i class="formation-sword" data-sword-index="10" style="--angle: 300deg; --radius: 64px; --delay: .54s"></i>
+                  <i class="formation-sword" data-sword-index="11" style="--angle: 330deg; --radius: 68px; --delay: .59s"></i>
+                </div>
+              </div>
+              <i class="formation-core"></i>
+              <i class="qingzhu-sword"></i>
+              <i class="stray-sword stray-sword--one"></i>
+              <i class="stray-sword stray-sword--two"></i>
+              <i class="stray-sword stray-sword--three"></i>
+            </div>
+
+            <section class="quota-eye" aria-label="七日额度余量">
+              <span class="quota-aura" aria-hidden="true"></span>
+              <strong id="percent">80%</strong>
+              <span class="quota-name">七日额度余量</span>
+            </section>
+
+            <section class="spirit-meridian" aria-label="七日额度进度">
+              <svg class="meridian-lines" viewBox="0 0 300 70" aria-hidden="true">
+                <defs>
+                  <linearGradient id="meridianRemaining" x1="0" x2="1">
+                    <stop offset="0" stop-color="#71e2dc" />
+                    <stop offset=".72" stop-color="#59d99d" />
+                    <stop offset="1" stop-color="#d5b564" />
+                  </linearGradient>
+                  <filter id="meridianGlow" x="-20%" y="-100%" width="140%" height="300%">
+                    <feGaussianBlur stdDeviation="2.2" result="blur" />
+                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+                  </filter>
+                </defs>
+                <path class="meridian-echo" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
+                <path class="meridian-path" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
+                <path class="meridian-progress" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
+              </svg>
+
+              <div class="wind-thunder-wings" role="img" aria-label="风雷翅额度游标">
+                <svg class="wing-asset" viewBox="0 105 1536 800" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+                  <image href="assets/wind-thunder-wings-v2.png" x="0" y="0" width="1536" height="1024" />
+                </svg>
+                <i class="wing-core"></i>
+                <i class="wing-lightning wing-lightning--silver"></i>
+                <i class="wing-lightning wing-lightning--gold"></i>
+              </div>
+
+              <span class="used-label" id="used">已用 20%</span>
+              <span class="reset-label">8月4日 18:30 重置</span>
+            </section>
+
+            <section class="spirit-seal" aria-label="五小时额度余量">
+              <span class="spirit-seal__label">五小时余量</span>
+              <strong>58%</strong>
+              <i aria-hidden="true"></i>
+            </section>
+
+            <footer class="card-foot">
+              <span>余3日6时 · 剑阵灵盈</span>
+              <span>方才更新</span>
+            </footer>
+          </article>
+        </div>
+        <p class="size-mark">480 × 270 · 桌面卡片屏实寸构图</p>
+      </div>
+
+      <div class="demo-console" aria-label="额度状态演示">
+        <div class="console-copy">
+          <span>灵力推演</span>
+          <strong>剑位与风雷翅会随消耗同步迁移</strong>
+        </div>
+        <div class="state-buttons">
+          <button class="active" type="button" data-used=".2" aria-pressed="true">已用 20%</button>
+          <button type="button" data-used=".55" aria-pressed="false">已用 55%</button>
+          <button type="button" data-used=".85" aria-pressed="false">已用 85%</button>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
