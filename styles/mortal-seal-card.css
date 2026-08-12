@@ -553,45 +553,6 @@ button {
   border-color: rgba(213, 181, 100, .34);
 }
 
-.qingzhu-sword {
-  position: absolute;
-  z-index: 5;
-  left: 198px;
-  top: 61px;
-  width: 30px;
-  height: 129px;
-  opacity: .62;
-  filter: drop-shadow(0 0 7px rgba(89, 217, 157, .45));
-}
-
-.qingzhu-sword::before {
-  content: "";
-  position: absolute;
-  inset: -16px -34px -9px;
-  opacity: .24;
-  mix-blend-mode: screen;
-  background-image: url("../assets/qingzhu-fengyun-sword-v2.png");
-  background-repeat: no-repeat;
-  background-position: center 43%;
-  background-size: 100px 150px;
-  filter: hue-rotate(7deg) saturate(.78) brightness(1.18);
-  -webkit-mask-image: linear-gradient(transparent 2%, #000 22% 90%, transparent);
-  mask-image: linear-gradient(transparent 2%, #000 22% 90%, transparent);
-}
-
-.qingzhu-sword::after {
-  content: "";
-  position: absolute;
-  left: 10px;
-  top: 7px;
-  width: 10px;
-  height: 112px;
-  clip-path: polygon(30% 0, 70% 0, 86% 79%, 50% 100%, 14% 79%);
-  background: linear-gradient(90deg, rgba(7, 52, 43, .4), rgba(89, 217, 157, .88) 35%, rgba(234, 248, 238, .92) 50%, rgba(42, 134, 101, .68) 62%, rgba(4, 20, 22, .5));
-  border-top: 2px solid rgba(213, 181, 100, .65);
-  box-shadow: 0 0 7px rgba(113, 226, 220, .58), 0 0 17px rgba(89, 217, 157, .25);
-}
-
 .stray-sword {
   position: absolute;
   z-index: 3;
@@ -634,14 +595,14 @@ button {
 .quota-eye {
   position: absolute;
   z-index: 24;
-  left: 22px;
-  top: 88px;
+  left: 18px;
+  top: 92px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  width: 148px;
-  height: 100px;
+  width: 160px;
+  height: 92px;
   pointer-events: none;
   text-align: center;
   animation: quotaReveal .72s .94s ease-out both;
@@ -661,7 +622,7 @@ button {
   display: block;
   color: var(--moon-white);
   font-family: "Bodoni 72", Didot, Georgia, serif;
-  font-size: 64px;
+  font-size: 56px;
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.06em;
@@ -712,7 +673,8 @@ button {
   letter-spacing: -.03em;
 }
 
-.ledger-item--cycle strong {
+.ledger-item--cycle strong,
+.ledger-item--balance strong {
   color: rgba(213, 181, 100, .96);
   font-family: STKaiti, KaiTi, serif;
   font-size: 15px;
@@ -732,12 +694,6 @@ button {
   margin: 9px 0 8px;
   opacity: .66;
   background: linear-gradient(90deg, transparent, rgba(213, 181, 100, .56));
-}
-
-.ledger-item--balance strong {
-  color: var(--ward-gold);
-  font-size: 21px;
-  letter-spacing: .015em;
 }
 
 .card-foot {
