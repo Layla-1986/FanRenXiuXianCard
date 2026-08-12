@@ -43,6 +43,7 @@ Assert-True (-not $html.Contains('class="formation-bloom"')) 'Blurred upper form
 Assert-True ($html.Contains('class="formation-swords formation-swords--lower-arc"')) 'Formation swords must be gathered into the lower battle arc'
 Assert-True ($html.Contains('class="quota-eye"')) 'Missing seven-day quota eye'
 Assert-True ($html.Contains('id="percent"')) 'Missing seven-day quota value target'
+Assert-True (-not $html.Contains('class="quota-name"')) 'Redundant seven-day quota caption must be removed'
 Assert-True (-not $html.Contains('class="spirit-meridian"')) 'Curved progress meridian must be removed'
 Assert-True (-not $html.Contains('meridian-')) 'All progress-line SVG layers must be removed'
 Assert-True (-not $html.Contains('wind-thunder-wings')) 'Wind-Thunder Wings must be removed from the card'
@@ -50,13 +51,14 @@ $windThunderWingCopy = ([char]0x98CE) + ([char]0x96F7) + ([char]0x7FC5)
 Assert-True (-not $html.Contains($windThunderWingCopy)) 'Obsolete Wind-Thunder Wings copy must be removed'
 Assert-True ($html.Contains('class="quota-ledger"')) 'Missing right-side quota text ledger'
 Assert-True ($html.Contains('class="ledger-item ledger-item--cycle"')) 'Missing seven-day cycle information group'
-Assert-True ($html.Contains('class="ledger-item ledger-item--credits"')) 'Missing account credit balance information group'
-Assert-True ($html.Contains('id="credits"')) 'Missing account credit balance value interface'
-$accountCreditLabel = ([char]0x8D26) + ([char]0x6237) + ([char]0x70B9) + ([char]0x6570) + ([char]0x4F59) + ([char]0x989D)
-$pointUnit = '0 ' + ([char]0x70B9)
+Assert-True ($html.Contains('class="ledger-item ledger-item--balance"')) 'Missing account dollar balance information group'
+Assert-True ($html.Contains('id="balance"')) 'Missing account dollar balance value interface'
+$accountCreditLabel = ([char]0x5F53) + ([char]0x524D) + ([char]0x4F59) + ([char]0x989D)
+$dollarBalance = 'US$39.36'
 $fiveHourCopy = ([char]0x4E94) + ([char]0x5C0F) + ([char]0x65F6) + ([char]0x4F59) + ([char]0x91CF)
 Assert-True ($html.Contains($accountCreditLabel)) 'Account credit balance label must be visible'
-Assert-True ($html.Contains($pointUnit)) 'Account credit balance must use a point unit'
+Assert-True ($html.Contains($dollarBalance)) 'Account balance must use a US dollar amount'
+Assert-True ($html.IndexOf($dollarBalance) -lt $html.IndexOf($accountCreditLabel)) 'Dollar balance must appear above its label'
 Assert-True (-not $html.Contains($fiveHourCopy)) 'Obsolete five-hour quota copy must be removed'
 Assert-True ($html.Contains('class="ledger-divider"')) 'Missing restrained ledger divider'
 Assert-True ($html.Contains('id="used"')) 'Missing used quota label target'
@@ -91,6 +93,8 @@ Assert-True (-not $css.Contains('.meridian-path')) 'Progress-line styling must b
 Assert-True ($css.Contains('.quota-ledger {')) 'Quota ledger must have a dedicated layout rule'
 Assert-True ($css.Contains('right: 18px')) 'Quota ledger must align to the card right edge'
 Assert-True ($css.Contains('width: 136px')) 'Quota ledger must preserve the portrait center with a compact width'
+Assert-True ($css.Contains('font-size: 64px')) 'Quota percentage must have a stronger visual scale'
+Assert-True ($css.Contains('left: 198px')) 'Qingzhu main sword must clear the percentage display'
 Assert-True (-not $css.Contains('.formation-bloom')) 'Blurred formation overlay styling must be removed'
 Assert-True (-not $css.Contains('@keyframes windRun')) 'Obsolete wind-current animation must be removed'
 Assert-True (-not $css.Contains('@keyframes thunderRun')) 'Obsolete thunder animation must be removed'
