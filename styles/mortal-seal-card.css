@@ -624,20 +624,31 @@ button {
   width: 112px;
   height: 82px;
   border-radius: 50%;
-  background: radial-gradient(ellipse, rgba(4, 20, 22, .72) 0 35%, rgba(4, 20, 22, .18) 62%, transparent 74%);
+  background: radial-gradient(ellipse, var(--spirit-glow) 0 8%, rgba(4, 20, 22, .68) 31%, rgba(4, 20, 22, .16) 62%, transparent 74%);
   filter: blur(2px);
 }
 
 .quota-eye strong {
   display: block;
-  color: var(--moon-white);
-  font-family: "Bodoni 72", Didot, Georgia, serif;
+  color: var(--spirit-highlight);
+  font-family: Baskerville, "Times New Roman", Georgia, serif;
   font-size: 38px;
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.06em;
   font-variant-numeric: lining-nums tabular-nums;
-  text-shadow: 0 3px 12px rgba(0, 0, 0, .9), 0 0 16px rgba(113, 226, 220, .28);
+  background: linear-gradient(180deg,
+    var(--spirit-highlight) 0 24%,
+    var(--spirit-jade) 52% 76%,
+    var(--spirit-gold) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: .45px var(--spirit-shadow);
+  paint-order: stroke fill;
+  stroke: var(--spirit-shadow);
+  text-shadow: 0 2px 7px rgba(0, 0, 0, .72), 0 0 9px var(--spirit-glow);
+  animation: jadeNumeralBreathe 6.8s ease-in-out infinite;
   transition: opacity .24s ease, transform .34s ease;
 }
 
@@ -856,6 +867,11 @@ button {
 @keyframes coreBreathe {
   0%, 84%, 100% { transform: scale(.94); opacity: .62; }
   90% { transform: scale(1.08); opacity: .92; }
+}
+
+@keyframes jadeNumeralBreathe {
+  0%, 100% { filter: saturate(.92) brightness(.98); }
+  50% { filter: saturate(1.06) brightness(1.06); }
 }
 
 @keyframes mistDrift {
