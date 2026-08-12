@@ -699,234 +699,79 @@ button {
   text-shadow: 0 2px 7px rgba(0, 0, 0, .92);
 }
 
-.spirit-meridian {
-  position: absolute;
-  z-index: 27;
-  left: 154px;
-  top: 158px;
-  width: 300px;
-  height: 70px;
-  overflow: visible;
-  pointer-events: none;
-  animation: meridianReveal .72s .72s ease-out both;
-}
-
-.meridian-lines {
-  position: absolute;
-  inset: 0;
-  width: 300px;
-  height: 70px;
-  overflow: visible;
-}
-
-.meridian-lines path {
-  fill: none;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-
-.meridian-echo {
-  stroke: rgba(113, 226, 220, .17);
-  stroke-width: 9;
-  filter: blur(5px);
-}
-
-.meridian-path {
-  stroke: rgba(116, 86, 59, .78);
-  stroke-width: 2.4;
-  stroke-dasharray: calc(var(--used) * 100) 100;
-  filter: drop-shadow(0 0 3px rgba(213, 181, 100, .14));
-  transition: stroke-dasharray .72s cubic-bezier(.2, .8, .2, 1);
-}
-
-.meridian-progress {
-  stroke: url(#meridianRemaining);
-  stroke-width: 2.8;
-  stroke-dasharray: calc((1 - var(--used)) * 100) 100;
-  stroke-dashoffset: calc(var(--used) * -100);
-  filter: url(#meridianGlow);
-  transition: stroke-dasharray .72s cubic-bezier(.2, .8, .2, 1), stroke-dashoffset .72s cubic-bezier(.2, .8, .2, 1);
-}
-
-.meridian-wind {
-  stroke: rgba(219, 255, 245, .72);
-  stroke-width: 1.05;
-  stroke-dasharray: 3 11 8 16;
-  filter: drop-shadow(0 0 2px rgba(113, 226, 220, .7));
-  animation: windRun 3.6s linear infinite;
-}
-
-.meridian-thunder {
-  stroke: rgba(126, 207, 255, .9);
-  stroke-width: 1.45;
-  stroke-dasharray: 1 7 2 21;
-  opacity: calc(.2 + var(--used) * .55);
-  filter: drop-shadow(0 0 2px rgba(92, 177, 255, .9));
-  animation: thunderRun 2.4s steps(5, end) infinite;
-}
-
-.meridian-gold {
-  stroke: rgba(230, 193, 94, .82);
-  stroke-width: .9;
-  stroke-dasharray: 1 23 5 31;
-  opacity: calc(.08 + var(--used) * .34);
-  filter: drop-shadow(0 0 2px rgba(213, 181, 100, .7));
-  animation: thunderRun 4.7s linear infinite reverse;
-}
-
-.wind-thunder-wings {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 64px;
-  height: 28px;
-  offset-position: 0 0;
-  offset-path: path("M 8 22 C 90 8 172 58 292 28");
-  offset-distance: calc(var(--used) * 100%);
-  offset-anchor: 50% 50%;
-  offset-rotate: 0deg;
-  opacity: .82;
-  transform-origin: 50% 50%;
-  filter: drop-shadow(0 0 4px rgba(113, 226, 220, .58)) drop-shadow(0 0 8px rgba(94, 168, 201, .28));
-  transition: offset-distance .72s cubic-bezier(.2, .8, .2, 1), filter .5s ease;
-}
-
-.wing-asset {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  mix-blend-mode: screen;
-  filter: hue-rotate(12deg) saturate(.9) brightness(.98) contrast(1.2);
-  transform-origin: 50% 54%;
-  animation: wingFlex 5.5s ease-in-out infinite;
-}
-
-.wing-veins {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-  fill: none;
-  stroke: rgba(210, 245, 255, .66);
-  stroke-width: .75;
-  stroke-linecap: round;
-  mix-blend-mode: screen;
-  filter: drop-shadow(0 0 1.5px rgba(90, 177, 255, .75));
-  animation: veinBreathe 3.4s ease-in-out infinite;
-}
-
-.wing-veins__thunder {
-  stroke: rgba(222, 187, 91, .72);
-  stroke-width: .65;
-  opacity: calc(.18 + var(--used) * .5);
-}
-
-.wing-core {
-  position: absolute;
-  left: 50%;
-  top: 54%;
-  width: 6px;
-  height: 6px;
-  transform: translate(-50%, -50%) rotate(45deg);
-  border: 1px solid rgba(234, 248, 238, .72);
-  background: linear-gradient(135deg, var(--ward-gold), var(--moon-white) 46%, var(--nascent-cyan));
-  box-shadow: 0 0 7px rgba(113, 226, 220, .82), 0 0 13px rgba(213, 181, 100, .26);
-}
-
-.wing-lightning {
-  position: absolute;
-  left: 50%;
-  top: 52%;
-  width: 38px;
-  height: 1px;
-  transform: translate(-50%, -50%);
-  opacity: calc(.18 + var(--used) * .42);
-  background: repeating-linear-gradient(90deg, transparent 0 5px, rgba(234, 248, 238, .82) 6px 8px, transparent 9px 14px);
-  filter: drop-shadow(0 0 2px rgba(113, 226, 220, .7));
-  animation: lightningPulse 3.8s steps(1, end) infinite;
-}
-
-.wing-lightning--gold {
-  width: 48px;
-  transform: translate(-50%, -50%) rotate(-4deg);
-  opacity: calc(.06 + var(--used) * .26);
-  background: repeating-linear-gradient(90deg, transparent 0 9px, rgba(213, 181, 100, .86) 10px 12px, transparent 13px 21px);
-  filter: drop-shadow(0 0 2px rgba(213, 181, 100, .58));
-  animation-delay: -1.7s;
-}
-
-.used-label,
-.reset-label {
-  position: absolute;
-  top: 52px;
-  color: rgba(234, 248, 238, .72);
-  font-size: 8px;
-  font-variant-numeric: tabular-nums;
-  text-shadow: 0 1px 5px rgba(0, 0, 0, .95);
-  white-space: nowrap;
-}
-
-.used-label {
-  left: 14px;
-  color: rgba(213, 181, 100, .9);
-}
-
-.reset-label {
-  right: 2px;
-}
-
-.spirit-seal {
+.quota-ledger {
   position: absolute;
   z-index: 31;
-  right: 17px;
-  bottom: 28px;
+  right: 18px;
+  top: 82px;
   display: grid;
-  justify-items: end;
-  width: 82px;
-  color: var(--ward-gold);
+  justify-items: stretch;
+  width: 136px;
+  padding: 12px 13px 11px;
+  border: 1px solid rgba(213, 181, 100, .16);
+  border-radius: 4px 14px 4px 14px;
+  color: var(--moon-white);
   text-align: right;
+  background: linear-gradient(105deg, rgba(3, 16, 17, .16), rgba(3, 16, 17, .64));
+  box-shadow: inset 0 1px rgba(234, 248, 238, .035), -10px 10px 28px rgba(0, 0, 0, .08);
+  backdrop-filter: blur(1.5px);
   text-shadow: 0 2px 7px rgba(0, 0, 0, .9);
   animation: quotaReveal .68s 1.04s ease-out both;
 }
 
-.spirit-seal__label {
-  padding-right: 2px;
-  color: rgba(197, 224, 213, .55);
+.ledger-item {
+  display: grid;
+  justify-items: end;
+  gap: 2px;
+}
+
+.ledger-kicker {
+  color: rgba(113, 226, 220, .64);
   font-family: STKaiti, KaiTi, serif;
   font-size: 8px;
-  letter-spacing: .1em;
+  letter-spacing: .2em;
 }
 
-.spirit-seal strong {
-  margin-top: -1px;
+.ledger-item strong {
   font-family: "Bodoni 72", Didot, Georgia, serif;
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 400;
   line-height: 1;
+  font-variant-numeric: lining-nums tabular-nums;
+  letter-spacing: -.03em;
 }
 
-.spirit-seal i {
-  position: absolute;
-  right: -6px;
-  top: -4px;
-  z-index: -1;
-  width: 47px;
-  height: 47px;
-  border: 1px solid rgba(213, 181, 100, .18);
-  border-radius: 50%;
-  background: repeating-conic-gradient(from 0deg, rgba(213, 181, 100, .22) 0 2deg, transparent 2deg 24deg);
-  opacity: .72;
+.ledger-item--cycle strong {
+  color: rgba(213, 181, 100, .96);
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 15px;
+  letter-spacing: .08em;
+}
+
+.ledger-note {
+  color: rgba(197, 224, 213, .48);
+  font-size: 7px;
+  letter-spacing: .04em;
+  white-space: nowrap;
+}
+
+.ledger-divider {
+  width: 100%;
+  height: 1px;
+  margin: 9px 0 8px;
+  opacity: .66;
+  background: linear-gradient(90deg, transparent, rgba(213, 181, 100, .56));
+}
+
+.ledger-item--short strong {
+  color: var(--ward-gold);
 }
 
 .card-foot {
   position: absolute;
   z-index: 32;
-  left: 166px;
-  right: 15px;
+  left: 190px;
+  right: 18px;
   bottom: 10px;
   display: flex;
   justify-content: space-between;
@@ -945,10 +790,6 @@ button {
 .seal-card[data-used-state="danger"] .formation-ring--outer,
 .seal-card[data-used-state="danger"] .formation-bloom {
   opacity: .28;
-}
-
-.seal-card[data-used-state="danger"] .wind-thunder-wings {
-  filter: drop-shadow(0 0 7px rgba(113, 226, 220, .72)) drop-shadow(0 0 12px rgba(213, 181, 100, .24));
 }
 
 .demo-console {
@@ -1041,11 +882,6 @@ button {
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes meridianReveal {
-  from { opacity: 0; clip-path: inset(0 100% 0 0); }
-  to { opacity: 1; clip-path: inset(-20px -30px -20px -20px); }
-}
-
 @keyframes swordEmerge {
   0% { opacity: 0; filter: blur(2px); }
   65% { opacity: 1; }
@@ -1067,35 +903,6 @@ button {
 @keyframes coreBreathe {
   0%, 84%, 100% { transform: scale(.94); opacity: .62; }
   90% { transform: scale(1.08); opacity: .92; }
-}
-
-@keyframes wingFlex {
-  0%, 82%, 100% { transform: scaleY(.94) scaleX(.98); }
-  88% { transform: scaleY(1.07) scaleX(1.025); }
-  93% { transform: scaleY(.98) scaleX(1); }
-}
-
-@keyframes windRun {
-  to { stroke-dashoffset: -76; }
-}
-
-@keyframes thunderRun {
-  0%, 100% { stroke-dashoffset: 0; opacity: calc(.12 + var(--used) * .28); }
-  42% { stroke-dashoffset: -38; opacity: calc(.32 + var(--used) * .58); }
-  48% { stroke-dashoffset: -41; opacity: .08; }
-  61% { stroke-dashoffset: -58; opacity: calc(.2 + var(--used) * .46); }
-}
-
-@keyframes veinBreathe {
-  0%, 78%, 100% { opacity: .46; }
-  84% { opacity: .94; }
-  90% { opacity: .58; }
-}
-
-@keyframes lightningPulse {
-  0%, 76%, 100% { visibility: hidden; }
-  78%, 81%, 84% { visibility: visible; }
-  80%, 83% { visibility: hidden; }
 }
 
 @keyframes mistDrift {
@@ -1187,8 +994,7 @@ button {
   .portrait-scene,
   .seal-formation,
   .quota-eye,
-  .spirit-meridian,
-  .spirit-seal,
+  .quota-ledger,
   .card-foot {
     opacity: 1;
     clip-path: none;

@@ -12,7 +12,7 @@
     <header class="showcase-intro">
       <p class="showcase-kicker">CODEX · 灵力法器</p>
       <h1>墨海剑墟</h1>
-      <p class="showcase-summary">以大庚剑阵镇守余量，青竹蜂云剑立于阵眼，风雷双翅循灵脉而行。</p>
+      <p class="showcase-summary">大庚剑阵镇守余量，青竹蜂云剑立于阵眼，人物与用量各归其位。</p>
     </header>
 
     <section class="showcase" aria-labelledby="showcaseTitle">
@@ -83,49 +83,18 @@
               <span class="quota-name">七日额度余量</span>
             </section>
 
-            <section class="spirit-meridian" aria-label="七日额度进度">
-              <svg class="meridian-lines" viewBox="0 0 300 70" aria-hidden="true">
-                <defs>
-                  <linearGradient id="meridianRemaining" x1="0" x2="1">
-                    <stop offset="0" stop-color="#71e2dc" />
-                    <stop offset=".72" stop-color="#59d99d" />
-                    <stop offset="1" stop-color="#d5b564" />
-                  </linearGradient>
-                  <filter id="meridianGlow" x="-20%" y="-100%" width="140%" height="300%">
-                    <feGaussianBlur stdDeviation="2.2" result="blur" />
-                    <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
-                  </filter>
-                </defs>
-                <path class="meridian-echo" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
-                <path class="meridian-path" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
-                <path class="meridian-progress" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
-                <path class="meridian-wind" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
-                <path class="meridian-thunder" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
-                <path class="meridian-gold" d="M8 22 C90 8 172 58 292 28" pathLength="100" />
-              </svg>
-
-              <div class="wind-thunder-wings" role="img" aria-label="风雷翅额度游标">
-                <svg class="wing-asset" viewBox="0 105 1536 800" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
-                  <image href="assets/wind-thunder-wings-v2.png" x="0" y="0" width="1536" height="1024" />
-                </svg>
-                <svg class="wing-veins" viewBox="0 0 64 28" aria-hidden="true">
-                  <path d="M32 15 C25 10 17 7 5 5 M32 15 C22 14 14 14 3 17 M32 15 C23 18 17 21 9 26" />
-                  <path d="M32 15 C39 10 47 7 59 5 M32 15 C42 14 50 14 61 17 M32 15 C41 18 47 21 55 26" />
-                  <path class="wing-veins__thunder" d="M3 12 L12 10 L9 15 L20 12 M61 12 L52 10 L55 15 L44 12" />
-                </svg>
-                <i class="wing-core"></i>
-                <i class="wing-lightning wing-lightning--silver"></i>
-                <i class="wing-lightning wing-lightning--gold"></i>
+            <section class="quota-ledger" aria-label="额度状态">
+              <div class="ledger-item ledger-item--cycle">
+                <span class="ledger-kicker">本周期消耗</span>
+                <strong id="used">已用 20%</strong>
+                <span class="ledger-note">8月4日 18:30 重置</span>
               </div>
-
-              <span class="used-label" id="used">已用 20%</span>
-              <span class="reset-label">8月4日 18:30 重置</span>
-            </section>
-
-            <section class="spirit-seal" aria-label="五小时额度余量">
-              <span class="spirit-seal__label">五小时余量</span>
-              <strong>58%</strong>
-              <i aria-hidden="true"></i>
+              <i class="ledger-divider" aria-hidden="true"></i>
+              <div class="ledger-item ledger-item--short">
+                <span class="ledger-kicker">五小时余量</span>
+                <strong>58%</strong>
+                <span class="ledger-note">大庚剑阵 · 灵盈</span>
+              </div>
             </section>
 
             <footer class="card-foot">
@@ -140,7 +109,7 @@
       <div class="demo-console" aria-label="额度状态演示">
         <div class="console-copy">
           <span>灵力推演</span>
-          <strong>剑位与风雷翅会随消耗同步迁移</strong>
+          <strong>剑位会随周期消耗渐次隐入阵中</strong>
         </div>
         <div class="state-buttons">
           <button class="active" type="button" data-used=".2" aria-pressed="true">已用 20%</button>
