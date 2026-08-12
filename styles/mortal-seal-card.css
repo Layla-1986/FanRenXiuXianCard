@@ -763,7 +763,7 @@ button {
   background: linear-gradient(90deg, transparent, rgba(213, 181, 100, .56));
 }
 
-.ledger-item--short strong {
+.ledger-item--credits strong {
   color: var(--ward-gold);
 }
 

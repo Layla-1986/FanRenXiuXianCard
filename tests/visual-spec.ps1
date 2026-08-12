@@ -49,7 +49,14 @@ $windThunderWingCopy = ([char]0x98CE) + ([char]0x96F7) + ([char]0x7FC5)
 Assert-True (-not $html.Contains($windThunderWingCopy)) 'Obsolete Wind-Thunder Wings copy must be removed'
 Assert-True ($html.Contains('class="quota-ledger"')) 'Missing right-side quota text ledger'
 Assert-True ($html.Contains('class="ledger-item ledger-item--cycle"')) 'Missing seven-day cycle information group'
-Assert-True ($html.Contains('class="ledger-item ledger-item--short"')) 'Missing five-hour quota information group'
+Assert-True ($html.Contains('class="ledger-item ledger-item--credits"')) 'Missing account credit balance information group'
+Assert-True ($html.Contains('id="credits"')) 'Missing account credit balance value interface'
+$accountCreditLabel = ([char]0x8D26) + ([char]0x6237) + ([char]0x70B9) + ([char]0x6570) + ([char]0x4F59) + ([char]0x989D)
+$pointUnit = '0 ' + ([char]0x70B9)
+$fiveHourCopy = ([char]0x4E94) + ([char]0x5C0F) + ([char]0x65F6) + ([char]0x4F59) + ([char]0x91CF)
+Assert-True ($html.Contains($accountCreditLabel)) 'Account credit balance label must be visible'
+Assert-True ($html.Contains($pointUnit)) 'Account credit balance must use a point unit'
+Assert-True (-not $html.Contains($fiveHourCopy)) 'Obsolete five-hour quota copy must be removed'
 Assert-True ($html.Contains('class="ledger-divider"')) 'Missing restrained ledger divider'
 Assert-True ($html.Contains('id="used"')) 'Missing used quota label target'
 Assert-True ($html.Contains('id="unlockButton"')) 'Missing unlock control'
