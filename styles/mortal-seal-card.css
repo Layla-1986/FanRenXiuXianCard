@@ -377,7 +377,7 @@ button {
   top: 7px;
   width: 240px;
   height: 172px;
-  opacity: .14;
+  opacity: .11;
   mix-blend-mode: screen;
   background-image: url("../assets/dageng-sword-array-v2.png");
   background-position: 50% 48%;
@@ -387,6 +387,7 @@ button {
   -webkit-mask-image: radial-gradient(ellipse, #000 30%, rgba(0, 0, 0, .7) 55%, transparent 79%);
   mask-image: radial-gradient(ellipse, #000 30%, rgba(0, 0, 0, .7) 55%, transparent 79%);
   transform: rotate(-8deg);
+  clip-path: inset(42% 0 0 round 50%);
 }
 
 .formation-plane {
@@ -501,13 +502,18 @@ button {
   pointer-events: none;
 }
 
+.formation-swords--lower-arc {
+  clip-path: inset(47% -36px -44px -36px);
+  filter: drop-shadow(0 7px 10px rgba(89, 217, 157, .12));
+}
+
 .formation-sword {
   position: absolute;
   left: calc(50% - 2px);
   top: calc(50% - var(--radius) - 34px);
   width: 4px;
   height: 34px;
-  opacity: .11;
+  opacity: .05;
   transform: rotate(var(--angle));
   transform-origin: 50% calc(100% + var(--radius));
   transition: opacity .55s ease, filter .55s ease;
@@ -534,7 +540,7 @@ button {
 }
 
 .formation-sword.is-lit {
-  opacity: .88;
+  opacity: .82;
   filter: drop-shadow(0 0 4px rgba(113, 226, 220, .7)) drop-shadow(0 0 7px rgba(89, 217, 157, .34));
   animation: swordEmerge .66s calc(.27s + var(--delay)) cubic-bezier(.14, .8, .2, 1) both;
 }
@@ -697,7 +703,7 @@ button {
   position: absolute;
   z-index: 27;
   left: 154px;
-  top: 142px;
+  top: 158px;
   width: 300px;
   height: 70px;
   overflow: visible;
@@ -720,9 +726,9 @@ button {
 }
 
 .meridian-echo {
-  stroke: rgba(113, 226, 220, .2);
-  stroke-width: 7;
-  filter: blur(4px);
+  stroke: rgba(113, 226, 220, .17);
+  stroke-width: 9;
+  filter: blur(5px);
 }
 
 .meridian-path {
@@ -742,20 +748,46 @@ button {
   transition: stroke-dasharray .72s cubic-bezier(.2, .8, .2, 1), stroke-dashoffset .72s cubic-bezier(.2, .8, .2, 1);
 }
 
+.meridian-wind {
+  stroke: rgba(219, 255, 245, .72);
+  stroke-width: 1.05;
+  stroke-dasharray: 3 11 8 16;
+  filter: drop-shadow(0 0 2px rgba(113, 226, 220, .7));
+  animation: windRun 3.6s linear infinite;
+}
+
+.meridian-thunder {
+  stroke: rgba(126, 207, 255, .9);
+  stroke-width: 1.45;
+  stroke-dasharray: 1 7 2 21;
+  opacity: calc(.2 + var(--used) * .55);
+  filter: drop-shadow(0 0 2px rgba(92, 177, 255, .9));
+  animation: thunderRun 2.4s steps(5, end) infinite;
+}
+
+.meridian-gold {
+  stroke: rgba(230, 193, 94, .82);
+  stroke-width: .9;
+  stroke-dasharray: 1 23 5 31;
+  opacity: calc(.08 + var(--used) * .34);
+  filter: drop-shadow(0 0 2px rgba(213, 181, 100, .7));
+  animation: thunderRun 4.7s linear infinite reverse;
+}
+
 .wind-thunder-wings {
   position: absolute;
   left: 0;
   top: 0;
-  width: 82px;
-  height: 38px;
+  width: 64px;
+  height: 28px;
   offset-position: 0 0;
   offset-path: path("M 8 22 C 90 8 172 58 292 28");
   offset-distance: calc(var(--used) * 100%);
   offset-anchor: 50% 50%;
   offset-rotate: 0deg;
-  opacity: .72;
+  opacity: .82;
   transform-origin: 50% 50%;
-  filter: drop-shadow(0 0 5px rgba(113, 226, 220, .5)) drop-shadow(0 0 11px rgba(94, 168, 201, .2));
+  filter: drop-shadow(0 0 4px rgba(113, 226, 220, .58)) drop-shadow(0 0 8px rgba(94, 168, 201, .28));
   transition: offset-distance .72s cubic-bezier(.2, .8, .2, 1), filter .5s ease;
 }
 
@@ -767,17 +799,38 @@ button {
   height: 100%;
   overflow: visible;
   mix-blend-mode: screen;
-  filter: hue-rotate(22deg) saturate(.72) brightness(1.04) contrast(1.08);
+  filter: hue-rotate(12deg) saturate(.9) brightness(.98) contrast(1.2);
   transform-origin: 50% 54%;
   animation: wingFlex 5.5s ease-in-out infinite;
+}
+
+.wing-veins {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke: rgba(210, 245, 255, .66);
+  stroke-width: .75;
+  stroke-linecap: round;
+  mix-blend-mode: screen;
+  filter: drop-shadow(0 0 1.5px rgba(90, 177, 255, .75));
+  animation: veinBreathe 3.4s ease-in-out infinite;
+}
+
+.wing-veins__thunder {
+  stroke: rgba(222, 187, 91, .72);
+  stroke-width: .65;
+  opacity: calc(.18 + var(--used) * .5);
 }
 
 .wing-core {
   position: absolute;
   left: 50%;
   top: 54%;
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   transform: translate(-50%, -50%) rotate(45deg);
   border: 1px solid rgba(234, 248, 238, .72);
   background: linear-gradient(135deg, var(--ward-gold), var(--moon-white) 46%, var(--nascent-cyan));
@@ -788,7 +841,7 @@ button {
   position: absolute;
   left: 50%;
   top: 52%;
-  width: 46px;
+  width: 38px;
   height: 1px;
   transform: translate(-50%, -50%);
   opacity: calc(.18 + var(--used) * .42);
@@ -798,7 +851,7 @@ button {
 }
 
 .wing-lightning--gold {
-  width: 58px;
+  width: 48px;
   transform: translate(-50%, -50%) rotate(-4deg);
   opacity: calc(.06 + var(--used) * .26);
   background: repeating-linear-gradient(90deg, transparent 0 9px, rgba(213, 181, 100, .86) 10px 12px, transparent 13px 21px);
@@ -1020,6 +1073,23 @@ button {
   0%, 82%, 100% { transform: scaleY(.94) scaleX(.98); }
   88% { transform: scaleY(1.07) scaleX(1.025); }
   93% { transform: scaleY(.98) scaleX(1); }
+}
+
+@keyframes windRun {
+  to { stroke-dashoffset: -76; }
+}
+
+@keyframes thunderRun {
+  0%, 100% { stroke-dashoffset: 0; opacity: calc(.12 + var(--used) * .28); }
+  42% { stroke-dashoffset: -38; opacity: calc(.32 + var(--used) * .58); }
+  48% { stroke-dashoffset: -41; opacity: .08; }
+  61% { stroke-dashoffset: -58; opacity: calc(.2 + var(--used) * .46); }
+}
+
+@keyframes veinBreathe {
+  0%, 78%, 100% { opacity: .46; }
+  84% { opacity: .94; }
+  90% { opacity: .58; }
 }
 
 @keyframes lightningPulse {
