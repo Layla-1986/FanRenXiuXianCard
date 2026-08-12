@@ -171,6 +171,10 @@ button {
 }
 
 .seal-card {
+  --formation-left: -22px;
+  --formation-top: 46px;
+  --formation-eye-x: 98px;
+  --formation-eye-y: 168px;
   position: relative;
   width: 480px;
   height: 270px;
@@ -361,8 +365,8 @@ button {
 .seal-formation {
   position: absolute;
   z-index: 10;
-  left: -22px;
-  top: 46px;
+  left: var(--formation-left);
+  top: var(--formation-top);
   width: 246px;
   height: 205px;
   pointer-events: none;
@@ -528,8 +532,8 @@ button {
 .formation-core {
   position: absolute;
   z-index: 4;
-  left: 103px;
-  top: 105px;
+  left: calc(var(--formation-eye-x) - var(--formation-left) - 17px);
+  top: calc(var(--formation-eye-y) - var(--formation-top) - 17px);
   width: 34px;
   height: 34px;
   border: 1px solid rgba(213, 181, 100, .45);
@@ -595,8 +599,8 @@ button {
 .quota-eye {
   position: absolute;
   z-index: 24;
-  left: 18px;
-  top: 140px;
+  left: calc(var(--formation-eye-x) - 80px);
+  top: calc(var(--formation-eye-y) - 46px);
   display: flex;
   align-items: center;
   justify-content: center;
