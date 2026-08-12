@@ -176,6 +176,11 @@ button {
   --formation-eye-x: 98px;
   --formation-eye-y: 168px;
   --quota-optical-y: -5px;
+  --spirit-highlight: #edf9ed;
+  --spirit-jade: #75d9b6;
+  --spirit-gold: #d7bd70;
+  --spirit-shadow: #123f39;
+  --spirit-glow: rgba(94, 221, 181, .38);
   position: relative;
   width: 480px;
   height: 270px;
@@ -509,8 +514,8 @@ button {
   position: absolute;
   inset: 0;
   clip-path: polygon(50% 0, 100% 18%, 72% 88%, 50% 100%, 28% 88%, 0 18%);
-  background: linear-gradient(90deg, rgba(20, 80, 65, .36), rgba(234, 248, 238, .9) 48%, rgba(89, 217, 157, .44) 55%, rgba(4, 20, 22, .3));
-  box-shadow: 0 0 8px rgba(113, 226, 220, .44);
+  background: linear-gradient(90deg, rgba(20, 80, 65, .36), var(--spirit-highlight) 48%, var(--spirit-jade) 58%, rgba(4, 20, 22, .3));
+  box-shadow: 0 0 8px var(--spirit-glow);
 }
 
 .formation-sword::after {
@@ -526,7 +531,7 @@ button {
 
 .formation-sword.is-lit {
   opacity: .82;
-  filter: drop-shadow(0 0 4px rgba(113, 226, 220, .7)) drop-shadow(0 0 7px rgba(89, 217, 157, .34));
+  filter: drop-shadow(0 0 3px var(--spirit-highlight)) drop-shadow(0 0 7px var(--spirit-glow));
   animation: swordEmerge .66s calc(.27s + var(--delay)) cubic-bezier(.14, .8, .2, 1) both;
 }
 
@@ -720,8 +725,24 @@ button {
   opacity: .44;
 }
 
+.seal-card[data-used-state="warning"] {
+  --spirit-highlight: #e8efcf;
+  --spirit-jade: #79bf8c;
+  --spirit-gold: #d3ad59;
+  --spirit-shadow: #3d4b31;
+  --spirit-glow: rgba(190, 177, 89, .34);
+}
+
 .seal-card[data-used-state="danger"] .formation-ring--outer {
   opacity: .28;
+}
+
+.seal-card[data-used-state="danger"] {
+  --spirit-highlight: #dbc889;
+  --spirit-jade: #778d62;
+  --spirit-gold: #b88842;
+  --spirit-shadow: #493820;
+  --spirit-glow: rgba(177, 128, 57, .28);
 }
 
 .demo-console {
