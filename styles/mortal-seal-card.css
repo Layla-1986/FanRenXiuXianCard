@@ -175,6 +175,7 @@ button {
   --formation-top: 46px;
   --formation-eye-x: 98px;
   --formation-eye-y: 168px;
+  --quota-optical-y: -5px;
   position: relative;
   width: 480px;
   height: 270px;
@@ -600,7 +601,7 @@ button {
   position: absolute;
   z-index: 24;
   left: calc(var(--formation-eye-x) - 80px);
-  top: calc(var(--formation-eye-y) - 46px);
+  top: calc(var(--formation-eye-y) - 46px + var(--quota-optical-y));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -626,7 +627,7 @@ button {
   display: block;
   color: var(--moon-white);
   font-family: "Bodoni 72", Didot, Georgia, serif;
-  font-size: 42px;
+  font-size: 38px;
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.06em;
