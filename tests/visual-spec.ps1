@@ -66,6 +66,8 @@ Assert-True ($html.Contains('id="unlockButton"')) 'Missing unlock control'
 Assert-True (($html | Select-String 'data-used=' -AllMatches).Matches.Count -eq 3) 'Exactly three quota demonstration states are required'
 $mindClearCopy = ([char]0x5FF5) + ([char]0x5934) + ([char]0x901A) + ([char]0x8FBE)
 $stewMortalWorldCopy = ([char]0x7096) + ([char]0x716E) + ([char]0x7EA2) + ([char]0x5C18)
+$askSpringBreezeCopy = ([char]0x9047) + ([char]0x4E8B) + ([char]0x4E0D) + ([char]0x51B3) + ([char]0xFF0C) + ([char]0x53EF) + ([char]0x95EE) + ([char]0x6625) + ([char]0x98CE)
+Assert-True ($html.Contains($askSpringBreezeCopy)) 'Account caption must use the ask-the-spring-breeze motto'
 Assert-True (($html | Select-String 'class="mortal-motto"' -AllMatches).Matches.Count -eq 2) 'Card footer must contain exactly two mortal-world motto inscriptions'
 Assert-True ($html.Contains($mindClearCopy)) 'Card footer must retain the classic mind-clear motto'
 Assert-True ($html.Contains($stewMortalWorldCopy)) 'Card footer must retain the playful stew-the-mortal-world motto'
@@ -132,6 +134,7 @@ Assert-True ($css.Contains('left: calc(var(--formation-eye-x) - var(--formation-
 Assert-True ($css.Contains('top: calc(var(--formation-eye-y) - var(--formation-top) - 17px)')) 'Formation core must share the quota vertical center'
 Assert-True ($css.Contains('.ledger-item--cycle strong,') -and $css.Contains('.ledger-item--balance strong {')) 'Cycle use and account balance must share one value scale rule'
 Assert-True ($css.Contains('.mortal-motto {')) 'Mortal-world motto inscriptions must have a dedicated style rule'
+Assert-True ([regex]::IsMatch($css, '(?s)\.card-foot\s*\{.*?justify-content:\s*center;.*?gap:\s*1\.2em;')) 'Mortal-world motto inscriptions must gather at the card center with restrained separation'
 Assert-True ($css.Contains('font-family: STKaiti, KaiTi, serif')) 'Mortal-world motto inscriptions must use the restrained calligraphic stack'
 Assert-True ($css.Contains('color: rgba(117, 217, 182, .46)')) 'Mortal-world motto inscriptions must stay below primary quota data'
 Assert-True ($css.Contains('letter-spacing: .18em')) 'Mortal-world motto inscriptions must use spacious seal-scroll tracking'
