@@ -596,7 +596,7 @@ button {
   position: absolute;
   z-index: 24;
   left: 18px;
-  top: 92px;
+  top: 140px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -622,7 +622,7 @@ button {
   display: block;
   color: var(--moon-white);
   font-family: "Bodoni 72", Didot, Georgia, serif;
-  font-size: 56px;
+  font-size: 42px;
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.06em;
