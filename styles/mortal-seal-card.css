@@ -174,7 +174,8 @@ button {
   --formation-left: -22px;
   --formation-top: 46px;
   --formation-eye-x: 98px;
-  --formation-eye-y: 168px;
+  --content-axis-y: 168px;
+  --formation-eye-y: var(--content-axis-y);
   --quota-optical-y: -5px;
   --spirit-highlight: #edf9ed;
   --spirit-jade: #75d9b6;
@@ -656,7 +657,8 @@ button {
   position: absolute;
   z-index: 31;
   right: 18px;
-  top: 82px;
+  top: var(--content-axis-y);
+  transform: translateY(-50%);
   display: grid;
   justify-items: stretch;
   width: 136px;
@@ -669,7 +671,7 @@ button {
   box-shadow: inset 0 1px rgba(234, 248, 238, .035), -10px 10px 28px rgba(0, 0, 0, .08);
   backdrop-filter: blur(1.5px);
   text-shadow: 0 2px 7px rgba(0, 0, 0, .9);
-  animation: quotaReveal .68s 1.04s ease-out both;
+  animation: ledgerReveal .68s 1.04s ease-out both;
 }
 
 .ledger-item {
@@ -720,16 +722,21 @@ button {
 .card-foot {
   position: absolute;
   z-index: 32;
-  left: 190px;
+  left: 34px;
   right: 18px;
   bottom: 10px;
   display: flex;
   justify-content: space-between;
-  color: rgba(197, 224, 213, .42);
   font-size: 7px;
-  letter-spacing: .04em;
   text-shadow: 0 1px 5px rgba(0, 0, 0, .9);
   animation: quotaReveal .62s 1.14s ease-out both;
+}
+
+.mortal-motto {
+  color: rgba(117, 217, 182, .46);
+  font-family: STKaiti, KaiTi, serif;
+  font-size: 8px;
+  letter-spacing: .18em;
 }
 
 .seal-card[data-used-state="warning"] .formation-ring--outer {
@@ -844,6 +851,11 @@ button {
 @keyframes quotaReveal {
   from { opacity: 0; transform: translateY(5px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes ledgerReveal {
+  from { opacity: 0; transform: translateY(calc(-50% + 5px)); }
+  to { opacity: 1; transform: translateY(-50%); }
 }
 
 @keyframes swordEmerge {
@@ -963,12 +975,18 @@ button {
   .portrait-scene,
   .seal-formation,
   .quota-eye,
-  .quota-ledger,
   .card-foot {
     opacity: 1;
     clip-path: none;
     filter: none;
     transform: none;
+  }
+
+  .quota-ledger {
+    opacity: 1;
+    clip-path: none;
+    filter: none;
+    transform: translateY(-50%);
   }
 
   .portrait-scene {
