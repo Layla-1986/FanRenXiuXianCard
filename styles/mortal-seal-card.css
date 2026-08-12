@@ -370,26 +370,6 @@ button {
   animation: formationReveal 1.15s .16s cubic-bezier(.15, .78, .2, 1) both;
 }
 
-.formation-bloom {
-  position: absolute;
-  z-index: 0;
-  left: -4px;
-  top: 7px;
-  width: 240px;
-  height: 172px;
-  opacity: .11;
-  mix-blend-mode: screen;
-  background-image: url("../assets/dageng-sword-array-v2.png");
-  background-position: 50% 48%;
-  background-size: 260px 174px;
-  background-repeat: no-repeat;
-  filter: hue-rotate(18deg) saturate(.62) brightness(.86) contrast(1.08);
-  -webkit-mask-image: radial-gradient(ellipse, #000 30%, rgba(0, 0, 0, .7) 55%, transparent 79%);
-  mask-image: radial-gradient(ellipse, #000 30%, rgba(0, 0, 0, .7) 55%, transparent 79%);
-  transform: rotate(-8deg);
-  clip-path: inset(42% 0 0 round 50%);
-}
-
 .formation-plane {
   position: absolute;
   z-index: 2;
@@ -782,13 +762,11 @@ button {
   animation: quotaReveal .62s 1.14s ease-out both;
 }
 
-.seal-card[data-used-state="warning"] .formation-ring--outer,
-.seal-card[data-used-state="warning"] .formation-bloom {
+.seal-card[data-used-state="warning"] .formation-ring--outer {
   opacity: .44;
 }
 
-.seal-card[data-used-state="danger"] .formation-ring--outer,
-.seal-card[data-used-state="danger"] .formation-bloom {
+.seal-card[data-used-state="danger"] .formation-ring--outer {
   opacity: .28;
 }
 
