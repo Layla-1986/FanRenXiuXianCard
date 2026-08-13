@@ -73,11 +73,15 @@ Assert-True ($html.Contains($mindClearCopy)) 'Card footer must retain the classi
 Assert-True ($html.Contains($stewMortalWorldCopy)) 'Card footer must retain the playful stew-the-mortal-world motto'
 
 Assert-True (($html | Select-String 'class="formation-sword"' -AllMatches).Matches.Count -eq 12) 'Formation must expose twelve fixed sword slots'
+Assert-True ([regex]::IsMatch($html, 'data-sword-index="0"[^>]*--angle:\s*103deg;[^>]*--radius:\s*61px;')) 'Left outer sword must begin the tightened lower horseshoe arc'
+Assert-True ([regex]::IsMatch($html, 'data-sword-index="5"[^>]*--angle:\s*173deg;[^>]*--radius:\s*72px;')) 'Left inner sword must anchor the formation eye'
+Assert-True ([regex]::IsMatch($html, 'data-sword-index="6"[^>]*--angle:\s*187deg;[^>]*--radius:\s*72px;')) 'Right inner sword must mirror the formation eye anchor'
+Assert-True ([regex]::IsMatch($html, 'data-sword-index="11"[^>]*--angle:\s*257deg;[^>]*--radius:\s*61px;')) 'Right outer sword must close the tightened lower horseshoe arc'
 Assert-True ($html.Contains('class="formation-ring formation-ring--outer"')) 'Missing outer perspective ring'
 Assert-True ($html.Contains('class="formation-ring formation-ring--middle"')) 'Missing middle perspective ring'
 Assert-True ($html.Contains('class="formation-ring formation-ring--inner"')) 'Missing inner perspective ring'
 Assert-True (-not $html.Contains('class="qingzhu-sword"')) 'The isolated Qingzhu main sword must be removed'
-Assert-True ($html.Contains('class="stray-sword stray-sword--one"')) 'Missing out-of-ring sword accent'
+Assert-True (-not $html.Contains('class="stray-sword')) 'Decorative stray swords must not inflate the quota sword count'
 Assert-True (-not $html.Contains('assets/wind-thunder-wings-v2.png')) 'Wind-Thunder Wings texture must no longer render'
 
 Assert-True ($css.Contains('--abyss-ink: #041416')) 'Missing abyss-ink token'
@@ -112,6 +116,11 @@ Assert-True ($css.Contains('.seal-card[data-used-state="danger"] {')) 'Danger st
 Assert-True ($css.Contains('var(--spirit-highlight) 48%')) 'Lit sword material must consume the shared spirit highlight'
 Assert-True ($css.Contains('var(--spirit-jade) 58%')) 'Lit sword material must consume the shared jade color'
 Assert-True ($css.Contains('drop-shadow(0 0 7px var(--spirit-glow))')) 'Lit sword glow must consume the shared spirit glow'
+Assert-True ($css.Contains('--sword-energy: 0')) 'Each sword slot must expose continuous quota energy'
+Assert-True ($css.Contains('opacity: calc(var(--sword-energy) * .9)')) 'Only quota-bearing swords may remain visibly modelled'
+Assert-True ($css.Contains('.formation-sword::after')) 'Qingzhu sword must retain a separate guard detail layer'
+Assert-True ($css.Contains('repeating-linear-gradient(180deg')) 'Qingzhu sword spine must expose bamboo-joint modelling'
+Assert-True (-not $css.Contains('.stray-sword')) 'Decorative stray sword styling must be removed'
 Assert-True ($css.Contains('font-family: Baskerville, "Times New Roman", Georgia, serif')) 'Quota numeral must use the restrained classical serif stack'
 Assert-True ($css.Contains('background-clip: text')) 'Quota numeral must render its jade material inside the glyphs'
 Assert-True ($css.Contains('-webkit-text-fill-color: transparent')) 'Quota numeral must expose the jade gradient instead of flat white'
@@ -150,11 +159,38 @@ Assert-True ([regex]::IsMatch($css, '(?s)@media \(prefers-reduced-motion: reduce
 
 Assert-True ($js.Contains('function setUsed(value)')) 'Missing reusable setUsed interface'
 Assert-True ($js.Contains('Number.isFinite(Number(value))')) 'setUsed must guard non-finite input'
-Assert-True ($js.Contains('Math.round(remaining * 12)')) 'Lit sword count must derive from remaining quota'
-Assert-True ($js.Contains("sword.classList.toggle('is-lit', index < litSwordCount)")) 'Sword slots must update from the derived count'
+Assert-True ($js.Contains('const swordPairs = [[5, 6], [4, 7], [3, 8], [2, 9], [1, 10], [0, 11]]')) 'Sword energy must unfold symmetrically from the formation eye'
+Assert-True ($js.Contains('const pairEnergy = remaining * swordPairs.length')) 'Sword pair energy must derive continuously from remaining quota'
+Assert-True ($js.Contains("sword.style.setProperty('--sword-energy', energy.toFixed(3))")) 'Each mirrored sword must receive continuous quota energy'
+Assert-True ($js.Contains("sword.classList.toggle('is-lit', energy > 0)")) 'Sword slots must retain a semantic lit state when they carry quota energy'
 Assert-True ($js.Contains('setUsed(Number(button.dataset.used))')) 'Demo controls must use the public updater'
 Assert-True ($js.Contains("unlockButton.addEventListener('click'")) 'Unlock button behavior must remain interactive'
 Assert-True ($js.Contains('window.setUsed = setUsed')) 'setUsed must remain available to future integrations'
+
+$swordPairs = @(@(5, 6), @(4, 7), @(3, 8), @(2, 9), @(1, 10), @(0, 11))
+foreach ($state in @(
+    @{ Used = .20; ExpectedVisible = 10 },
+    @{ Used = .55; ExpectedVisible = 6 },
+    @{ Used = .85; ExpectedVisible = 2 }
+)) {
+    $remaining = 1 - $state.Used
+    $pairEnergy = $remaining * $swordPairs.Count
+    $energies = @(0.0) * 12
+
+    for ($pairIndex = 0; $pairIndex -lt $swordPairs.Count; $pairIndex++) {
+        $energy = [Math]::Min(1.0, [Math]::Max(0.0, $pairEnergy - $pairIndex))
+        foreach ($swordIndex in $swordPairs[$pairIndex]) { $energies[$swordIndex] = $energy }
+    }
+
+    $visible = @($energies | Where-Object { $_ -gt 0 }).Count
+    $energyEquivalent = ($energies | Measure-Object -Sum).Sum
+    Assert-True ($visible -eq $state.ExpectedVisible) "Used $($state.Used) must illuminate $($state.ExpectedVisible) symmetric sword slots"
+    Assert-True ([Math]::Abs($energyEquivalent - ($remaining * 12)) -lt .0001) "Used $($state.Used) sword energy must exactly equal remaining quota"
+    for ($pairIndex = 0; $pairIndex -lt $swordPairs.Count; $pairIndex++) {
+        $pair = $swordPairs[$pairIndex]
+        Assert-True ([Math]::Abs($energies[$pair[0]] - $energies[$pair[1]]) -lt .0001) "Used $($state.Used) sword pair $pairIndex must stay mirrored"
+    }
+}
 
 if ($failures.Count -gt 0) {
     $failures | ForEach-Object { Write-Host "FAIL: $_" -ForegroundColor Red }

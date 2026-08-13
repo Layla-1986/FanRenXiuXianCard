@@ -494,17 +494,18 @@ button {
 }
 
 .formation-swords--lower-arc {
-  clip-path: inset(47% -36px -44px -36px);
-  filter: drop-shadow(0 7px 10px rgba(89, 217, 157, .12));
+  clip-path: inset(51% -30px -40px -30px);
+  filter: drop-shadow(0 7px 10px rgba(89, 217, 157, .14));
 }
 
 .formation-sword {
+  --sword-energy: 0;
   position: absolute;
-  left: calc(50% - 2px);
-  top: calc(50% - var(--radius) - 34px);
-  width: 4px;
-  height: 34px;
-  opacity: .05;
+  left: calc(50% - 2.5px);
+  top: calc(50% - var(--radius) - var(--length));
+  width: 5px;
+  height: var(--length);
+  opacity: calc(var(--sword-energy) * .9);
   transform: rotate(var(--angle));
   transform-origin: 50% calc(100% + var(--radius));
   transition: opacity .55s ease, filter .55s ease;
@@ -514,25 +515,30 @@ button {
   content: "";
   position: absolute;
   inset: 0;
-  clip-path: polygon(50% 0, 100% 18%, 72% 88%, 50% 100%, 28% 88%, 0 18%);
-  background: linear-gradient(90deg, rgba(20, 80, 65, .36), var(--spirit-highlight) 48%, var(--spirit-jade) 58%, rgba(4, 20, 22, .3));
-  box-shadow: 0 0 8px var(--spirit-glow);
+  clip-path: polygon(50% 0, 96% 17%, 72% 86%, 58% 94%, 50% 100%, 42% 94%, 28% 86%, 4% 17%);
+  background:
+    repeating-linear-gradient(180deg, transparent 0 7px, rgba(213, 181, 100, .46) 7px 7.7px, transparent 7.7px 12px),
+    linear-gradient(90deg, rgba(7, 42, 36, .78), rgba(20, 80, 65, .36) 29%, var(--spirit-highlight) 48%, var(--spirit-jade) 58%, rgba(5, 42, 34, .74));
+  box-shadow: inset 1px 0 rgba(234, 248, 238, .18), inset -1px 0 rgba(4, 20, 22, .42), 0 0 8px var(--spirit-glow);
 }
 
 .formation-sword::after {
   content: "";
   position: absolute;
-  left: -3px;
-  bottom: 2px;
-  width: 10px;
-  height: 2px;
+  left: -3.5px;
+  bottom: 3px;
+  width: 12px;
+  height: 2.5px;
   border-radius: 50%;
-  background: linear-gradient(90deg, transparent, var(--ward-gold), transparent);
+  background: linear-gradient(90deg, transparent, var(--spirit-gold) 27% 73%, transparent);
+  box-shadow: 0 0 4px color-mix(in srgb, var(--spirit-gold) 46%, transparent);
 }
 
 .formation-sword.is-lit {
-  opacity: .82;
   filter: drop-shadow(0 0 3px var(--spirit-highlight)) drop-shadow(0 0 7px var(--spirit-glow));
+}
+
+.formation-sword.is-lit::before {
   animation: swordEmerge .66s calc(.27s + var(--delay)) cubic-bezier(.14, .8, .2, 1) both;
 }
 
@@ -562,45 +568,6 @@ button {
 .formation-core::after {
   inset: 7px;
   border-color: rgba(213, 181, 100, .34);
-}
-
-.stray-sword {
-  position: absolute;
-  z-index: 3;
-  width: 5px;
-  height: 54px;
-  opacity: .36;
-  filter: drop-shadow(0 0 5px rgba(113, 226, 220, .28));
-}
-
-.stray-sword::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  clip-path: polygon(50% 0, 100% 14%, 69% 86%, 50% 100%, 31% 86%, 0 14%);
-  background: linear-gradient(90deg, rgba(89, 217, 157, .15), rgba(234, 248, 238, .75), rgba(89, 217, 157, .26));
-}
-
-.stray-sword--one {
-  left: 12px;
-  top: 50px;
-  transform: rotate(-39deg);
-}
-
-.stray-sword--two {
-  left: 205px;
-  top: 107px;
-  height: 66px;
-  opacity: .24;
-  transform: rotate(57deg);
-}
-
-.stray-sword--three {
-  left: 48px;
-  top: 161px;
-  height: 47px;
-  opacity: .18;
-  transform: rotate(-112deg);
 }
 
 .quota-eye {
@@ -867,9 +834,9 @@ button {
 }
 
 @keyframes swordEmerge {
-  0% { opacity: 0; filter: blur(2px); }
-  65% { opacity: 1; }
-  100% { opacity: .88; filter: drop-shadow(0 0 4px rgba(113, 226, 220, .7)) drop-shadow(0 0 7px rgba(89, 217, 157, .34)); }
+  0% { filter: blur(2px) brightness(.58); transform: scaleY(.52); transform-origin: 50% 100%; }
+  65% { filter: brightness(1.18); }
+  100% { filter: drop-shadow(0 0 4px rgba(113, 226, 220, .7)) drop-shadow(0 0 7px rgba(89, 217, 157, .34)); transform: scaleY(1); transform-origin: 50% 100%; }
 }
 
 @keyframes ringDrift {
