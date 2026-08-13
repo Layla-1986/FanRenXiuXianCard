@@ -71,6 +71,21 @@ def _quota_values(snapshot: Mapping[str, Any]) -> dict[str, Any]:
     }
 
 
+def _has_any_quota_value(snapshot: Mapping[str, Any]) -> bool:
+    """Distinguish an unrecognized Models page from a useful partial reading."""
+    values = _quota_values(snapshot)
+    return any(
+        value is not None
+        for value in (
+            values["aiCredits"],
+            values["gemini"]["weeklyRemaining"],
+            values["gemini"]["fiveHourRemaining"],
+            values["claudeGpt"]["weeklyRemaining"],
+            values["claudeGpt"]["fiveHourRemaining"],
+        )
+    )
+
+
 class QuotaStore:
     """Stores only the public quota contract, never raw UI Automation text."""
 
@@ -201,7 +216,8 @@ class UiAutomationCollector:
             return None
         if not isinstance(raw, Mapping):
             return None
-        return _quota_values(raw)
+        snapshot = _quota_values(raw)
+        return snapshot if _has_any_quota_value(snapshot) else None
 
 
 class PollingService:

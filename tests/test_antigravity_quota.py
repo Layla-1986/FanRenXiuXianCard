@@ -188,6 +188,38 @@ class CollectorTest(unittest.TestCase):
         self.assertIsNone(UiAutomationCollector(runner=lambda _: "").collect_once())
         self.assertIsNone(UiAutomationCollector(runner=lambda _: "not-json").collect_once())
 
+    def test_all_null_collector_shape_is_absent_and_preserves_prior_fresh_snapshot(self):
+        """Removing all-null rejection would replace a real cached reading with page-miss nulls."""
+        empty_reading = {
+            "aiCredits": None,
+            "gemini": {"weeklyRemaining": None, "fiveHourRemaining": None},
+            "claudeGpt": {"weeklyRemaining": None, "fiveHourRemaining": None},
+        }
+        collector = UiAutomationCollector(runner=lambda _: json.dumps(empty_reading))
+
+        self.assertIsNone(collector.collect_once())
+
+        with tempfile.TemporaryDirectory() as directory:
+            store = QuotaStore(Path(directory) / "cache.json")
+            store.record(sample_snapshot(aiCredits=250), BASE_TIME)
+            PollingService(store, collector, interval_seconds=60, now=lambda: BASE_TIME + timedelta(minutes=1)).poll_once()
+
+            payload = store.public_payload(BASE_TIME + timedelta(minutes=1))
+            self.assertEqual(250, payload["aiCredits"])
+            self.assertEqual("pending", payload["status"])
+
+    def test_collector_keeps_partial_reading_when_one_value_is_valid(self):
+        """Treating every incomplete collector response as absent would discard useful partial data."""
+        partial_reading = {
+            "aiCredits": None,
+            "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": None},
+            "claudeGpt": {"weeklyRemaining": None, "fiveHourRemaining": None},
+        }
+
+        snapshot = UiAutomationCollector(runner=lambda _: json.dumps(partial_reading)).collect_once()
+
+        self.assertEqual(75, snapshot["gemini"]["weeklyRemaining"])
+
     def test_polling_service_records_a_success_then_retains_cache_on_absence(self):
         with tempfile.TemporaryDirectory() as directory:
             store = QuotaStore(Path(directory) / "cache.json")
