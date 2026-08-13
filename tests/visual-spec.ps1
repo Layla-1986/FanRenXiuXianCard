@@ -63,6 +63,15 @@ Assert-True (-not $html.Contains($fiveHourCopy)) 'Obsolete five-hour quota copy 
 Assert-True ($html.Contains('class="ledger-divider"')) 'Missing restrained ledger divider'
 Assert-True ($html.Contains('id="used"')) 'Missing used quota label target'
 Assert-True ($html.Contains('id="unlockButton"')) 'Missing unlock control'
+Assert-True ($html.Contains('id="antigravityToggle"')) 'Missing Antigravity seal page control'
+Assert-True ($html.Contains('class="antigravity-page"')) 'Missing Antigravity card page'
+Assert-True ($html.Contains('id="agCredits"')) 'Missing Available AI Credits target'
+Assert-True ($html.Contains('id="agGeminiWeekly"')) 'Missing Gemini weekly quota target'
+Assert-True ($html.Contains('id="agGeminiFiveHour"')) 'Missing Gemini five-hour quota target'
+Assert-True ($html.Contains('id="agClaudeWeekly"')) 'Missing Claude and GPT weekly quota target'
+Assert-True ($html.Contains('id="agClaudeFiveHour"')) 'Missing Claude and GPT five-hour quota target'
+Assert-True ($html.Contains('id="agSyncStatus"')) 'Missing Antigravity sync status target'
+Assert-True ($html.Contains('id="agSyncedAt"')) 'Missing Antigravity sync time target'
 Assert-True (($html | Select-String 'data-used=' -AllMatches).Matches.Count -eq 3) 'Exactly three quota demonstration states are required'
 $mindClearCopy = ([char]0x5FF5) + ([char]0x5934) + ([char]0x901A) + ([char]0x8FBE)
 $stewMortalWorldCopy = ([char]0x7096) + ([char]0x716E) + ([char]0x7EA2) + ([char]0x5C18)
@@ -153,6 +162,11 @@ Assert-True (-not $css.Contains('@keyframes thunderRun')) 'Obsolete thunder anim
 Assert-True ($css.Contains('@keyframes sealAwaken')) 'Missing one-shot awakening sequence'
 Assert-True ($css.Contains('animation: sealAwaken 1.75s')) 'Awakening sequence must stay under 1.8 seconds'
 Assert-True ($css.Contains('@media (prefers-reduced-motion: reduce)')) 'Missing reduced-motion treatment'
+Assert-True ($css.Contains('.antigravity-page {')) 'Antigravity page must have a dedicated visual layer'
+Assert-True ($css.Contains('.model-ledger--gemini')) 'Gemini model ledger must have a dedicated layer'
+Assert-True ($css.Contains('.model-ledger--claude')) 'Claude and GPT model ledger must have a dedicated layer'
+Assert-True ($css.Contains('@keyframes scrollPageIn')) 'Page switch must use a short scroll reveal'
+Assert-True (-not $css.Contains('rotateY(')) 'Card page switch must not flip the card'
 Assert-True ($css.Contains('animation: none !important')) 'Reduced-motion mode must stop continuous motion'
 Assert-True ($css.Contains('transition-duration: .001ms !important')) 'Reduced-motion mode must suppress state-transition movement'
 Assert-True ([regex]::IsMatch($css, '(?s)@media \(prefers-reduced-motion: reduce\).*?\.quota-ledger\s*\{.*?transform:\s*translateY\(-50%\);')) 'Reduced-motion mode must preserve quota ledger alignment'
@@ -166,6 +180,10 @@ Assert-True ($js.Contains("sword.classList.toggle('is-lit', energy > 0)")) 'Swor
 Assert-True ($js.Contains('setUsed(Number(button.dataset.used))')) 'Demo controls must use the public updater'
 Assert-True ($js.Contains("unlockButton.addEventListener('click'")) 'Unlock button behavior must remain interactive'
 Assert-True ($js.Contains('window.setUsed = setUsed')) 'setUsed must remain available to future integrations'
+Assert-True ($js.Contains("fetch('/api/antigravity-quota'")) 'Antigravity page must use the local read-only API'
+Assert-True ($js.Contains("sessionStorage.setItem('quota-card-page'")) 'Page preference must be scoped to the browser session'
+Assert-True ($js.Contains("widget.dataset.page = page")) 'Page switch must use the stable card state root'
+Assert-True ($js.Contains("status === 'expired'")) 'Expired Antigravity data must have an explicit rendering path'
 
 $swordPairs = @(@(5, 6), @(4, 7), @(3, 8), @(2, 9), @(1, 10), @(0, 11))
 foreach ($state in @(
