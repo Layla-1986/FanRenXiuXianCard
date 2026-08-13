@@ -19,6 +19,8 @@ python antigravity_quota.py --port 8765
 http://127.0.0.1:8765/original-artifact-refined.html
 ```
 
+也可以运行 `start-quota-card.cmd`。它会先启动服务并等待本地 API 返回 HTTP 200，再打开浏览器。
+
 右上角“引”字反重力印用于切换页面；旁边仍是原有解锁按钮。页面每 60 秒读取一次本地接口。
 
 ## Antigravity 同步条件
@@ -35,6 +37,7 @@ http://127.0.0.1:8765/original-artifact-refined.html
 - 不读取 Cookie、令牌、邮箱、账号标识、聊天内容或网络流量。
 - 不保存完整辅助功能树或窗口文字。
 - 缓存与 API 只包含五项额度、同步时间、来源和状态。
+- 静态服务只提供额度卡页面、其 CSS/JavaScript 以及必需背景图片；仓库中的其他文件不会通过该服务暴露。
 
 接口：
 

@@ -20,6 +20,13 @@ from urllib.parse import urlparse
 SOURCE = "antigravity-ui-automation"
 STALE_AFTER = timedelta(minutes=10)
 EXPIRED_AFTER = timedelta(hours=24)
+STATIC_FILES = {
+    "/": "original-artifact-refined.html",
+    "/original-artifact-refined.html": "original-artifact-refined.html",
+    "/styles/mortal-seal-card.css": "styles/mortal-seal-card.css",
+    "/scripts/quota-card.js": "scripts/quota-card.js",
+    "/assets/hanli-nangong-background.png": "assets/hanli-nangong-background.png",
+}
 # Credits are an account balance, rather than a percentage.  This cap rejects
 # obviously corrupt automation values without imposing a percentage limit.
 MAX_AI_CREDITS = 1_000_000_000
@@ -273,7 +280,8 @@ def start_server(
             super().__init__(*args, directory=str(root), **kwargs)
 
         def do_GET(self) -> None:  # noqa: N802 - required HTTP handler name
-            if urlparse(self.path).path == "/api/antigravity-quota":
+            request_path = urlparse(self.path).path
+            if request_path == "/api/antigravity-quota":
                 body = json.dumps(store.public_payload(clock()), ensure_ascii=False).encode("utf-8")
                 self.send_response(HTTPStatus.OK)
                 self.send_header("Content-Type", "application/json; charset=utf-8")
@@ -282,6 +290,13 @@ def start_server(
                 self.end_headers()
                 self.wfile.write(body)
                 return
+            asset = STATIC_FILES.get(request_path)
+            if asset is None:
+                self.send_error(HTTPStatus.NOT_FOUND)
+                return
+            # SimpleHTTPRequestHandler performs content-type/range handling, but only after
+            # the URL has been mapped to this explicit card asset allowlist.
+            self.path = f"/{asset}"
             super().do_GET()
 
         def log_message(self, format: str, *args: object) -> None:

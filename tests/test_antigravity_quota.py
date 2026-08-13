@@ -162,8 +162,114 @@ class LocalApiTest(unittest.TestCase):
         with self.assertRaises(ValueError):
             start_server(self.store, static_root=Path.cwd(), host="0.0.0.0", port=0)
 
+    def test_static_host_allows_only_the_card_and_its_required_assets(self):
+        host, port = self.server.server_address
+        for path in (
+            "/original-artifact-refined.html",
+            "/styles/mortal-seal-card.css",
+            "/scripts/quota-card.js",
+            "/assets/hanli-nangong-background.png",
+        ):
+            connection = HTTPConnection(host, port, timeout=2)
+            connection.request("GET", path)
+            response = connection.getresponse()
+            self.assertEqual(200, response.status, path)
+            response.read()
+            connection.close()
+
+        for path in ("/README.md", "/tests/test_antigravity_quota.py", "/.git/config"):
+            connection = HTTPConnection(host, port, timeout=2)
+            connection.request("GET", path)
+            self.assertEqual(404, connection.getresponse().status, path)
+            connection.close()
+
 
 class CollectorTest(unittest.TestCase):
+    def _collect_fixture(self, fixture):
+        """Exercise the PowerShell parser with synthetic, quota-only UIA controls."""
+        with tempfile.TemporaryDirectory() as directory:
+            fixture_path = Path(directory) / "quota-fixture.json"
+            fixture_path.write_text(json.dumps(fixture), encoding="utf-8")
+            completed = subprocess.run(
+                [
+                    "powershell.exe",
+                    "-NoLogo",
+                    "-NoProfile",
+                    "-NonInteractive",
+                    "-ExecutionPolicy",
+                    "Bypass",
+                    "-File",
+                    str(Path(__file__).resolve().parents[1] / "scripts" / "collect_antigravity_quota.ps1"),
+                    "-FixturePath",
+                    str(fixture_path),
+                ],
+                capture_output=True,
+                text=True,
+                encoding="utf-8",
+                check=False,
+            )
+        self.assertEqual(0, completed.returncode, completed.stderr)
+        return json.loads(completed.stdout)
+
+    def test_powershell_fixture_extracts_five_english_models_values(self):
+        """Changing local label/value parsing would fail to extract a complete Models-page fixture."""
+        fixture = {
+            "modelsPage": True,
+            "controls": [
+                {"name": "Model Quota", "top": 0, "left": 0},
+                {"name": "Available AI Credits", "top": 20, "left": 0},
+                {"name": "1,250", "top": 20, "left": 180},
+                {"name": "Gemini Models", "top": 80, "left": 0},
+                {"name": "Weekly quota", "top": 100, "left": 0},
+                {"name": "75%", "top": 100, "left": 180},
+                {"name": "5-hour quota", "top": 125, "left": 0},
+                {"name": "25%", "top": 125, "left": 180},
+                {"name": "Claude and GPT models", "top": 180, "left": 0},
+                {"name": "Weekly quota", "top": 200, "left": 0},
+                {"name": "60%", "top": 200, "left": 180},
+                {"name": "5-hour quota", "top": 225, "left": 0},
+                {"name": "5%", "top": 225, "left": 180},
+            ],
+        }
+
+        self.assertEqual(
+            {
+                "aiCredits": 1250,
+                "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": 25},
+                "claudeGpt": {"weeklyRemaining": 60, "fiveHourRemaining": 5},
+            },
+            self._collect_fixture(fixture),
+        )
+
+    def test_powershell_fixture_rejects_negative_decimal_and_out_of_range_numbers(self):
+        """Weak numeric boundaries would turn -5 or 12.5 into a false quota value."""
+        fixture = {
+            "modelsPage": True,
+            "controls": [
+                {"name": "Model Quota", "top": 0, "left": 0},
+                {"name": "Available AI Credits", "top": 20, "left": 0},
+                {"name": "-5", "top": 20, "left": 180},
+                {"name": "Gemini Models", "top": 80, "left": 0},
+                {"name": "Weekly quota", "top": 100, "left": 0},
+                {"name": "12.5%", "top": 100, "left": 180},
+                {"name": "5-hour quota", "top": 125, "left": 0},
+                {"name": "-1%", "top": 125, "left": 180},
+                {"name": "Claude and GPT models", "top": 180, "left": 0},
+                {"name": "Weekly quota", "top": 200, "left": 0},
+                {"name": "1000%", "top": 200, "left": 180},
+                {"name": "5-hour quota", "top": 225, "left": 0},
+                {"name": "12.5", "top": 225, "left": 180},
+            ],
+        }
+
+        self.assertEqual(
+            {
+                "aiCredits": None,
+                "gemini": {"weeklyRemaining": None, "fiveHourRemaining": None},
+                "claudeGpt": {"weeklyRemaining": None, "fiveHourRemaining": None},
+            },
+            self._collect_fixture(fixture),
+        )
     def test_collector_emits_only_allowed_fields_from_automation_output(self):
         commands = []
 
