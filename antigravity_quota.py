@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import logging
 import os
 import subprocess
 import tempfile
@@ -19,6 +20,10 @@ from urllib.parse import urlparse
 SOURCE = "antigravity-ui-automation"
 STALE_AFTER = timedelta(minutes=10)
 EXPIRED_AFTER = timedelta(hours=24)
+# Credits are an account balance, rather than a percentage.  This cap rejects
+# obviously corrupt automation values without imposing a percentage limit.
+MAX_AI_CREDITS = 1_000_000_000
+LOGGER = logging.getLogger(__name__)
 
 
 def _timestamp(value: datetime) -> str:
@@ -41,13 +46,20 @@ def _remaining(value: object) -> int | None:
     return value
 
 
+def _ai_credits(value: object) -> int | None:
+    """Accept a reasonable whole-number account credit balance, never a percentage."""
+    if isinstance(value, bool) or not isinstance(value, int) or not 0 <= value <= MAX_AI_CREDITS:
+        return None
+    return value
+
+
 def _quota_values(snapshot: Mapping[str, Any]) -> dict[str, Any]:
     gemini = snapshot.get("gemini")
     claude_gpt = snapshot.get("claudeGpt")
     gemini = gemini if isinstance(gemini, Mapping) else {}
     claude_gpt = claude_gpt if isinstance(claude_gpt, Mapping) else {}
     return {
-        "aiCredits": _remaining(snapshot.get("aiCredits")),
+        "aiCredits": _ai_credits(snapshot.get("aiCredits")),
         "gemini": {
             "weeklyRemaining": _remaining(gemini.get("weeklyRemaining")),
             "fiveHourRemaining": _remaining(gemini.get("fiveHourRemaining")),
@@ -111,7 +123,11 @@ class QuotaStore:
             **_quota_values(snapshot),
         }
         self._last_poll_succeeded = True
-        self._write_cache()
+        try:
+            self._write_cache()
+        except OSError:
+            # The in-memory reading remains safe to serve; do not reveal UI data in logs.
+            LOGGER.warning("Antigravity quota cache write failed; retaining the in-memory reading")
 
     def public_payload(self, now: datetime) -> dict[str, Any]:
         synced_at = self._snapshot["syncedAt"]
@@ -211,7 +227,14 @@ class PollingService:
 
     def run_forever(self, stop_event: threading.Event) -> None:
         while not stop_event.is_set():
-            self.poll_once()
+            try:
+                self.poll_once()
+            except Exception as error:
+                # A transient collector/cache failure must not end the daemon thread.
+                LOGGER.warning(
+                    "Antigravity quota poll failed (%s); the next scheduled poll will continue",
+                    type(error).__name__,
+                )
             stop_event.wait(self.interval_seconds)
 
 

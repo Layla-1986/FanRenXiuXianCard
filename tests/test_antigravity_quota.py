@@ -48,6 +48,24 @@ class QuotaStoreTest(unittest.TestCase):
         self.assertEqual(0, payload["claudeGpt"]["fiveHourRemaining"])
         self.assertEqual("fresh", payload["status"])
 
+    def test_accepts_nonnegative_credit_balance_above_one_hundred(self):
+        """Changing credits back to percentage validation would discard a real balance."""
+        store = QuotaStore(self.cache_path)
+
+        store.record(sample_snapshot(aiCredits=1250), BASE_TIME)
+
+        self.assertEqual(1250, store.public_payload(BASE_TIME)["aiCredits"])
+
+    def test_rejects_non_integer_or_negative_credit_balance(self):
+        """Changing credit validation to coerce values would misreport unsupported UI data."""
+        store = QuotaStore(self.cache_path)
+
+        store.record(sample_snapshot(aiCredits=12.5), BASE_TIME)
+        self.assertIsNone(store.public_payload(BASE_TIME)["aiCredits"])
+        store.record(sample_snapshot(aiCredits=-1), BASE_TIME)
+
+        self.assertIsNone(store.public_payload(BASE_TIME)["aiCredits"])
+
     def test_replaces_missing_and_invalid_values_with_null_without_coercion(self):
         store = QuotaStore(self.cache_path)
         malformed = sample_snapshot(
@@ -183,6 +201,55 @@ class CollectorTest(unittest.TestCase):
             payload = store.public_payload(BASE_TIME)
             self.assertEqual("pending", payload["status"])
             self.assertEqual(33, payload["aiCredits"])
+
+    def test_cache_write_failure_keeps_fresh_snapshot_in_memory(self):
+        """Removing nonfatal persistence handling would raise and hide the current reading."""
+        with tempfile.TemporaryDirectory() as directory:
+            cache_parent = Path(directory) / "not-a-directory"
+            cache_parent.write_text("occupied", encoding="utf-8")
+            store = QuotaStore(cache_parent / "cache.json")
+
+            store.record(sample_snapshot(aiCredits=250), BASE_TIME)
+
+            payload = store.public_payload(BASE_TIME)
+            self.assertEqual(250, payload["aiCredits"])
+            self.assertEqual("fresh", payload["status"])
+
+    def test_run_forever_continues_after_one_collection_exception(self):
+        """Removing the per-poll exception boundary would stop before the next good reading."""
+        class StopAfterTwoWaits:
+            def __init__(self):
+                self.waits = 0
+
+            def is_set(self):
+                return self.waits >= 2
+
+            def wait(self, _timeout):
+                self.waits += 1
+                return self.is_set()
+
+        with tempfile.TemporaryDirectory() as directory:
+            attempts = 0
+
+            def runner(_command):
+                nonlocal attempts
+                attempts += 1
+                if attempts == 1:
+                    raise RuntimeError("temporary UIA failure")
+                return json.dumps(sample_snapshot(aiCredits=250))
+
+            store = QuotaStore(Path(directory) / "cache.json")
+            service = PollingService(
+                store,
+                UiAutomationCollector(runner=runner),
+                interval_seconds=60,
+                now=lambda: BASE_TIME,
+            )
+
+            service.run_forever(StopAfterTwoWaits())
+
+            self.assertEqual(2, attempts)
+            self.assertEqual(250, store.public_payload(BASE_TIME)["aiCredits"])
 
 
 class CommandLineTest(unittest.TestCase):
