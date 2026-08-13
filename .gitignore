@@ -1,1 +1,4 @@
 .superpowers/
+.antigravity-quota-cache.json
+.antigravity-quota-cache.json.*.tmp
+__pycache__/

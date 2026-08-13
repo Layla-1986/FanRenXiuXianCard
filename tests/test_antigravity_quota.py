@@ -1,0 +1,204 @@
+"""Contract tests for the localhost-only Antigravity quota companion."""
+
+from __future__ import annotations
+
+import json
+import subprocess
+import sys
+import tempfile
+import threading
+import unittest
+from datetime import datetime, timedelta, timezone
+from http.client import HTTPConnection
+from pathlib import Path
+
+from antigravity_quota import PollingService, QuotaStore, UiAutomationCollector, start_server
+
+
+UTC = timezone.utc
+BASE_TIME = datetime(2026, 8, 13, 8, 0, tzinfo=UTC)
+
+
+def sample_snapshot(**changes):
+    data = {
+        "aiCredits": 50,
+        "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": 25},
+        "claudeGpt": {"weeklyRemaining": 100, "fiveHourRemaining": 0},
+    }
+    data.update(changes)
+    return data
+
+
+class QuotaStoreTest(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.cache_path = Path(self.temp_dir.name) / "antigravity-cache.json"
+
+    def tearDown(self):
+        self.temp_dir.cleanup()
+
+    def test_accepts_zero_and_one_hundred_as_real_remaining_values(self):
+        store = QuotaStore(self.cache_path)
+
+        store.record(sample_snapshot(aiCredits=0), BASE_TIME)
+
+        payload = store.public_payload(BASE_TIME)
+        self.assertEqual(0, payload["aiCredits"])
+        self.assertEqual(100, payload["claudeGpt"]["weeklyRemaining"])
+        self.assertEqual(0, payload["claudeGpt"]["fiveHourRemaining"])
+        self.assertEqual("fresh", payload["status"])
+
+    def test_replaces_missing_and_invalid_values_with_null_without_coercion(self):
+        store = QuotaStore(self.cache_path)
+        malformed = sample_snapshot(
+            aiCredits="unknown",
+            gemini={"weeklyRemaining": None, "fiveHourRemaining": "25%"},
+            claudeGpt={"weeklyRemaining": -1, "fiveHourRemaining": 101},
+        )
+
+        store.record(malformed, BASE_TIME)
+
+        payload = store.public_payload(BASE_TIME)
+        self.assertIsNone(payload["aiCredits"])
+        self.assertIsNone(payload["gemini"]["weeklyRemaining"])
+        self.assertIsNone(payload["gemini"]["fiveHourRemaining"])
+        self.assertIsNone(payload["claudeGpt"]["weeklyRemaining"])
+        self.assertIsNone(payload["claudeGpt"]["fiveHourRemaining"])
+
+    def test_missing_page_keeps_cached_values_and_becomes_pending(self):
+        store = QuotaStore(self.cache_path)
+        store.record(sample_snapshot(aiCredits=42), BASE_TIME)
+
+        store.record(None, BASE_TIME + timedelta(seconds=60))
+
+        payload = store.public_payload(BASE_TIME + timedelta(seconds=60))
+        self.assertEqual(42, payload["aiCredits"])
+        self.assertEqual("pending", payload["status"])
+        self.assertEqual("2026-08-13T08:00:00Z", payload["syncedAt"])
+
+    def test_status_decays_to_stale_then_expired_from_last_successful_sync(self):
+        store = QuotaStore(self.cache_path)
+        store.record(sample_snapshot(), BASE_TIME)
+        store.record(None, BASE_TIME + timedelta(minutes=1))
+
+        self.assertEqual("stale", store.public_payload(BASE_TIME + timedelta(minutes=10))["status"])
+        self.assertEqual("expired", store.public_payload(BASE_TIME + timedelta(hours=24))["status"])
+
+    def test_cache_survives_restart_without_sensitive_or_unapproved_fields(self):
+        store = QuotaStore(self.cache_path)
+        store.record(
+            sample_snapshot(token="secret", email="person@example.com", fullWindowText="do not keep"),
+            BASE_TIME,
+        )
+
+        cache = json.loads(self.cache_path.read_text(encoding="utf-8"))
+        self.assertNotIn("token", json.dumps(cache))
+        self.assertNotIn("email", json.dumps(cache))
+        self.assertNotIn("fullWindowText", json.dumps(cache))
+        restarted = QuotaStore(self.cache_path)
+        payload = restarted.public_payload(BASE_TIME)
+        self.assertEqual(50, payload["aiCredits"])
+        self.assertEqual(
+            {"source", "syncedAt", "status", "aiCredits", "gemini", "claudeGpt"},
+            set(payload),
+        )
+
+
+class LocalApiTest(unittest.TestCase):
+    def setUp(self):
+        self.temp_dir = tempfile.TemporaryDirectory()
+        self.store = QuotaStore(Path(self.temp_dir.name) / "cache.json")
+        self.store.record(sample_snapshot(aiCredits=17), BASE_TIME)
+        self.server = start_server(
+            self.store,
+            static_root=Path(__file__).resolve().parents[1],
+            port=0,
+            now=lambda: BASE_TIME,
+        )
+        self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
+        self.thread.start()
+
+    def tearDown(self):
+        self.server.shutdown()
+        self.server.server_close()
+        self.thread.join()
+        self.temp_dir.cleanup()
+
+    def test_api_is_loopback_only_and_returns_only_the_public_contract(self):
+        host, port = self.server.server_address
+        self.assertEqual("127.0.0.1", host)
+        connection = HTTPConnection(host, port, timeout=2)
+        connection.request("GET", "/api/antigravity-quota")
+        response = connection.getresponse()
+        payload = json.loads(response.read())
+
+        self.assertEqual(200, response.status)
+        self.assertEqual(17, payload["aiCredits"])
+        self.assertEqual(
+            {"source", "syncedAt", "status", "aiCredits", "gemini", "claudeGpt"},
+            set(payload),
+        )
+        self.assertNotIn("token", json.dumps(payload))
+
+    def test_rejects_non_loopback_bind_requests(self):
+        with self.assertRaises(ValueError):
+            start_server(self.store, static_root=Path.cwd(), host="0.0.0.0", port=0)
+
+
+class CollectorTest(unittest.TestCase):
+    def test_collector_emits_only_allowed_fields_from_automation_output(self):
+        commands = []
+
+        def runner(command):
+            commands.append(command)
+            return json.dumps(
+                sample_snapshot(aiCredits=0, token="must-not-leave-powershell", windowText="must-not-leave-powershell")
+            )
+
+        collector = UiAutomationCollector(runner=runner)
+
+        snapshot = collector.collect_once()
+
+        self.assertEqual(0, snapshot["aiCredits"])
+        self.assertEqual(100, snapshot["claudeGpt"]["weeklyRemaining"])
+        self.assertNotIn("token", json.dumps(snapshot))
+        self.assertNotIn("windowText", json.dumps(snapshot))
+        self.assertEqual("powershell.exe", Path(commands[0][0]).name.lower())
+        self.assertIn("collect_antigravity_quota.ps1", commands[0][-1])
+
+    def test_collector_treats_empty_or_invalid_automation_output_as_absent_page(self):
+        self.assertIsNone(UiAutomationCollector(runner=lambda _: "").collect_once())
+        self.assertIsNone(UiAutomationCollector(runner=lambda _: "not-json").collect_once())
+
+    def test_polling_service_records_a_success_then_retains_cache_on_absence(self):
+        with tempfile.TemporaryDirectory() as directory:
+            store = QuotaStore(Path(directory) / "cache.json")
+            responses = iter([json.dumps(sample_snapshot(aiCredits=33)), ""])
+            collector = UiAutomationCollector(runner=lambda _: next(responses))
+            service = PollingService(store, collector, interval_seconds=60, now=lambda: BASE_TIME)
+
+            service.poll_once()
+            self.assertEqual("fresh", store.public_payload(BASE_TIME)["status"])
+            service.poll_once()
+            payload = store.public_payload(BASE_TIME)
+            self.assertEqual("pending", payload["status"])
+            self.assertEqual(33, payload["aiCredits"])
+
+
+class CommandLineTest(unittest.TestCase):
+    def test_help_exposes_a_localhost_companion_service_command(self):
+        completed = subprocess.run(
+            [sys.executable, "antigravity_quota.py", "--help"],
+            cwd=Path(__file__).resolve().parents[1],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+
+        self.assertEqual(0, completed.returncode)
+        self.assertIn("127.0.0.1", completed.stdout)
+        self.assertIn("--port", completed.stdout)
+
+
+if __name__ == "__main__":
+    unittest.main()
