@@ -1,0 +1,231 @@
+﻿<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>???? ? ?????? V5</title>
+  <style>
+    :root { color-scheme: dark; --jade:#71e2dc; --green:#59d99d; --gold:#d5b564; --white:#eaf8ee; }
+    * { box-sizing:border-box }
+    body { margin:0; min-height:100vh; color:#dceee6; background:radial-gradient(circle at 44% 35%,#173a34 0,#071918 43%,#020b0c 100%); font-family:"Microsoft YaHei UI",sans-serif; }
+    main { width:min(1040px,calc(100% - 28px)); margin:auto; padding:28px 0 38px; }
+    header { text-align:center; margin-bottom:18px; }
+    .eyebrow { color:var(--gold); font:11px Georgia,serif; letter-spacing:.32em; }
+    h1 { margin:9px 0 6px; color:var(--white); font:400 38px/1.2 STKaiti,KaiTi,serif; letter-spacing:.12em; }
+    header p { margin:0; color:#86aca2; font:13px/1.7 STKaiti,KaiTi,serif; letter-spacing:.08em; }
+    .lab { display:grid; grid-template-columns:minmax(520px,1fr) 270px; gap:16px; padding:18px; border:1px solid rgba(113,226,220,.12); border-radius:26px; background:rgba(2,15,15,.58); }
+    .stage { display:grid; place-items:center; min-height:510px; border:1px solid rgba(213,181,100,.15); border-radius:22px; background:radial-gradient(ellipse,rgba(113,226,220,.08),transparent 56%),rgba(3,18,17,.72); overflow:hidden; }
+    .card { position:relative; width:480px; height:270px; overflow:hidden; border-radius:22px; box-shadow:0 24px 58px rgba(0,0,0,.5),0 0 0 1px rgba(213,181,100,.28); background:#041416; }
+    .portrait { position:absolute; inset:0; background:url("/files/hanli-nangong-background.png") 51% 48%/cover; filter:saturate(.82) contrast(1.08) brightness(.72); transform:scale(1.025); }
+    .veil { position:absolute; inset:0; background:radial-gradient(circle at 57% 43%,transparent 0 17%,rgba(4,20,22,.04) 30%,rgba(4,20,22,.22) 67%),linear-gradient(90deg,rgba(4,20,22,.91),rgba(4,20,22,.55) 27%,rgba(4,20,22,.08) 57%,rgba(4,20,22,.48)),linear-gradient(0deg,rgba(4,20,22,.94),rgba(4,20,22,.38) 25%,transparent 51%); }
+    .mark { position:absolute; z-index:20; left:19px; top:14px; display:grid; gap:2px; }
+    .mark strong { font:16px STKaiti,KaiTi,serif; letter-spacing:.13em; }
+    .mark small { color:rgba(113,226,220,.58); font:7px STKaiti,KaiTi,serif; letter-spacing:.28em; }
+    .plan { position:absolute; z-index:20; right:20px; top:18px; color:var(--gold); font:9px Georgia,serif; }
+    .formation { position:absolute; z-index:10; left:-22px; top:46px; width:246px; height:205px; perspective:520px; }
+    .plane { position:absolute; left:12px; top:41px; width:206px; height:142px; transform:rotateX(61deg) rotateZ(-12deg); transform-style:preserve-3d; }
+    .ring { position:absolute; display:block; border-radius:50%; border:1px solid rgba(113,226,220,.38); background:repeating-conic-gradient(from 9deg,rgba(213,181,100,.4) 0 1.2deg,transparent 1.2deg 14deg),radial-gradient(circle,transparent 57%,rgba(89,217,157,.09) 60%,transparent 66%); box-shadow:inset 0 0 17px rgba(89,217,157,.11),0 0 12px rgba(113,226,220,.15); }
+    .ring::before,.ring::after { content:""; position:absolute; inset:7px; border-radius:50%; border:1px dashed rgba(89,217,157,.24); }
+    .ring::after { inset:-5px; border-color:rgba(213,181,100,.13); border-style:dotted; }
+    .outer { inset:0; animation:ring 48s linear infinite; }
+    .middle { inset:20px 26px; border-color:rgba(89,217,157,.52); animation:ringBack 41s linear infinite; }
+    .inner { inset:39px 53px; border-color:rgba(234,248,238,.48); animation:ring 34s linear infinite reverse; }
+    .axis { position:absolute; left:50%; top:-3px; width:1px; height:calc(100% + 6px); background:linear-gradient(transparent,rgba(113,226,220,.28),transparent); }
+    .axis.two { transform:rotate(90deg); }
+    .runes { position:absolute; inset:0; animation:ringBack 54s linear infinite; }
+    .runes b { position:absolute; display:grid; place-items:center; width:13px; height:13px; border:1px solid rgba(213,181,100,.28); border-radius:50%; color:rgba(213,181,100,.57); font:400 7px STKaiti,KaiTi,serif; }
+    .runes b:nth-child(1){left:48%;top:-5px}.runes b:nth-child(2){right:9px;top:19%}.runes b:nth-child(3){right:-4px;top:53%}.runes b:nth-child(4){right:21%;bottom:-4px}.runes b:nth-child(5){left:45%;bottom:-8px}.runes b:nth-child(6){left:14%;bottom:5px}.runes b:nth-child(7){left:-4px;top:49%}.runes b:nth-child(8){left:11px;top:13%}
+    .sword-orbit { position:absolute; z-index:5; inset:0; animation:swordOrbit 20s linear infinite; }
+    .sword { --a:0deg; --depth:.84; position:absolute; left:calc(50% - 7px); top:-12px; width:14px; height:52px; transform:rotate(var(--a)); transform-origin:50% 84px; opacity:var(--depth); filter:drop-shadow(0 1px .8px rgba(0,0,0,.6)) drop-shadow(0 0 1.4px rgba(238,255,244,.82)) drop-shadow(0 0 5.5px rgba(79,226,174,.28)); }
+    .sword-depth-near { --depth:1; filter:drop-shadow(0 1.5px 1px rgba(0,0,0,.66)) drop-shadow(0 0 1.8px rgba(242,255,246,.94)) drop-shadow(0 0 7px rgba(86,240,188,.36)); }
+    .sword-depth-far { --depth:.58; filter:drop-shadow(0 .7px .5px rgba(0,0,0,.45)) drop-shadow(0 0 3px rgba(73,193,151,.18)); }
+    .qingzhu-sword { display:block; width:100%; height:100%; overflow:visible; }
+    .blade-aura { fill:none; stroke:#99ffe3; stroke-width:5.5; opacity:.13; filter:url(#qingzhu-soft-glow); }
+    .blade-shadow-shell { fill:url(#qingzhu-shadow-shell); stroke:#062b25; stroke-width:1.2; stroke-linejoin:round; }
+    .blade-left-plane { fill:url(#qingzhu-left-plane); stroke:#d2b566; stroke-width:.45; stroke-linejoin:round; }
+    .blade-right-plane { fill:url(#qingzhu-right-plane); stroke:#f0dd98; stroke-width:.4; stroke-linejoin:round; }
+    .blade-center-prism { fill:url(#qingzhu-center-prism); stroke:#c9fff0; stroke-width:.42; stroke-linejoin:round; }
+    .blade-ridge { fill:none; stroke:url(#qingzhu-ridge); stroke-width:1.25; stroke-linecap:round; opacity:.96; }
+    .blade-facet { fill:none; stroke:#e8fff0; stroke-width:.55; opacity:.42; }
+    .blade-gold-inlay { fill:none; stroke:#d8bd68; stroke-width:.72; stroke-linecap:round; opacity:.88; }
+    .blade-tip-spark { fill:#f4fff5; filter:url(#qingzhu-tip-flare); opacity:.95; }
+    .bamboo-joint,.bamboo-seal-ring { fill:url(#qingzhu-metal); stroke:#d2bb73; stroke-width:.55; }
+    .sword-guard .guard-ring-thickness { fill:url(#qingzhu-guard-shadow); stroke:#092b25; stroke-width:.65; }
+    .sword-guard .guard-gold-lip { fill:none; stroke:#e0c878; stroke-width:1.05; stroke-linecap:round; }
+    .sword-guard .guard-outer { fill:url(#qingzhu-metal); stroke:#dfc576; stroke-width:1.15; }
+    .sword-guard .guard-inner { fill:#07382e; stroke:#a8f0cb; stroke-width:.58; }
+    .sword-guard .guard-collar { fill:url(#qingzhu-core); stroke:#d4bd70; stroke-width:.72; }
+    .sword-grip .grip-body { fill:url(#qingzhu-grip); stroke:#c2a45d; stroke-width:.72; }
+    .sword-grip .grip-carved-wrap { fill:none; stroke:#b8f0cb; stroke-width:.66; stroke-linecap:round; opacity:.72; }
+    .sword-grip .grip-wrap { fill:none; stroke:#144735; stroke-width:1.7; stroke-linecap:round; opacity:.56; }
+    .sword-grip .grip-ring { fill:#0a4536; stroke:#cab069; stroke-width:.78; }
+    .sword-grip .pommel-cap { fill:url(#qingzhu-metal); stroke:#d9bf70; stroke-width:.86; }
+    .pommel-gem { fill:#caffea; stroke:#d9bf70; stroke-width:.42; filter:url(#qingzhu-tip-flare); }
+    .spirit-flow { fill:url(#qingzhu-spirit-flow); opacity:.68; mix-blend-mode:screen; animation:spiritFlow 2.8s ease-in-out infinite; }
+    .core-dot { position:absolute; z-index:3; left:103px; top:105px; width:34px; height:34px; border:1px solid rgba(213,181,100,.45); border-radius:50%; background:radial-gradient(circle,rgba(234,248,238,.9) 0 7%,rgba(113,226,220,.54) 8% 22%,rgba(89,217,157,.15) 39%,transparent 68%); box-shadow:0 0 11px rgba(113,226,220,.44),0 0 28px rgba(89,217,157,.18); }
+    .percent { position:absolute; z-index:22; left:18px; top:117px; width:160px; height:92px; display:grid; place-items:center; color:#edf9ed; font:400 38px Baskerville,Georgia,serif; letter-spacing:-.06em; text-shadow:0 2px 7px #000,0 0 9px rgba(94,221,181,.38); }
+    .ledger { position:absolute; z-index:21; right:18px; top:117px; width:136px; padding:12px 13px; border:1px solid rgba(213,181,100,.16); border-radius:4px 14px; text-align:right; background:linear-gradient(105deg,rgba(3,16,17,.16),rgba(3,16,17,.64)); }
+    .ledger small { color:rgba(113,226,220,.64); font:8px STKaiti,KaiTi,serif; letter-spacing:.18em; }
+    .ledger strong { display:block; margin:3px 0 10px; color:var(--gold); font:15px STKaiti,KaiTi,serif; }
+    .ledger b { display:block; padding-top:8px; border-top:1px solid rgba(213,181,100,.35); color:var(--gold); font:15px STKaiti,KaiTi,serif; font-weight:400; }
+    .motto { position:absolute; z-index:20; left:50%; bottom:10px; transform:translateX(-50%); color:rgba(117,217,182,.46); font:8px STKaiti,KaiTi,serif; letter-spacing:.18em; white-space:nowrap; }
+    aside { display:grid; align-content:start; gap:12px; }
+    .panel { padding:16px; border:1px solid rgba(113,226,220,.12); border-radius:16px; background:rgba(8,31,29,.72); }
+    .panel h2 { margin:0 0 5px; color:var(--gold); font:19px STKaiti,KaiTi,serif; }
+    .panel p { margin:0; color:#83aaa0; font-size:12px; line-height:1.7; }
+    .states { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    button { padding:11px 6px; border:1px solid rgba(113,226,220,.16); border-radius:11px; color:#a7c9c0; background:rgba(3,20,18,.82); cursor:pointer; }
+    button.active { color:#031412; background:linear-gradient(135deg,#d9fff2,#63dec0); border-color:#63dec0; }
+    .metric { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.055); color:#83aaa0; font-size:12px; }
+    .metric b { color:#d9fff2; font-weight:500; }
+    @keyframes ring { to{transform:rotate(360deg)} } @keyframes ringBack { to{transform:rotate(-360deg)} } @keyframes swordOrbit { to{transform:rotate(360deg)} } @keyframes spiritFlow { 0%,100%{opacity:.18;transform:translateY(10px)} 45%{opacity:.8;transform:translateY(-10px)} }
+    @media(max-width:850px){.lab{grid-template-columns:1fr}.stage{min-height:430px}.card{transform:scale(.92)}}
+    @media(prefers-reduced-motion:reduce){.spirit-flow{animation:none!important}.ring,.runes,.sword-orbit{animation:none}}
+  </style>
+</head>
+<body>
+  <svg class="sword-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="qingzhu-shadow-shell" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#031915"/>
+        <stop offset=".18" stop-color="#07523c"/>
+        <stop offset=".49" stop-color="#0f8a63"/>
+        <stop offset=".78" stop-color="#063429"/>
+        <stop offset="1" stop-color="#020f0e"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-left-plane" x1="0" y1="0" x2="1" y2=".12">
+        <stop offset="0" stop-color="#063126"/>
+        <stop offset=".38" stop-color="#0b6c4d"/>
+        <stop offset=".72" stop-color="#35b987"/>
+        <stop offset="1" stop-color="#0b3a2d"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-right-plane" x1="0" y1="0" x2="1" y2=".08">
+        <stop offset="0" stop-color="#0f7553"/>
+        <stop offset=".43" stop-color="#79e3af"/>
+        <stop offset=".64" stop-color="#e5ffe8"/>
+        <stop offset="1" stop-color="#0a3b2f"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-center-prism" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#0c6a4b"/>
+        <stop offset=".42" stop-color="#52d59e"/>
+        <stop offset=".52" stop-color="#f3fff0"/>
+        <stop offset=".68" stop-color="#6fe3ad"/>
+        <stop offset="1" stop-color="#07362d"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-core" x1="0" y1="0" x2="1" y2=".15">
+        <stop offset="0" stop-color="#06372c"/>
+        <stop offset=".44" stop-color="#148762"/>
+        <stop offset=".58" stop-color="#8ce7ba"/>
+        <stop offset="1" stop-color="#052822"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-ridge" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f7f4c9"/>
+        <stop offset=".62" stop-color="#97e6c3"/>
+        <stop offset="1" stop-color="#b99b4e"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-metal" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#67dca3"/>
+        <stop offset=".17" stop-color="#d9f6cf"/>
+        <stop offset=".42" stop-color="#0c5f45"/>
+        <stop offset=".77" stop-color="#052e27"/>
+        <stop offset="1" stop-color="#55bf8b"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-grip" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#062a24"/>
+        <stop offset=".5" stop-color="#197557"/>
+        <stop offset="1" stop-color="#031d1a"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-guard-shadow" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#1e8361"/>
+        <stop offset=".48" stop-color="#052821"/>
+        <stop offset="1" stop-color="#061714"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-spirit-flow" x1="0" y1="1" x2="0" y2="0">
+        <stop offset="0" stop-color="#62ffc6" stop-opacity="0"/>
+        <stop offset=".46" stop-color="#dffff1" stop-opacity=".86"/>
+        <stop offset="1" stop-color="#76ffd4" stop-opacity="0"/>
+      </linearGradient>      <filter id="qingzhu-soft-glow"      <filter id="qingzhu-soft-glow" x="-80%" y="-30%" width="260%" height="180%">
+        <feGaussianBlur stdDeviation="1.55"/>
+      </filter>
+      <filter id="qingzhu-tip-flare" x="-200%" y="-200%" width="500%" height="500%">
+        <feGaussianBlur stdDeviation=".85"/>
+      </filter>
+      <symbol id="qingzhu-sword-glyph" viewBox="0 0 38 124">
+        <path class="blade-aura" d="M19 1.5L30 17.5L27.9 76.5L22.6 88.5H15.4L10.1 76.5L8 17.5Z"/>
+        <path class="blade-shadow-shell" d="M19 1.8L29.1 17.9L27.2 76.1L22 87.1H16L10.8 76.1L8.9 17.9Z"/>
+        <path class="blade-left-plane" d="M19 4.6L18.8 84.5L11.9 74.9L10.2 18.4Z"/>
+        <path class="blade-right-plane" d="M19 4.6L27.8 18.4L26.1 74.9L19.2 84.5Z"/>
+        <path class="blade-center-prism" d="M19 5.4L22.2 19.3L21.3 75.4L19 84.4L16.7 75.4L15.8 19.3Z"/>
+        <path class="blade-facet" d="M11.2 19.5L19 7.4L26.8 19.5M13.4 73.6L19 12.5L24.6 73.6"/>
+        <path class="blade-ridge" d="M19 5.2V83"/>
+        <path class="blade-gold-inlay" d="M10.5 20.1L12.2 74.4L16 84.6M27.5 20.1L25.8 74.4L22 84.6"/>
+        <circle class="blade-tip-spark" cx="19" cy="5" r="1.35"/>
+        <path class="spirit-flow" d="M17.7 23.5H20.3L20 68.6L19 80L18 68.6Z"/>
+        <g aria-hidden="true">
+          <path class="bamboo-joint" d="M13.7 29Q19 31.5 24.3 29L24.1 33Q19 35.1 13.9 33Z"/>
+          <path class="bamboo-joint" d="M14.1 46.8Q19 49.2 23.9 46.8L23.7 50.9Q19 53 14.3 50.9Z"/>
+          <path class="bamboo-joint" d="M14.5 63.5Q19 65.7 23.5 63.5L23.3 67.4Q19 69.3 14.7 67.4Z"/>
+          <path class="bamboo-seal-ring" d="M15.2 76.4Q19 78.2 22.8 76.4L22 81.3Q19 82.8 16 81.3Z"/>
+        </g>
+        <g class="sword-guard">
+          <path class="guard-collar" d="M13.2 84.1H24.8L27 91.2H11Z"/>
+          <path class="guard-ring-thickness" d="M5 89.1Q19 84.6 33 89.1L31.6 95.1Q19 99.4 6.4 95.1Z"/>
+          <path class="guard-outer" d="M3.8 86.9Q19 83 34.2 86.9L32.5 92.8Q19 96.4 5.5 92.8Z"/>
+          <path class="guard-inner" d="M8.2 88.7Q19 86.1 29.8 88.7L28.9 91.3Q19 93.5 9.1 91.3Z"/>
+          <path class="guard-gold-lip" d="M6.2 88.2Q19 84.9 31.8 88.2M6.8 94.2Q19 97.8 31.2 94.2"/>
+        </g>
+        <g class="sword-grip">
+          <path class="grip-body" d="M13.5 93H24.5L23.4 117H14.6Z"/>
+          <path class="grip-wrap" d="M14 95.7L24 101.4M13.8 101.6L23.7 107.2M13.6 107.4L23.4 113M24 95.1L14 101M23.8 101L13.8 106.7M23.6 106.9L13.7 112.6"/>
+          <path class="grip-carved-wrap" d="M16.2 95.5Q19 97.8 21.8 95.5M15.9 104Q19 106.2 22.1 104M15.6 112Q19 114.1 22.4 112"/>
+          <path class="grip-ring" d="M12.7 92.8H25.3V96.3H12.7ZM13.2 114.4H24.8V117.9H13.2Z"/>
+          <path class="pommel-cap" d="M12.1 117.4H25.9L28 121Q19 123.5 10 121Z"/>
+          <circle class="pommel-gem" cx="19" cy="119.7" r="1.4"/>
+          <path d="M13.2 120Q19 121.8 24.8 120" fill="none" stroke="#95e6bd" stroke-width=".7"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+  <main>
+    <header><div class="eyebrow">ORIGINAL DAGENG ARRAY ? QINGZHU SWORD STUDY</div><h1>??????????</h1><p>?????????????????????????????????</p></header>
+    <section class="lab">
+      <div class="stage">
+        <article class="card">
+          <div class="portrait"></div><div class="veil"></div>
+          <div class="mark"><strong>???? Codex</strong><small>?????????</small></div><span class="plan">PLUS</span>
+          <div class="formation">
+            <div class="plane">
+              <i class="ring outer"></i><i class="ring middle"></i><i class="ring inner"></i><i class="axis"></i><i class="axis two"></i>
+              <div class="runes"><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b></div>
+              <div class="sword-orbit" id="orbit"></div>
+            </div><i class="core-dot"></i>
+          </div>
+          <div class="percent" id="percent">80%</div>
+          <div class="ledger"><small>?????</small><strong id="used">?? 20%</strong><b>US$39.36</b></div>
+          <div class="motto">???? ? ????</div>
+        </article>
+      </div>
+      <aside>
+        <div class="panel"><h2>????</h2><p>???????????????????????????????????</p></div>
+        <div class="panel states"><button class="active" data-remain="80">? 80% ? 8?</button><button data-remain="50">? 50% ? 5?</button><button data-remain="20">? 20% ? 2?</button><button data-remain="100">? 100% ? 10?</button></div>
+        <div class="panel"><div class="metric"><span>????</span><b>????</b></div><div class="metric"><span>????</span><b id="count">8?</b></div><div class="metric"><span>????</span><b id="gap">45?</b></div></div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    const orbit=document.querySelector('#orbit');
+    const buttons=[...document.querySelectorAll('[data-remain]')];
+    function render(remain){
+      const count=Math.max(1,Math.round(remain/10)); orbit.replaceChildren();
+      for(let i=0;i<count;i++){
+        const sword=document.createElement('i');const phase=i/count;sword.className='sword '+(phase>.25&&phase<.75?'sword-depth-near':'sword-depth-far');sword.style.setProperty('--a',(i*360/count)+'deg');
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.className='qingzhu-sword';svg.setAttribute('class','qingzhu-sword');svg.setAttribute('viewBox','0 0 38 124');
+        const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','#qingzhu-sword-glyph');svg.append(use);sword.append(svg);orbit.append(sword)
+      }
+      document.querySelector('#percent').textContent=`${remain}%`;document.querySelector('#used').textContent=`?? ${100-remain}%`;document.querySelector('#count').textContent=`${count}?`;document.querySelector('#gap').textContent=`${Math.round(360/count)}?`;
+      buttons.forEach(button=>button.classList.toggle('active',Number(button.dataset.remain)===remain));
+    }
+    buttons.forEach(button=>button.addEventListener('click',()=>render(Number(button.dataset.remain))));render(80);
+  </script>
+</body>
+</html>
