@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>???? ? ?????????</title>
+  <style>
+    :root { color-scheme: dark; --jade:#71e2dc; --green:#59d99d; --gold:#d5b564; --white:#eaf8ee; }
+    * { box-sizing:border-box }
+    body { margin:0; min-height:100vh; color:#dceee6; background:radial-gradient(circle at 44% 35%,#173a34 0,#071918 43%,#020b0c 100%); font-family:"Microsoft YaHei UI",sans-serif; }
+    main { width:min(1040px,calc(100% - 28px)); margin:auto; padding:28px 0 38px; }
+    header { text-align:center; margin-bottom:18px; }
+    .eyebrow { color:var(--gold); font:11px Georgia,serif; letter-spacing:.32em; }
+    h1 { margin:9px 0 6px; color:var(--white); font:400 38px/1.2 STKaiti,KaiTi,serif; letter-spacing:.12em; }
+    header p { margin:0; color:#86aca2; font:13px/1.7 STKaiti,KaiTi,serif; letter-spacing:.08em; }
+    .lab { display:grid; grid-template-columns:minmax(520px,1fr) 270px; gap:16px; padding:18px; border:1px solid rgba(113,226,220,.12); border-radius:26px; background:rgba(2,15,15,.58); }
+    .stage { display:grid; place-items:center; min-height:510px; border:1px solid rgba(213,181,100,.15); border-radius:22px; background:radial-gradient(ellipse,rgba(113,226,220,.08),transparent 56%),rgba(3,18,17,.72); overflow:hidden; }
+    .card { position:relative; width:480px; height:270px; overflow:hidden; border-radius:22px; box-shadow:0 24px 58px rgba(0,0,0,.5),0 0 0 1px rgba(213,181,100,.28); background:#041416; }
+    .portrait { position:absolute; inset:0; background:url("/files/hanli-nangong-background.png") 51% 48%/cover; filter:saturate(.82) contrast(1.08) brightness(.72); transform:scale(1.025); }
+    .veil { position:absolute; inset:0; background:radial-gradient(circle at 57% 43%,transparent 0 17%,rgba(4,20,22,.04) 30%,rgba(4,20,22,.22) 67%),linear-gradient(90deg,rgba(4,20,22,.91),rgba(4,20,22,.55) 27%,rgba(4,20,22,.08) 57%,rgba(4,20,22,.48)),linear-gradient(0deg,rgba(4,20,22,.94),rgba(4,20,22,.38) 25%,transparent 51%); }
+    .mark { position:absolute; z-index:20; left:19px; top:14px; display:grid; gap:2px; }
+    .mark strong { font:16px STKaiti,KaiTi,serif; letter-spacing:.13em; }
+    .mark small { color:rgba(113,226,220,.58); font:7px STKaiti,KaiTi,serif; letter-spacing:.28em; }
+    .plan { position:absolute; z-index:20; right:20px; top:18px; color:var(--gold); font:9px Georgia,serif; }
+    .formation { position:absolute; z-index:10; left:-22px; top:46px; width:246px; height:205px; perspective:520px; }
+    .plane { position:absolute; left:12px; top:41px; width:206px; height:142px; transform:rotateX(61deg) rotateZ(-12deg); transform-style:preserve-3d; }
+    .ring { position:absolute; display:block; border-radius:50%; border:1px solid rgba(113,226,220,.38); background:repeating-conic-gradient(from 9deg,rgba(213,181,100,.4) 0 1.2deg,transparent 1.2deg 14deg),radial-gradient(circle,transparent 57%,rgba(89,217,157,.09) 60%,transparent 66%); box-shadow:inset 0 0 17px rgba(89,217,157,.11),0 0 12px rgba(113,226,220,.15); }
+    .ring::before,.ring::after { content:""; position:absolute; inset:7px; border-radius:50%; border:1px dashed rgba(89,217,157,.24); }
+    .ring::after { inset:-5px; border-color:rgba(213,181,100,.13); border-style:dotted; }
+    .outer { inset:0; animation:ring 48s linear infinite; }
+    .middle { inset:20px 26px; border-color:rgba(89,217,157,.52); animation:ringBack 41s linear infinite; }
+    .inner { inset:39px 53px; border-color:rgba(234,248,238,.48); animation:ring 34s linear infinite reverse; }
+    .axis { position:absolute; left:50%; top:-3px; width:1px; height:calc(100% + 6px); background:linear-gradient(transparent,rgba(113,226,220,.28),transparent); }
+    .axis.two { transform:rotate(90deg); }
+    .runes { position:absolute; inset:0; animation:ringBack 54s linear infinite; }
+    .runes b { position:absolute; display:grid; place-items:center; width:13px; height:13px; border:1px solid rgba(213,181,100,.28); border-radius:50%; color:rgba(213,181,100,.57); font:400 7px STKaiti,KaiTi,serif; }
+    .runes b:nth-child(1){left:48%;top:-5px}.runes b:nth-child(2){right:9px;top:19%}.runes b:nth-child(3){right:-4px;top:53%}.runes b:nth-child(4){right:21%;bottom:-4px}.runes b:nth-child(5){left:45%;bottom:-8px}.runes b:nth-child(6){left:14%;bottom:5px}.runes b:nth-child(7){left:-4px;top:49%}.runes b:nth-child(8){left:11px;top:13%}
+    .sword-orbit { position:absolute; z-index:5; inset:0; animation:swordOrbit 20s linear infinite; }
+    .sword { --a:0deg; position:absolute; left:calc(50% - 6px); top:-9px; width:12px; height:46px; transform:rotate(var(--a)); transform-origin:50% 77px; filter:drop-shadow(0 0 1px rgba(238,255,244,.84)) drop-shadow(0 0 3.6px rgba(53,194,139,.3)); }
+    .qingzhu-sword { display:block; width:100%; height:100%; overflow:visible; }
+    .blade-aura { fill:none; stroke:#8dffe0; stroke-width:3.2; opacity:.12; filter:url(#qingzhu-soft-glow); }
+    .blade-edge { fill:url(#qingzhu-edge); stroke:#d7c27b; stroke-width:1.05; stroke-linejoin:round; }
+    .blade-core { fill:url(#qingzhu-core); stroke:#1b7458; stroke-width:.7; }
+    .blade-ridge { fill:none; stroke:url(#qingzhu-ridge); stroke-width:1.1; stroke-linecap:round; opacity:.94; }
+    .blade-facet { fill:none; stroke:#b7f7dc; stroke-width:.6; opacity:.46; }
+    .blade-gold-inlay { fill:none; stroke:#d6b960; stroke-width:.62; stroke-linecap:round; opacity:.9; }
+    .bamboo-joint { fill:url(#qingzhu-metal); stroke:#cbb065; stroke-width:.55; }
+    .sword-guard .guard-outer { fill:url(#qingzhu-metal); stroke:#d7bd6a; stroke-width:1.05; }
+    .sword-guard .guard-inner { fill:#073c30; stroke:#9ae0bc; stroke-width:.62; }
+    .sword-guard .guard-collar { fill:url(#qingzhu-core); stroke:#cbb36a; stroke-width:.7; }
+    .sword-grip .grip-body { fill:url(#qingzhu-grip); stroke:#baa05b; stroke-width:.65; }
+    .sword-grip .grip-wrap { fill:none; stroke:#75c4a0; stroke-width:.72; stroke-linecap:round; opacity:.78; }
+    .sword-grip .grip-ring { fill:#0c4938; stroke:#c5aa61; stroke-width:.7; }
+    .sword-grip .pommel-cap { fill:url(#qingzhu-metal); stroke:#d1b766; stroke-width:.8; }
+    .core-dot { position:absolute; z-index:3; left:103px; top:105px; width:34px; height:34px; border:1px solid rgba(213,181,100,.45); border-radius:50%; background:radial-gradient(circle,rgba(234,248,238,.9) 0 7%,rgba(113,226,220,.54) 8% 22%,rgba(89,217,157,.15) 39%,transparent 68%); box-shadow:0 0 11px rgba(113,226,220,.44),0 0 28px rgba(89,217,157,.18); }
+    .percent { position:absolute; z-index:22; left:18px; top:117px; width:160px; height:92px; display:grid; place-items:center; color:#edf9ed; font:400 38px Baskerville,Georgia,serif; letter-spacing:-.06em; text-shadow:0 2px 7px #000,0 0 9px rgba(94,221,181,.38); }
+    .ledger { position:absolute; z-index:21; right:18px; top:117px; width:136px; padding:12px 13px; border:1px solid rgba(213,181,100,.16); border-radius:4px 14px; text-align:right; background:linear-gradient(105deg,rgba(3,16,17,.16),rgba(3,16,17,.64)); }
+    .ledger small { color:rgba(113,226,220,.64); font:8px STKaiti,KaiTi,serif; letter-spacing:.18em; }
+    .ledger strong { display:block; margin:3px 0 10px; color:var(--gold); font:15px STKaiti,KaiTi,serif; }
+    .ledger b { display:block; padding-top:8px; border-top:1px solid rgba(213,181,100,.35); color:var(--gold); font:15px STKaiti,KaiTi,serif; font-weight:400; }
+    .motto { position:absolute; z-index:20; left:50%; bottom:10px; transform:translateX(-50%); color:rgba(117,217,182,.46); font:8px STKaiti,KaiTi,serif; letter-spacing:.18em; white-space:nowrap; }
+    aside { display:grid; align-content:start; gap:12px; }
+    .panel { padding:16px; border:1px solid rgba(113,226,220,.12); border-radius:16px; background:rgba(8,31,29,.72); }
+    .panel h2 { margin:0 0 5px; color:var(--gold); font:19px STKaiti,KaiTi,serif; }
+    .panel p { margin:0; color:#83aaa0; font-size:12px; line-height:1.7; }
+    .states { display:grid; grid-template-columns:1fr 1fr; gap:7px; }
+    button { padding:11px 6px; border:1px solid rgba(113,226,220,.16); border-radius:11px; color:#a7c9c0; background:rgba(3,20,18,.82); cursor:pointer; }
+    button.active { color:#031412; background:linear-gradient(135deg,#d9fff2,#63dec0); border-color:#63dec0; }
+    .metric { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.055); color:#83aaa0; font-size:12px; }
+    .metric b { color:#d9fff2; font-weight:500; }
+    @keyframes ring { to{transform:rotate(360deg)} } @keyframes ringBack { to{transform:rotate(-360deg)} } @keyframes swordOrbit { to{transform:rotate(360deg)} }
+    @media(max-width:850px){.lab{grid-template-columns:1fr}.stage{min-height:430px}.card{transform:scale(.92)}}
+    @media(prefers-reduced-motion:reduce){.ring,.runes,.sword-orbit{animation:none}}
+  </style>
+</head>
+<body>
+  <svg class="sword-defs" width="0" height="0" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="qingzhu-edge" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#173d31"/>
+        <stop offset=".18" stop-color="#2b8f68"/>
+        <stop offset=".48" stop-color="#d7f6df"/>
+        <stop offset=".7" stop-color="#3aa77b"/>
+        <stop offset="1" stop-color="#092d26"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-core" x1="0" y1="0" x2="1" y2=".15">
+        <stop offset="0" stop-color="#064235"/>
+        <stop offset=".44" stop-color="#15966b"/>
+        <stop offset=".58" stop-color="#78d7ad"/>
+        <stop offset="1" stop-color="#052d27"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-ridge" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#f7f4c9"/>
+        <stop offset=".62" stop-color="#97e6c3"/>
+        <stop offset="1" stop-color="#b99b4e"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-metal" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0" stop-color="#2c936a"/>
+        <stop offset=".5" stop-color="#073b30"/>
+        <stop offset="1" stop-color="#58b58a"/>
+      </linearGradient>
+      <linearGradient id="qingzhu-grip" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0" stop-color="#062a24"/>
+        <stop offset=".5" stop-color="#197557"/>
+        <stop offset="1" stop-color="#031d1a"/>
+      </linearGradient>
+      <filter id="qingzhu-soft-glow" x="-80%" y="-30%" width="260%" height="180%">
+        <feGaussianBlur stdDeviation="1.25"/>
+      </filter>
+      <symbol id="qingzhu-sword-glyph" viewBox="0 0 30 112">
+        <path class="blade-aura" d="M15 1L23.7 14L22.2 70L18.5 78H11.5L7.8 70L6.3 14Z"/>
+        <path class="blade-edge" d="M15 1L22.7 14.5L21.2 69.4L17.7 76.5H12.3L8.8 69.4L7.3 14.5Z"/>
+        <path class="blade-core" d="M15 3.8L20.8 15.5L19.5 68.5L16.8 74.2H13.2L10.5 68.5L9.2 15.5Z"/>
+        <path class="blade-facet" d="M9.6 16L15 7.1L20.4 16M11.2 68.3L15 10L18.8 68.3"/>
+        <path class="blade-ridge" d="M15 4.6V72.5"/>
+        <path class="blade-gold-inlay" d="M9.1 16.5L10.5 68.3L13 74.1M20.9 16.5L19.5 68.3L17 74.1"/>
+        <g aria-hidden="true">
+          <path class="bamboo-joint" d="M10 27.5Q15 29.7 20 27.5L19.9 31Q15 33 10.1 31Z"/>
+          <path class="bamboo-joint" d="M10.3 45.5Q15 47.6 19.7 45.5L19.6 49Q15 51 10.4 49Z"/>
+          <path class="bamboo-joint" d="M10.6 61.7Q15 63.6 19.4 61.7L19.3 65Q15 66.8 10.7 65Z"/>
+        </g>
+        <g class="sword-guard">
+          <path class="guard-collar" d="M10.7 72.7H19.3L21.5 78.8H8.5Z"/>
+          <path class="guard-outer" d="M2.2 77.5Q15 74.8 27.8 77.5L26.8 82Q15 84.7 3.2 82Z"/>
+          <path class="guard-inner" d="M6.1 78.9Q15 77.2 23.9 78.9L23.3 81Q15 82.5 6.7 81Z"/>
+        </g>
+        <g class="sword-grip">
+          <path class="grip-body" d="M10.8 82H19.2L18.5 105H11.5Z"/>
+          <path class="grip-wrap" d="M11.2 84.4L18.7 89.6M11 90L18.4 95.2M10.8 95.7L18.2 100.8M18.8 84.1L11.2 89.5M18.6 90L11 95.2M18.4 95.7L10.8 101"/>
+          <path class="grip-ring" d="M10.4 82H19.6V85H10.4ZM10.8 102.2H19.2V105.3H10.8Z"/>
+          <path class="pommel-cap" d="M9.6 105.2H20.4L22 108.5Q15 111 8 108.5Z"/>
+          <path d="M10.5 108.2Q15 109.8 19.5 108.2" fill="none" stroke="#8de0b8" stroke-width=".65"/>
+        </g>
+      </symbol>
+    </defs>
+  </svg>
+  <main>
+    <header><div class="eyebrow">ORIGINAL DAGENG ARRAY ? QINGZHU SWORD STUDY</div><h1>??????????</h1><p>?????????????????????????????????</p></header>
+    <section class="lab">
+      <div class="stage">
+        <article class="card">
+          <div class="portrait"></div><div class="veil"></div>
+          <div class="mark"><strong>???? Codex</strong><small>?????????</small></div><span class="plan">PLUS</span>
+          <div class="formation">
+            <div class="plane">
+              <i class="ring outer"></i><i class="ring middle"></i><i class="ring inner"></i><i class="axis"></i><i class="axis two"></i>
+              <div class="runes"><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b><b>?</b></div>
+              <div class="sword-orbit" id="orbit"></div>
+            </div><i class="core-dot"></i>
+          </div>
+          <div class="percent" id="percent">80%</div>
+          <div class="ledger"><small>?????</small><strong id="used">?? 20%</strong><b>US$39.36</b></div>
+          <div class="motto">???? ? ????</div>
+        </article>
+      </div>
+      <aside>
+        <div class="panel"><h2>????</h2><p>???????????????????????????????????</p></div>
+        <div class="panel states"><button class="active" data-remain="80">? 80% ? 8?</button><button data-remain="50">? 50% ? 5?</button><button data-remain="20">? 20% ? 2?</button><button data-remain="100">? 100% ? 10?</button></div>
+        <div class="panel"><div class="metric"><span>????</span><b>????</b></div><div class="metric"><span>????</span><b id="count">8?</b></div><div class="metric"><span>????</span><b id="gap">45?</b></div></div>
+      </aside>
+    </section>
+  </main>
+  <script>
+    const orbit=document.querySelector('#orbit');
+    const buttons=[...document.querySelectorAll('[data-remain]')];
+    function render(remain){
+      const count=Math.max(1,Math.round(remain/10)); orbit.replaceChildren();
+      for(let i=0;i<count;i++){
+        const sword=document.createElement('i');sword.className='sword';sword.style.setProperty('--a',`${i*360/count}deg`);
+        const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');svg.className='qingzhu-sword';svg.setAttribute('class','qingzhu-sword');svg.setAttribute('viewBox','0 0 30 112');
+        const use=document.createElementNS('http://www.w3.org/2000/svg','use');use.setAttribute('href','#qingzhu-sword-glyph');svg.append(use);sword.append(svg);orbit.append(sword)
+      }
+      document.querySelector('#percent').textContent=`${remain}%`;document.querySelector('#used').textContent=`?? ${100-remain}%`;document.querySelector('#count').textContent=`${count}?`;document.querySelector('#gap').textContent=`${Math.round(360/count)}?`;
+      buttons.forEach(button=>button.classList.toggle('active',Number(button.dataset.remain)===remain));
+    }
+    buttons.forEach(button=>button.addEventListener('click',()=>render(Number(button.dataset.remain))));render(80);
+  </script>
+</body>
+</html>
