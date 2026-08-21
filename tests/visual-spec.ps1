@@ -122,6 +122,8 @@ Assert-True ($css.Contains('backdrop-filter: blur(10px)')) 'Model ledgers should
 Assert-True ($css.Contains('linear-gradient(120deg, rgba(255, 255, 255, .18)')) 'Model ledgers should have a translucent inner highlight'
 Assert-True ($css.Contains('top: 59px')) 'Model ledgers should sit below the facial eye line'
 Assert-True ($css.Contains('rgba(12, 37, 39, .42)')) 'Model ledgers should remain translucent over the portrait'
+Assert-True ($css.Contains('justify-self: end')) 'Quota columns should form a distinct right-side zone'
+Assert-True ($css.Contains('border-left: 1px solid rgba(255, 255, 255, .12)')) 'Quota zone should have a subtle glass divider'
 Assert-True (-not $css.Contains('url("../assets/dageng-sword-array-v2.png")')) 'Blurred Great Geng texture overlay must not render'
 Assert-True (-not $css.Contains('.qingzhu-sword')) 'The isolated Qingzhu main sword styling must be removed'
 Assert-True ($css.Contains('.formation-ring--outer {')) 'Outer ring must have its own material rule'

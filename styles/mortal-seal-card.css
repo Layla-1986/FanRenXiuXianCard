@@ -920,6 +920,15 @@ button {
 .quota-pair {
   position: relative;
   z-index: 1;
+  justify-self: end;
+  width: 100%;
+  max-width: 255px;
+  min-height: 58px;
+  padding: 7px 2px 6px 18px;
+  border-left: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 0 10px 10px 0;
+  background: linear-gradient(105deg, rgba(255, 255, 255, .045), rgba(113, 226, 220, .035) 48%, rgba(203, 166, 255, .05));
+  box-shadow: inset 12px 0 20px rgba(255, 255, 255, .018);
   display: grid;
   grid-template-columns: 1fr 1px 1fr;
   align-items: center;
