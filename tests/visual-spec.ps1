@@ -77,6 +77,10 @@ Assert-True ($html.Contains('id="agGeminiWeeklyReset"')) 'Missing Gemini weekly 
 Assert-True ($html.Contains('id="agGeminiFiveHourReset"')) 'Missing Gemini five-hour reset target'
 Assert-True ($html.Contains('id="agClaudeWeeklyReset"')) 'Missing Claude weekly reset target'
 Assert-True ($html.Contains('id="agClaudeFiveHourReset"')) 'Missing Claude five-hour reset target'
+$purpleMansion = ([char]0x7D2B) + ([char]0x5FAE) + ([char]0x661F) + ([char]0x5E9C)
+$blackScale = ([char]0x7384) + ([char]0x8861) + ([char]0x661F) + ([char]0x5E9C)
+Assert-True (-not $html.Contains($purpleMansion)) 'Gemini decorative small label must be removed'
+Assert-True (-not $html.Contains($blackScale)) 'Claude decorative small label must be removed'
 Assert-True ($html.Contains('id="agSyncStatus"')) 'Missing Antigravity sync status target'
 Assert-True ($html.Contains('id="agSyncedAt"')) 'Missing Antigravity sync time target'
 Assert-True (($html | Select-String 'data-used=' -AllMatches).Matches.Count -eq 3) 'Exactly three quota demonstration states are required'

@@ -895,17 +895,8 @@ button {
   position: relative;
   z-index: 1;
   display: grid;
-  gap: 3px;
+  align-content: center;
 }
-
-.model-ledger header span {
-  color: rgba(113, 226, 220, .57);
-  font-family: STKaiti, KaiTi, serif;
-  font-size: 8px;
-  letter-spacing: .18em;
-}
-
-.model-ledger--claude header span { color: rgba(203, 166, 255, .65); }
 
 .model-ledger header strong {
   font-family: Georgia, serif;
