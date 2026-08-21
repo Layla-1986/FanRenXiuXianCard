@@ -79,6 +79,10 @@ Assert-True ($html.Contains('id="agGeminiWeeklyReset"')) 'Missing Gemini weekly 
 Assert-True ($html.Contains('id="agGeminiFiveHourReset"')) 'Missing Gemini five-hour reset target'
 Assert-True ($html.Contains('id="agClaudeWeeklyReset"')) 'Missing Claude weekly reset target'
 Assert-True ($html.Contains('id="agClaudeFiveHourReset"')) 'Missing Claude five-hour reset target'
+Assert-True ([regex]::IsMatch($html, '(?s)id="agGeminiWeekly".*?</div>\s*<small class="quota-reset" id="agGeminiWeeklyReset"')) 'Gemini weekly reset must occupy a separate grid column'
+Assert-True ([regex]::IsMatch($html, '(?s)id="agGeminiFiveHour".*?</div>\s*<small class="quota-reset" id="agGeminiFiveHourReset"')) 'Gemini five-hour reset must occupy a separate grid column'
+Assert-True ([regex]::IsMatch($html, '(?s)id="agClaudeWeekly".*?</div>\s*<small class="quota-reset" id="agClaudeWeeklyReset"')) 'Claude weekly reset must occupy a separate grid column'
+Assert-True ([regex]::IsMatch($html, '(?s)id="agClaudeFiveHour".*?</div>\s*<small class="quota-reset" id="agClaudeFiveHourReset"')) 'Claude five-hour reset must occupy a separate grid column'
 $purpleMansion = ([char]0x7D2B) + ([char]0x5FAE) + ([char]0x661F) + ([char]0x5E9C)
 $blackScale = ([char]0x7384) + ([char]0x8861) + ([char]0x661F) + ([char]0x5E9C)
 Assert-True (-not $html.Contains($purpleMansion)) 'Gemini decorative small label must be removed'
@@ -195,7 +199,8 @@ Assert-True ($collector.Contains("@('Model Quota', 'Model Credits', 'Gemini Mode
 Assert-True ($collector.Contains('Get-Process -ErrorAction Stop')) 'Antigravity collector must fall back when Win32 process enumeration is denied'
 Assert-True ($collector.Contains('^Settings(?: - Models)?$')) 'Antigravity collector may use the exact current or legacy Settings window title as a bounded fallback'
 Assert-True ([regex]::IsMatch($css, '(?s)\.model-ledgers\s*\{.*?right:\s*22px;.*?top:\s*82px;')) 'Antigravity ledgers must move down and widen toward the right edge'
-Assert-True ([regex]::IsMatch($css, '(?s)\.quota-pair\s*\{.*?grid-template-columns:\s*1fr\s+1px\s+1fr;')) 'Weekly and five-hour quota must share one two-column ledger frame'
+Assert-True ([regex]::IsMatch($css, '(?s)\.quota-pair\s*\{.*?grid-template-columns:\s*minmax\(48px,\s*1fr\)\s+56px\s+1px\s+minmax\(48px,\s*1fr\)\s+56px;')) 'Each quota value and reset time must occupy aligned independent columns'
+Assert-True ([regex]::IsMatch($css, '(?s)\.quota-reset\s*\{.*?align-self:\s*center;.*?text-align:\s*center;')) 'Reset columns must be vertically and horizontally aligned'
 Assert-True (-not [regex]::IsMatch($css, '(?s)\.quota-pair\s*>\s*div:last-child\s*\{.*?position:\s*absolute;')) 'Five-hour quota must remain inside the ledger frame'
 Assert-True ($css.Contains('@keyframes scrollPageIn')) 'Page switch must use a short scroll reveal'
 Assert-True (-not $css.Contains('rotateY(')) 'Card page switch must not flip the card'
