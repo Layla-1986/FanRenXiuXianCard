@@ -4,9 +4,11 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $htmlPath = Join-Path $projectRoot 'original-artifact-refined.html'
 $cssPath = Join-Path $projectRoot 'styles/mortal-seal-card.css'
 $jsPath = Join-Path $projectRoot 'scripts/quota-card.js'
+$collectorPath = Join-Path $projectRoot 'scripts/collect_antigravity_quota.ps1'
 $html = if (Test-Path -LiteralPath $htmlPath) { Get-Content -LiteralPath $htmlPath -Raw -Encoding UTF8 } else { '' }
 $css = if (Test-Path -LiteralPath $cssPath) { Get-Content -LiteralPath $cssPath -Raw -Encoding UTF8 } else { '' }
 $js = if (Test-Path -LiteralPath $jsPath) { Get-Content -LiteralPath $jsPath -Raw -Encoding UTF8 } else { '' }
+$collector = if (Test-Path -LiteralPath $collectorPath) { Get-Content -LiteralPath $collectorPath -Raw -Encoding UTF8 } else { '' }
 $failures = [System.Collections.Generic.List[string]]::new()
 
 function Assert-True {
@@ -187,6 +189,7 @@ Assert-True ($css.Contains('@media (prefers-reduced-motion: reduce)')) 'Missing 
 Assert-True ($css.Contains('.antigravity-page {')) 'Antigravity page must have a dedicated visual layer'
 Assert-True ($css.Contains('.model-ledger--gemini')) 'Gemini model ledger must have a dedicated layer'
 Assert-True ($css.Contains('.model-ledger--claude')) 'Claude and GPT model ledger must have a dedicated layer'
+Assert-True ($collector.Contains('(?:\s+ide)?')) 'Antigravity collector must recognize the installed Antigravity IDE process name'
 Assert-True ([regex]::IsMatch($css, '(?s)\.model-ledgers\s*\{.*?right:\s*22px;.*?top:\s*82px;')) 'Antigravity ledgers must move down and widen toward the right edge'
 Assert-True ([regex]::IsMatch($css, '(?s)\.quota-pair\s*\{.*?grid-template-columns:\s*1fr\s+1px\s+1fr;')) 'Weekly and five-hour quota must share one two-column ledger frame'
 Assert-True (-not [regex]::IsMatch($css, '(?s)\.quota-pair\s*>\s*div:last-child\s*\{.*?position:\s*absolute;')) 'Five-hour quota must remain inside the ledger frame'

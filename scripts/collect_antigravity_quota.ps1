@@ -25,7 +25,7 @@ function Get-AntigravityProcessIds {
     try { $processes = @(Get-CimInstance Win32_Process -ErrorAction Stop) }
     catch { return $ids }
     foreach ($process in $processes) {
-        if ($process.Name -match '(?i)^antigravity(?:\.exe)?$') { [void]$ids.Add([int]$process.ProcessId) }
+        if ($process.Name -match '(?i)^antigravity(?:\s+ide)?(?:\.exe)?$') { [void]$ids.Add([int]$process.ProcessId) }
     }
     do {
         $added = $false
