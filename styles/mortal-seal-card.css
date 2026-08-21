@@ -784,15 +784,16 @@ button {
   background-image: url("../assets/antigravity-nangong-background.jpg");
   background-size: cover;
   background-position: center 44%;
-  filter: saturate(.78) contrast(1.08) brightness(.73);
+  filter: saturate(.86) contrast(1.04) brightness(.88);
   transform: scale(1.012);
 }
 
 .antigravity-page::after {
   z-index: 1;
   background:
-    linear-gradient(90deg, rgba(2, 10, 11, .94) 0%, rgba(3, 11, 12, .78) 42%, rgba(7, 8, 8, .22) 72%, rgba(6, 4, 4, .38) 100%),
-    linear-gradient(0deg, rgba(1, 7, 8, .76) 0%, transparent 30%, rgba(2, 8, 9, .2) 66%, rgba(2, 8, 9, .58) 100%);
+    linear-gradient(90deg, rgba(2, 10, 11, .72) 0%, rgba(3, 11, 12, .44) 42%, rgba(7, 8, 8, .08) 72%, rgba(6, 4, 4, .22) 100%),
+    linear-gradient(0deg, rgba(1, 7, 8, .42) 0%, transparent 34%, rgba(2, 8, 9, .08) 66%, rgba(2, 8, 9, .28) 100%),
+    radial-gradient(circle at 72% 38%, rgba(255, 227, 190, .18), transparent 34%);
 }
 
 .seal-card[data-page="antigravity"] .antigravity-page {
@@ -804,7 +805,7 @@ button {
   position: absolute;
   z-index: 2;
   inset: 0;
-  opacity: .46;
+  opacity: .62;
   background:
     linear-gradient(110deg, transparent 0 48%, rgba(113, 226, 220, .08) 49%, transparent 51%),
     radial-gradient(circle at 50% 52%, rgba(237, 232, 255, .08) 0 1px, transparent 2px);
@@ -869,9 +870,20 @@ button {
   overflow: hidden;
   border: 1px solid rgba(176, 203, 189, .22);
   border-radius: 3px 16px 3px 16px;
-  background: linear-gradient(100deg, rgba(2, 17, 18, .84), rgba(18, 14, 13, .58));
-  backdrop-filter: blur(3px) saturate(.82);
-  box-shadow: inset 0 1px rgba(240, 235, 255, .035), 0 9px 22px rgba(0, 0, 0, .16);
+  background: linear-gradient(115deg, rgba(12, 37, 39, .58), rgba(26, 24, 34, .38));
+  backdrop-filter: blur(10px) saturate(1.18);
+  -webkit-backdrop-filter: blur(10px) saturate(1.18);
+  box-shadow: inset 0 1px rgba(255, 255, 255, .18), inset 0 -12px 24px rgba(23, 225, 205, .06), 0 9px 22px rgba(0, 0, 0, .14);
+}
+
+.model-ledger::after {
+  content: "";
+  position: absolute;
+  inset: 1px;
+  pointer-events: none;
+  border-radius: 2px 15px 2px 15px;
+  background: linear-gradient(120deg, rgba(255, 255, 255, .18), transparent 22%, transparent 72%, rgba(174, 146, 255, .09));
+  mix-blend-mode: screen;
 }
 
 .model-ledger::before {
