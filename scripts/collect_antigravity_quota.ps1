@@ -23,7 +23,18 @@ function New-EmptyQuotaResult {
 function Get-AntigravityProcessIds {
     $ids = [System.Collections.Generic.HashSet[int]]::new()
     try { $processes = @(Get-CimInstance Win32_Process -ErrorAction Stop) }
-    catch { return $ids }
+    catch {
+        # Some Windows sessions deny Win32_Process inspection. Fall back to the
+        # process list, which still provides the executable IDs without command lines.
+        try {
+            foreach ($process in @(Get-Process -ErrorAction Stop)) {
+                if ($process.ProcessName -match '(?i)^antigravity(?:\s+ide)?$') {
+                    [void]$ids.Add([int]$process.Id)
+                }
+            }
+        } catch { }
+        return $ids
+    }
     foreach ($process in $processes) {
         if ($process.Name -match '(?i)^antigravity(?:\s+ide)?(?:\.exe)?$') { [void]$ids.Add([int]$process.ProcessId) }
     }
@@ -135,17 +146,11 @@ function Get-FixtureControls([string] $path) {
 }
 
 function Get-SelectedModelsContainer($window) {
-    # Phase 1: ask UIA only for the selected Models tab and exact page anchors. We do not
-    # enumerate descendants or read arbitrary accessible names until this local container exists.
-    $modelsTabCondition = New-Object System.Windows.Automation.AndCondition @(
-        (New-Object System.Windows.Automation.PropertyCondition(
-            [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
-            [System.Windows.Automation.ControlType]::TabItem
-        )),
-        (New-Object System.Windows.Automation.PropertyCondition(
-            [System.Windows.Automation.AutomationElement]::NameProperty,
-            'Models'
-        ))
+    # Phase 1: ask UIA only for the selected Models navigation item and exact page
+    # anchors. The current build uses a list item and labels the page "Models & Usage".
+    $modelsTabCondition = New-Object System.Windows.Automation.PropertyCondition(
+        [System.Windows.Automation.AutomationElement]::NameProperty,
+        'Models'
     )
     $modelsTab = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $modelsTabCondition)
     if ($null -eq $modelsTab) { return $null }
@@ -154,8 +159,27 @@ function Get-SelectedModelsContainer($window) {
             [System.Windows.Automation.SelectionItemPattern]::Pattern
         )
         if ($null -eq $selection -or -not $selection.Current.IsSelected) { return $null }
-        foreach ($anchorName in @('Model Quota', 'Gemini Models', 'Claude and GPT models')) {
-            $anchor = $modelsTab.FindFirst(
+        $pageTitle = $window.FindFirst(
+            [System.Windows.Automation.TreeScope]::Descendants,
+            (New-Object System.Windows.Automation.PropertyCondition(
+                [System.Windows.Automation.AutomationElement]::NameProperty,
+                'Models & Usage'
+            ))
+        )
+        $quotaHeading = $null
+        foreach ($headingName in @('Model Quota', 'Model Credits')) {
+            $quotaHeading = $window.FindFirst(
+                [System.Windows.Automation.TreeScope]::Descendants,
+                (New-Object System.Windows.Automation.PropertyCondition(
+                    [System.Windows.Automation.AutomationElement]::NameProperty,
+                    $headingName
+                ))
+            )
+            if ($null -ne $quotaHeading) { break }
+        }
+        if ($null -eq $pageTitle -or $null -eq $quotaHeading) { return $null }
+        foreach ($anchorName in @('Gemini Models', 'Claude and GPT models')) {
+            $anchor = $window.FindFirst(
                 [System.Windows.Automation.TreeScope]::Descendants,
                 (New-Object System.Windows.Automation.PropertyCondition(
                     [System.Windows.Automation.AutomationElement]::NameProperty,
@@ -165,7 +189,7 @@ function Get-SelectedModelsContainer($window) {
             if ($null -eq $anchor) { return $null }
         }
     } catch { return $null }
-    return $modelsTab
+    return $window
 }
 
 function Get-VisibleQuotaControls($container) {
@@ -200,7 +224,9 @@ if ($FixturePath) {
     $antigravityProcessIds = Get-AntigravityProcessIds
     foreach ($window in $topLevelWindows) {
         if ($window.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window) { continue }
-        if (-not $antigravityProcessIds.Contains([int]$window.Current.ProcessId)) { continue }
+        $processMatch = $antigravityProcessIds.Contains([int]$window.Current.ProcessId)
+        $titleMatch = $window.Current.Name -match '(?i)^Settings - Models$'
+        if (-not ($processMatch -or $titleMatch)) { continue }
         $modelsContainer = Get-SelectedModelsContainer $window
         if ($null -eq $modelsContainer) { continue }
         $result = Get-QuotaFromControls (Get-VisibleQuotaControls $modelsContainer)
