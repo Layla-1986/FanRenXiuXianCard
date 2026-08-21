@@ -22,8 +22,8 @@ BASE_TIME = datetime(2026, 8, 13, 8, 0, tzinfo=UTC)
 def sample_snapshot(**changes):
     data = {
         "aiCredits": 50,
-        "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": 25},
-        "claudeGpt": {"weeklyRemaining": 100, "fiveHourRemaining": 0},
+        "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": 25, "weeklyReset": "5天5时", "fiveHourReset": "2时18分"},
+        "claudeGpt": {"weeklyRemaining": 100, "fiveHourRemaining": 0, "weeklyReset": "5天4时", "fiveHourReset": "1时42分"},
     }
     data.update(changes)
     return data
@@ -46,6 +46,7 @@ class QuotaStoreTest(unittest.TestCase):
         self.assertEqual(0, payload["aiCredits"])
         self.assertEqual(100, payload["claudeGpt"]["weeklyRemaining"])
         self.assertEqual(0, payload["claudeGpt"]["fiveHourRemaining"])
+        self.assertEqual("5天5时", payload["gemini"]["weeklyReset"])
         self.assertEqual("fresh", payload["status"])
 
     def test_accepts_nonnegative_credit_balance_above_one_hundred(self):
@@ -222,6 +223,7 @@ class CollectorTest(unittest.TestCase):
                 {"name": "1,250", "top": 20, "left": 180},
                 {"name": "Gemini Models", "top": 80, "left": 0},
                 {"name": "Weekly quota", "top": 100, "left": 0},
+                {"name": "It will fully refresh in 5 days, 5 hours.", "top": 112, "left": 0},
                 {"name": "75%", "top": 100, "left": 180},
                 {"name": "5-hour quota", "top": 125, "left": 0},
                 {"name": "25%", "top": 125, "left": 180},
@@ -236,8 +238,8 @@ class CollectorTest(unittest.TestCase):
         self.assertEqual(
             {
                 "aiCredits": 1250,
-                "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": 25},
-                "claudeGpt": {"weeklyRemaining": 60, "fiveHourRemaining": 5},
+                "gemini": {"weeklyRemaining": 75, "fiveHourRemaining": 25, "weeklyReset": "5 days, 5 hours", "fiveHourReset": None},
+                "claudeGpt": {"weeklyRemaining": 60, "fiveHourRemaining": 5, "weeklyReset": None, "fiveHourReset": None},
             },
             self._collect_fixture(fixture),
         )
@@ -266,8 +268,8 @@ class CollectorTest(unittest.TestCase):
         self.assertEqual(
             {
                 "aiCredits": None,
-                "gemini": {"weeklyRemaining": None, "fiveHourRemaining": None},
-                "claudeGpt": {"weeklyRemaining": None, "fiveHourRemaining": None},
+                "gemini": {"weeklyRemaining": None, "fiveHourRemaining": None, "weeklyReset": None, "fiveHourReset": None},
+                "claudeGpt": {"weeklyRemaining": None, "fiveHourRemaining": None, "weeklyReset": None, "fiveHourReset": None},
             },
             self._collect_fixture(fixture),
         )

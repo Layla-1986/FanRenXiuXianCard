@@ -10,11 +10,14 @@ const unlockButton = document.querySelector('#unlockButton');
 const antigravityToggle = document.querySelector('#antigravityToggle');
 const antigravityPage = document.querySelector('.antigravity-page');
 const antigravityFields = {
-  credits: document.querySelector('#agCredits'),
   geminiWeekly: document.querySelector('#agGeminiWeekly'),
+  geminiWeeklyReset: document.querySelector('#agGeminiWeeklyReset'),
   geminiFiveHour: document.querySelector('#agGeminiFiveHour'),
+  geminiFiveHourReset: document.querySelector('#agGeminiFiveHourReset'),
   claudeWeekly: document.querySelector('#agClaudeWeekly'),
+  claudeWeeklyReset: document.querySelector('#agClaudeWeeklyReset'),
   claudeFiveHour: document.querySelector('#agClaudeFiveHour'),
+  claudeFiveHourReset: document.querySelector('#agClaudeFiveHourReset'),
   status: document.querySelector('#agSyncStatus'),
   syncedAt: document.querySelector('#agSyncedAt')
 };
@@ -36,10 +39,12 @@ function formatQuota(value, expired = false) {
   return Number.isFinite(numeric) ? `${Math.min(100, Math.max(0, Math.round(numeric)))}%` : '—';
 }
 
-function formatCredits(value, expired = false) {
-  if (expired || isMissingValue(value)) return '—';
-  const numeric = Number(value);
-  return Number.isFinite(numeric) && numeric >= 0 ? String(numeric) : '—';
+function formatReset(value, expired = false) {
+  if (expired || isMissingValue(value)) return '待同步';
+  const safe = String(value).trim().slice(0, 32)
+    .replace(/days?/gi, '天').replace(/hours?/gi, '时').replace(/minutes?/gi, '分')
+    .replace(/\s*,\s*/g, '').replace(/\s+/g, '');
+  return safe.endsWith('重置') ? safe : `${safe}重置`;
 }
 
 function formatSyncTime(value) {
@@ -53,11 +58,14 @@ function renderAntigravityQuota(payload = {}) {
   const status = ['fresh', 'pending', 'stale', 'expired'].includes(payload.status) ? payload.status : 'pending';
   const expired = status === 'expired';
   const values = {
-    credits: formatCredits(payload.aiCredits, expired),
     geminiWeekly: formatQuota(payload.gemini?.weeklyRemaining, expired),
+    geminiWeeklyReset: formatReset(payload.gemini?.weeklyReset, expired),
     geminiFiveHour: formatQuota(payload.gemini?.fiveHourRemaining, expired),
+    geminiFiveHourReset: formatReset(payload.gemini?.fiveHourReset, expired),
     claudeWeekly: formatQuota(payload.claudeGpt?.weeklyRemaining, expired),
-    claudeFiveHour: formatQuota(payload.claudeGpt?.fiveHourRemaining, expired)
+    claudeWeeklyReset: formatReset(payload.claudeGpt?.weeklyReset, expired),
+    claudeFiveHour: formatQuota(payload.claudeGpt?.fiveHourRemaining, expired),
+    claudeFiveHourReset: formatReset(payload.claudeGpt?.fiveHourReset, expired)
   };
 
   Object.entries(values).forEach(([key, value]) => {

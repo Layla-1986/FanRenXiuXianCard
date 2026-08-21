@@ -51,11 +51,14 @@ async function loadQuotaCard({ storage = createStorage(), fetchImpl = async () =
     unlockButton: createElement(),
     antigravityToggle: createElement(),
     antigravityPage: createElement(),
-    agCredits: createElement(),
     agGeminiWeekly: createElement(),
+    agGeminiWeeklyReset: createElement(),
     agGeminiFiveHour: createElement(),
+    agGeminiFiveHourReset: createElement(),
     agClaudeWeekly: createElement(),
+    agClaudeWeeklyReset: createElement(),
     agClaudeFiveHour: createElement(),
+    agClaudeFiveHourReset: createElement(),
     agSyncStatus: createElement(),
     agSyncedAt: createElement()
   };
@@ -64,9 +67,11 @@ async function loadQuotaCard({ storage = createStorage(), fetchImpl = async () =
   const selectors = new Map([
     ['#widget', elements.widget], ['#percent', elements.percent], ['#used', elements.used],
     ['#unlockButton', elements.unlockButton], ['#antigravityToggle', elements.antigravityToggle],
-    ['.antigravity-page', elements.antigravityPage], ['#agCredits', elements.agCredits],
+    ['.antigravity-page', elements.antigravityPage],
     ['#agGeminiWeekly', elements.agGeminiWeekly], ['#agGeminiFiveHour', elements.agGeminiFiveHour],
+    ['#agGeminiWeeklyReset', elements.agGeminiWeeklyReset], ['#agGeminiFiveHourReset', elements.agGeminiFiveHourReset],
     ['#agClaudeWeekly', elements.agClaudeWeekly], ['#agClaudeFiveHour', elements.agClaudeFiveHour],
+    ['#agClaudeWeeklyReset', elements.agClaudeWeeklyReset], ['#agClaudeFiveHourReset', elements.agClaudeFiveHourReset],
     ['#agSyncStatus', elements.agSyncStatus], ['#agSyncedAt', elements.agSyncedAt]
   ]);
   const sandbox = {
@@ -112,7 +117,7 @@ async function testPageSwitchAndSessionRestore() {
 async function testFetchFailureRendersPendingWithoutNaN() {
   const runtime = await loadQuotaCard({ fetchImpl: async () => { throw new Error('offline'); } });
   assert.equal(runtime.elements.agSyncStatus.textContent, '\u5f85\u540c\u6b65');
-  assert.equal(runtime.elements.agCredits.textContent, '\u2014');
+  assert.equal(runtime.elements.agGeminiWeeklyReset.textContent, '\u5f85\u540c\u6b65');
   assert.equal(runtime.elements.agSyncedAt.textContent, syncAdvice);
   assert.equal(Object.values(runtime.elements).some((element) => String(element.textContent).includes('NaN')), false);
 }
@@ -127,10 +132,18 @@ async function testMissingValuesStayUnavailableInsteadOfZeroOrEpoch() {
     syncedAt: null
   });
   assert.equal(runtime.elements.agSyncStatus.textContent, '\u5df2\u540c\u6b65');
-  for (const key of ['agCredits', 'agGeminiWeekly', 'agGeminiFiveHour', 'agClaudeWeekly', 'agClaudeFiveHour']) {
+  for (const key of ['agGeminiWeekly', 'agGeminiFiveHour', 'agClaudeWeekly', 'agClaudeFiveHour']) {
     assert.equal(runtime.elements[key].textContent, '\u2014', `${key} must be unavailable`);
   }
   assert.equal(runtime.elements.agSyncedAt.textContent, syncAdvice);
+
+  runtime.window.renderAntigravityQuota({
+    status: 'fresh',
+    gemini: { weeklyReset: '5天5时', fiveHourReset: '2时18分' },
+    claudeGpt: { weeklyReset: '5天4时', fiveHourReset: '1时42分' }
+  });
+  assert.equal(runtime.elements.agGeminiWeeklyReset.textContent, '5天5时重置');
+  assert.equal(runtime.elements.agClaudeFiveHourReset.textContent, '1时42分重置');
 
   runtime.window.renderAntigravityQuota({ status: 'fresh', syncedAt: 'not-a-timestamp' });
   assert.equal(runtime.elements.agSyncedAt.textContent, syncAdvice);
@@ -147,7 +160,6 @@ async function testStaleAndExpiredHaveDistinctAccessibleOutcomes() {
 
   runtime.window.renderAntigravityQuota({ status: 'expired' });
   assert.equal(runtime.elements.agSyncStatus.textContent, '\u6570\u636e\u5df2\u8fc7\u671f');
-  assert.equal(runtime.elements.agCredits.textContent, '\u2014');
   assert.equal(runtime.elements.agGeminiWeekly.textContent, '\u2014');
   assert.equal(runtime.elements.agClaudeFiveHour.textContent, '\u2014');
   assert.equal(runtime.elements.agSyncedAt.textContent, syncAdvice);

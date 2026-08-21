@@ -6,6 +6,7 @@ import argparse
 import json
 import logging
 import os
+import re
 import subprocess
 import tempfile
 import threading
@@ -61,6 +62,14 @@ def _ai_credits(value: object) -> int | None:
     return value
 
 
+def _reset_label(value: object) -> str | None:
+    """Keep only short duration labels; never expose arbitrary UI text."""
+    if not isinstance(value, str):
+        return None
+    value = value.strip()
+    return value if re.fullmatch(r"[0-9\s天时分小时日周dayshourminuteds,.]+", value, re.IGNORECASE) and len(value) <= 32 else None
+
+
 def _quota_values(snapshot: Mapping[str, Any]) -> dict[str, Any]:
     gemini = snapshot.get("gemini")
     claude_gpt = snapshot.get("claudeGpt")
@@ -71,10 +80,14 @@ def _quota_values(snapshot: Mapping[str, Any]) -> dict[str, Any]:
         "gemini": {
             "weeklyRemaining": _remaining(gemini.get("weeklyRemaining")),
             "fiveHourRemaining": _remaining(gemini.get("fiveHourRemaining")),
+            "weeklyReset": _reset_label(gemini.get("weeklyReset")),
+            "fiveHourReset": _reset_label(gemini.get("fiveHourReset")),
         },
         "claudeGpt": {
             "weeklyRemaining": _remaining(claude_gpt.get("weeklyRemaining")),
             "fiveHourRemaining": _remaining(claude_gpt.get("fiveHourRemaining")),
+            "weeklyReset": _reset_label(claude_gpt.get("weeklyReset")),
+            "fiveHourReset": _reset_label(claude_gpt.get("fiveHourReset")),
         },
     }
 

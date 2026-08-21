@@ -15,8 +15,8 @@ $MaxAiCredits = 1000000000
 function New-EmptyQuotaResult {
     return [ordered]@{
         aiCredits = $null
-        gemini = [ordered]@{ weeklyRemaining = $null; fiveHourRemaining = $null }
-        claudeGpt = [ordered]@{ weeklyRemaining = $null; fiveHourRemaining = $null }
+        gemini = [ordered]@{ weeklyRemaining = $null; fiveHourRemaining = $null; weeklyReset = $null; fiveHourReset = $null }
+        claudeGpt = [ordered]@{ weeklyRemaining = $null; fiveHourRemaining = $null; weeklyReset = $null; fiveHourReset = $null }
     }
 }
 
@@ -78,6 +78,18 @@ function Get-RemainingForPeriod($controls, [int] $startIndex, [int] $endIndex, [
     return $null
 }
 
+function Get-ResetForPeriod($controls, [int] $startIndex, [int] $endIndex, [string] $periodPattern) {
+    for ($index = $startIndex; $index -lt $endIndex; $index++) {
+        if ($controls[$index].Name -notmatch $periodPattern -or $controls[$index].Name -notmatch '(?i)(?:quota|limit|remaining)') { continue }
+        $lastIndex = [Math]::Min($index + 8, $endIndex - 1)
+        for ($near = $index; $near -le $lastIndex; $near++) {
+            $match = [regex]::Match($controls[$near].Name, '(?i)(?:fully\s+)?refresh(?:es)?\s+in\s+(?<duration>\d+\s*(?:days?|hours?|minutes?)(?:\s*,?\s*\d+\s*(?:days?|hours?|minutes?))?)')
+            if ($match.Success) { return $match.Groups['duration'].Value }
+        }
+    }
+    return $null
+}
+
 function Get-QuotaFromControls($controls) {
     $result = New-EmptyQuotaResult
     $controls = @($controls | Sort-Object Top, Left, Order)
@@ -100,8 +112,12 @@ function Get-QuotaFromControls($controls) {
     }
     $result.gemini.weeklyRemaining = Get-RemainingForPeriod $controls ($geminiIndex + 1) $claudeGptIndex '(?i)weekly'
     $result.gemini.fiveHourRemaining = Get-RemainingForPeriod $controls ($geminiIndex + 1) $claudeGptIndex '(?i)(?:5\s*-?\s*hour|five\s*-?\s*hour)'
+    $result.gemini.weeklyReset = Get-ResetForPeriod $controls ($geminiIndex + 1) $claudeGptIndex '(?i)weekly'
+    $result.gemini.fiveHourReset = Get-ResetForPeriod $controls ($geminiIndex + 1) $claudeGptIndex '(?i)(?:5\s*-?\s*hour|five\s*-?\s*hour)'
     $result.claudeGpt.weeklyRemaining = Get-RemainingForPeriod $controls ($claudeGptIndex + 1) $controls.Count '(?i)weekly'
     $result.claudeGpt.fiveHourRemaining = Get-RemainingForPeriod $controls ($claudeGptIndex + 1) $controls.Count '(?i)(?:5\s*-?\s*hour|five\s*-?\s*hour)'
+    $result.claudeGpt.weeklyReset = Get-ResetForPeriod $controls ($claudeGptIndex + 1) $controls.Count '(?i)weekly'
+    $result.claudeGpt.fiveHourReset = Get-ResetForPeriod $controls ($claudeGptIndex + 1) $controls.Count '(?i)(?:5\s*-?\s*hour|five\s*-?\s*hour)'
     return $result
 }
 
