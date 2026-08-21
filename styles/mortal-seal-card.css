@@ -855,7 +855,7 @@ button {
   z-index: 2;
   left: 22px;
   right: 22px;
-  top: 59px;
+  top: 70px;
   display: grid;
   gap: 9px;
 }
@@ -865,7 +865,7 @@ button {
   display: grid;
   grid-template-columns: 142px 1fr;
   align-items: center;
-  height: 76px;
+  height: 70px;
   padding: 9px 15px;
   overflow: hidden;
   border: 1px solid rgba(176, 203, 189, .22);

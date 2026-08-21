@@ -120,7 +120,7 @@ Assert-True ($css.Contains('background-position: center 44%')) 'Antigravity crop
 Assert-True ($css.Contains('brightness(.88)')) 'Antigravity portrait should preserve facial highlights with a brighter treatment'
 Assert-True ($css.Contains('backdrop-filter: blur(10px)')) 'Model ledgers should use a jelly glass blur'
 Assert-True ($css.Contains('linear-gradient(120deg, rgba(255, 255, 255, .18)')) 'Model ledgers should have a translucent inner highlight'
-Assert-True ($css.Contains('top: 59px')) 'Model ledgers should sit below the facial eye line'
+Assert-True ($css.Contains('top: 70px')) 'Model ledgers should sit below the facial eye line'
 Assert-True ($css.Contains('rgba(12, 37, 39, .42)')) 'Model ledgers should remain translucent over the portrait'
 Assert-True ($css.Contains('justify-self: end')) 'Quota columns should form a distinct right-side zone'
 Assert-True ($css.Contains('border-left: 1px solid rgba(255, 255, 255, .12)')) 'Quota zone should have a subtle glass divider'
