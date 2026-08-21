@@ -110,7 +110,7 @@ function Get-QuotaFromControls($controls) {
     $modelQuotaIndex = -1; $geminiIndex = -1; $claudeGptIndex = -1
     for ($index = 0; $index -lt $controls.Count; $index++) {
         $name = $controls[$index].Name
-        if ($modelQuotaIndex -lt 0 -and $name -match '(?i)^model\s+quota$') { $modelQuotaIndex = $index }
+        if ($modelQuotaIndex -lt 0 -and $name -match '(?i)^model\s+(?:quota|credits)$') { $modelQuotaIndex = $index }
         if ($geminiIndex -lt 0 -and $name -match '(?i)^gemini\s+models?$') { $geminiIndex = $index }
         if ($claudeGptIndex -lt 0 -and $name -match '(?i)^claude\s+(?:and|&)\s+gpt\s+models?$') { $claudeGptIndex = $index }
     }
@@ -146,8 +146,9 @@ function Get-FixtureControls([string] $path) {
 }
 
 function Get-SelectedModelsContainer($window) {
-    # Phase 1: ask UIA only for the selected Models navigation item and exact page
-    # anchors. The current build uses a list item and labels the page "Models & Usage".
+    # Phase 1: require the Models navigation item and exact page anchors before
+    # reading any values. Current Electron builds expose Models as Text/Button
+    # controls rather than a SelectionItem, so selection state is not available.
     $modelsTabCondition = New-Object System.Windows.Automation.PropertyCondition(
         [System.Windows.Automation.AutomationElement]::NameProperty,
         'Models'
@@ -155,17 +156,6 @@ function Get-SelectedModelsContainer($window) {
     $modelsTab = $window.FindFirst([System.Windows.Automation.TreeScope]::Descendants, $modelsTabCondition)
     if ($null -eq $modelsTab) { return $null }
     try {
-        $selection = [System.Windows.Automation.SelectionItemPattern]$modelsTab.GetCurrentPattern(
-            [System.Windows.Automation.SelectionItemPattern]::Pattern
-        )
-        if ($null -eq $selection -or -not $selection.Current.IsSelected) { return $null }
-        $pageTitle = $window.FindFirst(
-            [System.Windows.Automation.TreeScope]::Descendants,
-            (New-Object System.Windows.Automation.PropertyCondition(
-                [System.Windows.Automation.AutomationElement]::NameProperty,
-                'Models & Usage'
-            ))
-        )
         $quotaHeading = $null
         foreach ($headingName in @('Model Quota', 'Model Credits')) {
             $quotaHeading = $window.FindFirst(
@@ -177,7 +167,7 @@ function Get-SelectedModelsContainer($window) {
             )
             if ($null -ne $quotaHeading) { break }
         }
-        if ($null -eq $pageTitle -or $null -eq $quotaHeading) { return $null }
+        if ($null -eq $quotaHeading) { return $null }
         foreach ($anchorName in @('Gemini Models', 'Claude and GPT models')) {
             $anchor = $window.FindFirst(
                 [System.Windows.Automation.TreeScope]::Descendants,
@@ -193,7 +183,9 @@ function Get-SelectedModelsContainer($window) {
 }
 
 function Get-VisibleQuotaControls($container) {
-    # Phase 2: names are read only below the confirmed Models tab, never from the whole window.
+    # Phase 2: names are read only below the confirmed Models page. Chromium maps
+    # ARIA headings to Heading controls, so add only the exact quota headings to
+    # the ordinary Text controls used for labels and values.
     $textCondition = New-Object System.Windows.Automation.PropertyCondition(
         [System.Windows.Automation.AutomationElement]::ControlTypeProperty,
         [System.Windows.Automation.ControlType]::Text
@@ -207,6 +199,24 @@ function Get-VisibleQuotaControls($container) {
         } catch { continue }
         if ([string]::IsNullOrWhiteSpace($name) -or $name.Length -gt 120 -or $bounds.Width -le 0 -or $bounds.Height -le 0) { continue }
         $controls += [pscustomobject]@{ Name = $name; Top = [int]$bounds.Top; Left = [int]$bounds.Left; Order = $order }
+        $order++
+    }
+    foreach ($anchorName in @('Model Quota', 'Model Credits', 'Gemini Models', 'Claude and GPT models')) {
+        if (@($controls | Where-Object { $_.Name -eq $anchorName }).Count -gt 0) { continue }
+        $anchor = $container.FindFirst(
+            [System.Windows.Automation.TreeScope]::Descendants,
+            (New-Object System.Windows.Automation.PropertyCondition(
+                [System.Windows.Automation.AutomationElement]::NameProperty,
+                $anchorName
+            ))
+        )
+        if ($null -eq $anchor) { continue }
+        try {
+            if ($anchor.Current.IsOffscreen) { continue }
+            $bounds = $anchor.Current.BoundingRectangle
+        } catch { continue }
+        if ($bounds.Width -le 0 -or $bounds.Height -le 0) { continue }
+        $controls += [pscustomobject]@{ Name = $anchorName; Top = [int]$bounds.Top; Left = [int]$bounds.Left; Order = $order }
         $order++
     }
     return $controls
@@ -225,7 +235,7 @@ if ($FixturePath) {
     foreach ($window in $topLevelWindows) {
         if ($window.Current.ControlType -ne [System.Windows.Automation.ControlType]::Window) { continue }
         $processMatch = $antigravityProcessIds.Contains([int]$window.Current.ProcessId)
-        $titleMatch = $window.Current.Name -match '(?i)^Settings - Models$'
+        $titleMatch = $window.Current.Name -match '(?i)^Settings(?: - Models)?$'
         if (-not ($processMatch -or $titleMatch)) { continue }
         $modelsContainer = Get-SelectedModelsContainer $window
         if ($null -eq $modelsContainer) { continue }
