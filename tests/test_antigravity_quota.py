@@ -169,6 +169,7 @@ class LocalApiTest(unittest.TestCase):
             "/styles/mortal-seal-card.css",
             "/scripts/quota-card.js",
             "/assets/hanli-nangong-background.png",
+            "/assets/antigravity-nangong-background.jpg",
         ):
             connection = HTTPConnection(host, port, timeout=2)
             connection.request("GET", path)

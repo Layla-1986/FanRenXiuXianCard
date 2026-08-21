@@ -764,13 +764,35 @@ button {
   position: absolute;
   z-index: 20;
   inset: 0;
+  isolation: isolate;
   display: none;
   overflow: hidden;
   color: #f1edff;
+  background: #070908;
+}
+
+.antigravity-page::before,
+.antigravity-page::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.antigravity-page::before {
+  z-index: 0;
+  background-image: url("../assets/antigravity-nangong-background.jpg");
+  background-size: cover;
+  background-position: center 44%;
+  filter: saturate(.78) contrast(1.08) brightness(.73);
+  transform: scale(1.012);
+}
+
+.antigravity-page::after {
+  z-index: 1;
   background:
-    radial-gradient(circle at 17% 26%, rgba(91, 224, 211, .2), transparent 28%),
-    radial-gradient(circle at 84% 48%, rgba(157, 118, 231, .22), transparent 33%),
-    linear-gradient(142deg, #071b1f 0%, #10162d 48%, #251b3d 100%);
+    linear-gradient(90deg, rgba(2, 10, 11, .94) 0%, rgba(3, 11, 12, .78) 42%, rgba(7, 8, 8, .22) 72%, rgba(6, 4, 4, .38) 100%),
+    linear-gradient(0deg, rgba(1, 7, 8, .76) 0%, transparent 30%, rgba(2, 8, 9, .2) 66%, rgba(2, 8, 9, .58) 100%);
 }
 
 .seal-card[data-page="antigravity"] .antigravity-page {
@@ -780,8 +802,9 @@ button {
 
 .antigravity-sky {
   position: absolute;
+  z-index: 2;
   inset: 0;
-  opacity: .78;
+  opacity: .46;
   background:
     linear-gradient(110deg, transparent 0 48%, rgba(113, 226, 220, .08) 49%, transparent 51%),
     radial-gradient(circle at 50% 52%, rgba(237, 232, 255, .08) 0 1px, transparent 2px);
@@ -900,9 +923,10 @@ button {
   height: 66px;
   padding: 9px 15px;
   overflow: hidden;
-  border: 1px solid rgba(176, 153, 230, .22);
+  border: 1px solid rgba(176, 203, 189, .22);
   border-radius: 3px 16px 3px 16px;
-  background: linear-gradient(100deg, rgba(3, 20, 24, .75), rgba(27, 26, 57, .69));
+  background: linear-gradient(100deg, rgba(2, 17, 18, .84), rgba(18, 14, 13, .58));
+  backdrop-filter: blur(3px) saturate(.82);
   box-shadow: inset 0 1px rgba(240, 235, 255, .035), 0 9px 22px rgba(0, 0, 0, .16);
 }
 

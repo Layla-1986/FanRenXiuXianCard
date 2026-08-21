@@ -26,6 +26,7 @@ STATIC_FILES = {
     "/styles/mortal-seal-card.css": "styles/mortal-seal-card.css",
     "/scripts/quota-card.js": "scripts/quota-card.js",
     "/assets/hanli-nangong-background.png": "assets/hanli-nangong-background.png",
+    "/assets/antigravity-nangong-background.jpg": "assets/antigravity-nangong-background.jpg",
 }
 # Credits are an account balance, rather than a percentage.  This cap rejects
 # obviously corrupt automation values without imposing a percentage limit.

@@ -16,6 +16,7 @@ function Assert-True {
 
 $localAssets = @(
     'assets/hanli-nangong-background.png',
+    'assets/antigravity-nangong-background.jpg',
     'assets/nascent-soul-aura-reference.png',
     'assets/dageng-sword-array-v2.png',
     'assets/qingzhu-fengyun-sword-v2.png',
@@ -103,6 +104,9 @@ Assert-True ($css.Contains('width: 480px')) 'Card must retain the exact 480px wi
 Assert-True ($css.Contains('height: 270px')) 'Card must retain the exact 270px height'
 Assert-True ($css.Contains('url("../assets/hanli-nangong-background.png")')) 'Confirmed Han Li and Nangong Wan background must remain active'
 Assert-True ($css.Contains('background-position: 51% 48%')) 'Portrait crop must preserve the face-to-face center'
+Assert-True ($css.Contains('url("../assets/antigravity-nangong-background.jpg")')) 'Antigravity page must use the confirmed portrait background'
+Assert-True ($css.Contains('background-size: cover')) 'Antigravity portrait must fill the 480 by 270 card without distortion'
+Assert-True ($css.Contains('background-position: center 44%')) 'Antigravity crop must preserve the face while excluding the bottom watermark'
 Assert-True (-not $css.Contains('url("../assets/dageng-sword-array-v2.png")')) 'Blurred Great Geng texture overlay must not render'
 Assert-True (-not $css.Contains('.qingzhu-sword')) 'The isolated Qingzhu main sword styling must be removed'
 Assert-True ($css.Contains('.formation-ring--outer {')) 'Outer ring must have its own material rule'
