@@ -2,7 +2,9 @@
 
 ## 界面说明
 
-![Codex 页面](images/mortal-quota-card-codex.png)
+![Codex 页面](images/mortal-quota-card-codex-hd.png)
+
+![Antigravity 页面](images/mortal-quota-card-antigravity-hd.png)
 
 右上角有两个主要控件：
 
