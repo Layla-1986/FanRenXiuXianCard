@@ -3,88 +3,104 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>墨海剑墟 · 法宝封印图卷</title>
+  <title>凡人修仙传 × Codex · 双页灵枢卡</title>
   <link rel="stylesheet" href="styles/mortal-seal-card.css">
   <script src="scripts/quota-card.js" defer></script>
 </head>
 <body>
   <main class="page-shell">
     <header class="showcase-intro">
-      <p class="showcase-kicker">CODEX · 灵力法器</p>
-      <h1>墨海剑墟</h1>
-      <p class="showcase-summary">阵守余量，道在人心；一念通达，亦可炖煮红尘。</p>
+      <p class="showcase-kicker">凡人修仙传 × CODEX</p>
+      <h1>大庚剑阵 · 青玉金焰</h1>
+      <p class="showcase-summary">青玉为体，金焰为势；阵守余量，一念通达。</p>
     </header>
 
     <section class="showcase" aria-labelledby="showcaseTitle">
-      <h2 class="visually-hidden" id="showcaseTitle">凡人修仙主题 Codex 用量悬浮卡片</h2>
-
+      <h2 class="visually-hidden" id="showcaseTitle">凡人修仙主题双页额度悬浮卡片</h2>
       <div class="display-stage">
         <div class="stage-halo" aria-hidden="true"></div>
         <div class="stage-card">
-          <article class="seal-card" id="widget" style="--used: .2" data-used-state="calm" aria-label="Codex 用量法宝封印图卷">
-            <div class="portrait-scene" aria-hidden="true"></div>
-            <div class="scene-veil" aria-hidden="true"></div>
-            <div class="scene-mist scene-mist--one" aria-hidden="true"></div>
-            <div class="scene-mist scene-mist--two" aria-hidden="true"></div>
+          <article class="seal-card" id="widget" data-page="codex" data-energy-state="stable" aria-label="Codex 用量法宝封印图卷">
+            <svg class="formation-defs" width="0" height="0" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="formation-link-gradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#71e2dc" stop-opacity=".18"/>
+                  <stop offset=".48" stop-color="#d5b564" stop-opacity=".74"/>
+                  <stop offset="1" stop-color="#f0a94a" stop-opacity=".16"/>
+                </linearGradient>
+              </defs>
+            </svg>
 
-            <header class="card-mark">
-              <div class="account-mark">
-                <span class="account-name">眭劳模的 Codex</span>
-                <span class="account-caption">遇事不决，可问春风</span>
-              </div>
-              <div class="account-actions">
-                <span class="plan-mark">PLUS</span>
-                <button class="antigravity-seal" id="antigravityToggle" type="button" aria-label="查看反重力额度" aria-pressed="false">
-                  <span aria-hidden="true">引</span>
-                </button>
-                <button class="seal-lock" id="unlockButton" type="button" aria-label="解锁悬浮窗" aria-pressed="false">
-                  <svg viewBox="0 0 24 24" aria-hidden="true">
-                    <path class="lock-shackle" d="M7.5 10V7.4a4.5 4.5 0 0 1 9 0V10" />
-                    <path d="M6.2 10h11.6v9H6.2z" />
-                    <path d="M12 13.1v3" />
-                  </svg>
-                </button>
-              </div>
-            </header>
+            <div class="portrait-base" aria-hidden="true"></div>
+            <svg class="moon-field" viewBox="0 0 480 270" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <filter id="moon-luminance-filter" color-interpolation-filters="sRGB" x="-8%" y="-8%" width="116%" height="116%">
+                  <feGaussianBlur stdDeviation="3.2"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .8504 2.8608 .2888 0 -2.28"/>
+                </filter>
+                <mask id="moon-luminance-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="480" height="270" style="mask-type:alpha">
+                  <image href="assets/hanli-nangong-background.png" x="0" y="-45.9" width="480" height="365.6" preserveAspectRatio="none" filter="url(#moon-luminance-filter)"/>
+                </mask>
+              </defs>
+              <image href="assets/hanli-nangong-background.png" x="0" y="-45.9" width="480" height="365.6" preserveAspectRatio="none" mask="url(#moon-luminance-mask)"/>
+            </svg>
+            <div class="veil" aria-hidden="true"></div>
 
-            <div class="seal-formation" aria-hidden="true">
-              <div class="formation-plane">
-                <i class="formation-ring formation-ring--outer"></i>
-                <i class="formation-ring formation-ring--middle"></i>
-                <i class="formation-ring formation-ring--inner"></i>
-                <i class="formation-axis formation-axis--one"></i>
-                <i class="formation-axis formation-axis--two"></i>
-                <div class="formation-runes">
-                  <b>临</b><b>兵</b><b>斗</b><b>者</b><b>皆</b><b>阵</b><b>列</b><b>前</b>
+            <div class="codex-mark">
+              <strong>眭劳模的 Codex</strong>
+              <small>遇事不决 · 可问春风</small>
+            </div>
+            <div class="account-actions">
+              <span class="sync-status" id="syncStatus" data-state="pending">读取中</span>
+              <span class="plan-mark">PLUS</span>
+              <button class="antigravity-seal" id="antigravityToggle" type="button" aria-label="查看反重力额度" aria-pressed="false">
+                <span aria-hidden="true">引</span>
+              </button>
+              <button class="seal-lock" id="unlockButton" type="button" aria-label="解锁悬浮窗" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="lock-shackle" d="M7.5 10V7.4a4.5 4.5 0 0 1 9 0V10"/>
+                  <path d="M6.2 10h11.6v9H6.2z"/>
+                  <path d="M12 13.1v3"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="formation" aria-hidden="true">
+              <div class="plane">
+                <i class="formation-foundation"></i>
+                <i class="formation-radiance"></i>
+                <i class="seal-track outer-seal"></i>
+                <i class="seal-track inner-seal"></i>
+                <i class="golden-arc-track"></i>
+                <i class="broken-orbit"></i>
+                <i class="axis"></i>
+                <i class="axis two"></i>
+                <svg class="formation-links" viewBox="0 0 206 142">
+                  <path d="M103 71L28 46L172 27L187 107L57 127Z"/>
+                  <path d="M28 46L172 27L187 107L57 127Z" opacity=".44"/>
+                </svg>
+                <div class="runes"><b>临</b><b>兵</b><b>斗</b><b>者</b><b>皆</b><b>阵</b><b>列</b><b>前</b></div>
+                <div class="satellite-system">
+                  <i class="satellite-eye satellite-one"></i>
+                  <i class="satellite-eye satellite-two"></i>
+                  <i class="satellite-eye satellite-three"></i>
+                  <i class="satellite-eye satellite-four"></i>
                 </div>
-                <div class="formation-swords formation-swords--lower-arc">
-                  <i class="formation-sword" data-sword-index="0" style="--angle: 103deg; --radius: 61px; --length: 31px; --delay: .54s"></i>
-                  <i class="formation-sword" data-sword-index="1" style="--angle: 117deg; --radius: 64px; --length: 32px; --delay: .44s"></i>
-                  <i class="formation-sword" data-sword-index="2" style="--angle: 131deg; --radius: 67px; --length: 33px; --delay: .34s"></i>
-                  <i class="formation-sword" data-sword-index="3" style="--angle: 145deg; --radius: 69px; --length: 34px; --delay: .24s"></i>
-                  <i class="formation-sword" data-sword-index="4" style="--angle: 159deg; --radius: 71px; --length: 35px; --delay: .14s"></i>
-                  <i class="formation-sword" data-sword-index="5" style="--angle: 173deg; --radius: 72px; --length: 36px; --delay: .04s"></i>
-                  <i class="formation-sword" data-sword-index="6" style="--angle: 187deg; --radius: 72px; --length: 36px; --delay: .09s"></i>
-                  <i class="formation-sword" data-sword-index="7" style="--angle: 201deg; --radius: 71px; --length: 35px; --delay: .19s"></i>
-                  <i class="formation-sword" data-sword-index="8" style="--angle: 215deg; --radius: 69px; --length: 34px; --delay: .29s"></i>
-                  <i class="formation-sword" data-sword-index="9" style="--angle: 229deg; --radius: 67px; --length: 33px; --delay: .39s"></i>
-                  <i class="formation-sword" data-sword-index="10" style="--angle: 243deg; --radius: 64px; --length: 32px; --delay: .49s"></i>
-                  <i class="formation-sword" data-sword-index="11" style="--angle: 257deg; --radius: 61px; --length: 31px; --delay: .59s"></i>
-                </div>
+                <div class="formation-particles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
               </div>
-              <i class="formation-core"></i>
+              <i class="core-dot"></i>
             </div>
 
             <section class="quota-eye" aria-label="七日额度余量">
-              <span class="quota-aura" aria-hidden="true"></span>
+              <i class="quota-aura" aria-hidden="true"></i>
               <strong id="percent">80%</strong>
             </section>
 
-            <section class="quota-ledger" aria-label="额度状态">
+            <section class="ledger" aria-label="Codex 额度状态">
               <div class="ledger-item ledger-item--cycle">
                 <span class="ledger-kicker">本周期消耗</span>
                 <strong id="used">已用 20%</strong>
-                <span class="ledger-note">8月4日 18:30 重置</span>
+                <span class="ledger-note" id="resetAt">重置时间待定</span>
               </div>
               <i class="ledger-divider" aria-hidden="true"></i>
               <div class="ledger-item ledger-item--balance">
@@ -93,10 +109,7 @@
               </div>
             </section>
 
-            <footer class="card-foot">
-              <span class="mortal-motto">念头通达</span>
-              <span class="mortal-motto">炖煮红尘</span>
-            </footer>
+            <div class="motto">念头通达 · 炖煮红尘</div>
 
             <section class="antigravity-page" aria-label="Antigravity 账户额度" aria-hidden="true">
               <div class="antigravity-sky" aria-hidden="true">
@@ -106,7 +119,6 @@
               <header class="antigravity-heading">
                 <span class="antigravity-kicker">ANTIGRAVITY · 灵枢账簿</span>
               </header>
-
               <div class="model-ledgers">
                 <article class="model-ledger model-ledger--gemini">
                   <header><strong>Gemini Models</strong></header>
@@ -129,7 +141,6 @@
                   </div>
                 </article>
               </div>
-
               <footer class="antigravity-status">
                 <span class="sync-orb" aria-hidden="true"></span>
                 <strong id="agSyncStatus">待同步</strong>
@@ -144,12 +155,13 @@
       <div class="demo-console" aria-label="额度状态演示">
         <div class="console-copy">
           <span>灵力推演</span>
-          <strong>剑位会随周期消耗渐次隐入阵中</strong>
+          <strong>月盘、阵轨与青玉金焰随额度连续变化</strong>
         </div>
         <div class="state-buttons">
-          <button class="active" type="button" data-used=".2" aria-pressed="true">已用 20%</button>
-          <button type="button" data-used=".55" aria-pressed="false">已用 55%</button>
-          <button type="button" data-used=".85" aria-pressed="false">已用 85%</button>
+          <button class="active" type="button" data-remain="80" aria-pressed="true">余量 80%</button>
+          <button type="button" data-remain="50" aria-pressed="false">余量 50%</button>
+          <button type="button" data-remain="20" aria-pressed="false">余量 20%</button>
+          <button type="button" data-remain="100" aria-pressed="false">余量 100%</button>
         </div>
       </div>
     </section>

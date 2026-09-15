@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>凡人修仙传 × Codex · 双限同参概念稿</title>
+  <link rel="stylesheet" href="styles/mortal-seal-card.css">
+  <style>
+    .five-hour-concept {
+      --five-hour-color: #76e6cb;
+      --five-hour-glow: rgba(118, 230, 203, .42);
+      --ledger-sigil-color: #71e2dc;
+      --ledger-sigil-glow: rgba(113, 226, 220, .28);
+      --ledger-value-color: #d5b564;
+      --ledger-value-glow: rgba(213, 181, 100, .4);
+    }
+
+    .five-hour-concept .showcase-summary { letter-spacing: .22em; }
+    .five-hour-concept .sync-status { color: rgba(213, 181, 100, .82); }
+    .five-hour-concept .account-actions { right: 14px; }
+
+    .five-hour-concept .ledger {
+      right: 10px;
+      top: 168px;
+      width: 138px;
+      padding: 5px 0 1px;
+      overflow: hidden;
+      border-color: rgba(196, 237, 221, .18);
+      border-radius: 6px 17px 6px 17px;
+      background:
+        linear-gradient(90deg, rgba(3, 21, 22, .7) 0 32px, rgba(213, 181, 100, .12) 32px 33px, transparent 33px),
+        linear-gradient(102deg, rgba(3, 16, 17, .12), rgba(8, 28, 27, .58)),
+        radial-gradient(circle at 78% 22%, rgba(118, 230, 203, .08), transparent 46%);
+      box-shadow:
+        inset 0 1px rgba(234, 248, 238, .08),
+        inset 0 0 22px rgba(118, 230, 203, .035),
+        -12px 13px 30px rgba(0, 0, 0, .14);
+      backdrop-filter: blur(2.4px) saturate(1.12);
+    }
+
+    .five-hour-concept .ledger-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 33px minmax(0, 1fr);
+      grid-template-rows: 15px 13px;
+      row-gap: 1px;
+      align-items: center;
+      min-height: 33px;
+      padding: 2px 8px 2px 0;
+    }
+
+    .five-hour-concept .ledger-row + .ledger-row {
+      border-top: 1px solid rgba(213, 181, 100, .16);
+    }
+
+    .ledger-sigil {
+      position: relative;
+      grid-row: 1 / 3;
+      grid-column: 1;
+      justify-self: center;
+      width: 18px;
+      height: 18px;
+      border: 1px solid color-mix(in srgb, var(--ledger-sigil-color) 58%, transparent);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: var(--ledger-sigil-color);
+      font: 8px/1 STKaiti, KaiTi, serif;
+      box-shadow: 0 0 7px var(--ledger-sigil-glow), inset 0 0 7px color-mix(in srgb, var(--ledger-sigil-color) 14%, transparent);
+    }
+
+    .five-hour-concept .ledger-sigil::before {
+      content: "";
+      position: absolute;
+      inset: -3px;
+      border-radius: 50%;
+      pointer-events: none;
+      border: 1px dashed color-mix(in srgb, var(--ledger-sigil-color) 46%, transparent);
+      opacity: .82;
+    }
+
+    .five-hour-concept .ledger-value {
+      grid-column: 2;
+      align-self: end;
+      justify-self: end;
+      width: 100%;
+      color: var(--ledger-value-color);
+      font: 400 13px/15px STKaiti, KaiTi, "Bodoni 72", Didot, Georgia, serif;
+      letter-spacing: .025em;
+      font-variant-numeric: tabular-nums;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .five-hour-concept .ledger-value {
+      text-shadow: 0 0 9px var(--ledger-value-glow), 0 2px 5px rgba(0, 0, 0, .8);
+    }
+
+    .five-hour-concept .ledger-reset {
+      grid-column: 2;
+      align-self: center;
+      justify-self: end;
+      width: 100%;
+      color: rgba(197, 224, 213, .68);
+      font: 9px/11px STKaiti, KaiTi, "Microsoft YaHei", sans-serif;
+      letter-spacing: .015em;
+      white-space: nowrap;
+      text-align: right;
+    }
+
+    .five-hour-concept[data-five-state="warning"] {
+      --five-hour-color: #efc36d;
+      --five-hour-glow: rgba(239, 195, 109, .42);
+    }
+
+    .five-hour-concept[data-five-state="critical"] {
+      --five-hour-color: #f18a5d;
+      --five-hour-glow: rgba(241, 138, 93, .5);
+    }
+
+    .five-hour-concept[data-five-state="critical"] .ledger-row--five {
+      background: linear-gradient(90deg, transparent, rgba(168, 91, 69, .08));
+    }
+
+    .concept-caption {
+      display: grid;
+      gap: 4px;
+    }
+
+    .concept-caption em {
+      color: rgba(113, 226, 220, .62);
+      font: 10px/1.4 STKaiti, KaiTi, serif;
+      letter-spacing: .08em;
+    }
+
+  </style>
+</head>
+<body>
+  <main class="page-shell five-hour-concept" id="concept" data-five-state="full">
+    <header class="showcase-intro">
+      <p class="showcase-kicker">凡人修仙传 × CODEX · 概念稿</p>
+      <h1>双限同参 · 五时副印</h1>
+      <p class="showcase-summary">七日为阵，五时为印；主次分明，同守灵府。</p>
+    </header>
+
+    <section class="showcase" aria-labelledby="showcaseTitle">
+      <h2 class="visually-hidden" id="showcaseTitle">Codex 七日与五小时额度概念卡片</h2>
+      <div class="display-stage">
+        <div class="stage-halo" aria-hidden="true"></div>
+        <div class="stage-card">
+          <article class="seal-card" id="widget" data-page="codex" data-energy-state="stable" aria-label="Codex 双额度法宝封印图卷">
+            <svg class="formation-defs" width="0" height="0" aria-hidden="true" focusable="false">
+              <defs>
+                <linearGradient id="formation-link-gradient" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#71e2dc" stop-opacity=".18"/>
+                  <stop offset=".48" stop-color="#d5b564" stop-opacity=".74"/>
+                  <stop offset="1" stop-color="#f0a94a" stop-opacity=".16"/>
+                </linearGradient>
+              </defs>
+            </svg>
+
+            <div class="portrait-base" aria-hidden="true"></div>
+            <svg class="moon-field" viewBox="0 0 480 270" preserveAspectRatio="none" aria-hidden="true">
+              <defs>
+                <filter id="moon-luminance-filter" color-interpolation-filters="sRGB" x="-8%" y="-8%" width="116%" height="116%">
+                  <feGaussianBlur stdDeviation="3.2"/>
+                  <feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  .8504 2.8608 .2888 0 -2.28"/>
+                </filter>
+                <mask id="moon-luminance-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="480" height="270" style="mask-type:alpha">
+                  <image href="assets/hanli-nangong-background.png" x="0" y="-45.9" width="480" height="365.6" preserveAspectRatio="none" filter="url(#moon-luminance-filter)"/>
+                </mask>
+              </defs>
+              <image href="assets/hanli-nangong-background.png" x="0" y="-45.9" width="480" height="365.6" preserveAspectRatio="none" mask="url(#moon-luminance-mask)"/>
+            </svg>
+            <div class="veil" aria-hidden="true"></div>
+
+            <div class="codex-mark">
+              <strong>眭劳模的 Codex</strong>
+              <small>遇事不决 · 可问春风</small>
+            </div>
+            <div class="account-actions">
+              <span class="sync-status" data-state="preview">概念</span>
+              <span class="plan-mark">PLUS</span>
+              <button class="seal-lock" type="button" aria-label="解锁悬浮窗" aria-pressed="false">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path class="lock-shackle" d="M7.5 10V7.4a4.5 4.5 0 0 1 9 0V10"/>
+                  <path d="M6.2 10h11.6v9H6.2z"/>
+                  <path d="M12 13.1v3"/>
+                </svg>
+              </button>
+            </div>
+
+            <div class="formation" aria-hidden="true">
+              <div class="plane">
+                <i class="formation-foundation"></i>
+                <i class="formation-radiance"></i>
+                <i class="seal-track outer-seal"></i>
+                <i class="seal-track inner-seal"></i>
+                <i class="golden-arc-track"></i>
+                <i class="broken-orbit"></i>
+                <i class="axis"></i>
+                <i class="axis two"></i>
+                <svg class="formation-links" viewBox="0 0 206 142">
+                  <path d="M103 71L28 46L172 27L187 107L57 127Z"/>
+                  <path d="M28 46L172 27L187 107L57 127Z" opacity=".44"/>
+                </svg>
+                <div class="runes"><b>临</b><b>兵</b><b>斗</b><b>者</b><b>皆</b><b>阵</b><b>列</b><b>前</b></div>
+                <div class="satellite-system">
+                  <i class="satellite-eye satellite-one"></i>
+                  <i class="satellite-eye satellite-two"></i>
+                  <i class="satellite-eye satellite-three"></i>
+                  <i class="satellite-eye satellite-four"></i>
+                </div>
+                <div class="formation-particles"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+              </div>
+              <i class="core-dot"></i>
+            </div>
+
+            <section class="quota-eye" aria-label="七日额度余量">
+              <i class="quota-aura" aria-hidden="true"></i>
+              <strong id="weeklyPercent">80%</strong>
+            </section>
+
+            <section class="ledger" aria-label="Codex 七日、五小时与余额状态">
+              <div class="ledger-row ledger-row--five">
+                <i class="ledger-sigil" aria-hidden="true">五</i>
+                <strong class="ledger-value" id="fiveHourPercent">余94%</strong>
+                <span class="ledger-reset" id="fiveHourReset">9月4日 23:30 重置</span>
+              </div>
+              <div class="ledger-row ledger-row--week">
+                <i class="ledger-sigil" aria-hidden="true">周</i>
+                <strong class="ledger-value" id="weeklyUsed">已用20%</strong>
+                <span class="ledger-reset" id="weeklyReset">8月31日 18:30 重置</span>
+              </div>
+              <div class="ledger-row ledger-row--balance">
+                <i class="ledger-sigil" aria-hidden="true">灵</i>
+                <strong class="ledger-value">$39.36</strong>
+                <span class="ledger-reset">9月21日 07:45 到期</span>
+              </div>
+            </section>
+
+            <div class="motto">念头通达 · 炖煮红尘</div>
+          </article>
+        </div>
+        <p class="size-mark">480 × 270 · 独立视觉稿，不修改当前版本</p>
+      </div>
+
+      <div class="demo-console" aria-label="五小时额度状态演示">
+        <div class="console-copy concept-caption">
+          <span>五时副印</span>
+          <strong>七日主阵保持不动，短周期额度只改变右侧副印</strong>
+          <em>青玉充盈 · 金焰临界 · 赤焰告急</em>
+        </div>
+        <div class="state-buttons">
+          <button class="active" type="button" data-five="94" data-state="full" aria-pressed="true">五时 94%</button>
+          <button type="button" data-five="42" data-state="warning" aria-pressed="false">五时 42%</button>
+          <button type="button" data-five="16" data-state="critical" aria-pressed="false">五时 16%</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const concept = document.querySelector('#concept');
+    const fiveHour = document.querySelector('#fiveHourPercent');
+    const fiveHourReset = document.querySelector('#fiveHourReset');
+    const buttons = [...document.querySelectorAll('[data-five]')];
+    const resetMinutes = { full: 131, warning: 63, critical: 18 };
+
+    function formatResetTime(minutesFromNow) {
+      const resetAt = new Date(Date.now() + minutesFromNow * 60_000);
+      const month = resetAt.getMonth() + 1;
+      const day = resetAt.getDate();
+      const hour = String(resetAt.getHours()).padStart(2, '0');
+      const minute = String(resetAt.getMinutes()).padStart(2, '0');
+      return `${month}月${day}日 ${hour}:${minute} 重置`;
+    }
+
+    fiveHourReset.textContent = formatResetTime(resetMinutes.full);
+
+    buttons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const state = button.dataset.state;
+        concept.dataset.fiveState = state;
+        fiveHour.textContent = `余${button.dataset.five}%`;
+        fiveHourReset.textContent = formatResetTime(resetMinutes[state]);
+        buttons.forEach((item) => {
+          const active = item === button;
+          item.classList.toggle('active', active);
+          item.setAttribute('aria-pressed', String(active));
+        });
+      });
+    });
+  </script>
+</body>
+</html>

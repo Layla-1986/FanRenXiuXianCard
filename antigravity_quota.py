@@ -10,12 +10,15 @@ import re
 import subprocess
 import tempfile
 import threading
+from decimal import Decimal, InvalidOperation
 from datetime import datetime, timedelta, timezone
 from http import HTTPStatus
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any, Callable, Mapping, Sequence
 from urllib.parse import urlparse
+
+from mortal_quota.codex import CodexAccountProvider, CodexAppServerClient, CodexSessionReader
 
 
 SOURCE = "antigravity-ui-automation"
@@ -24,15 +27,21 @@ EXPIRED_AFTER = timedelta(hours=24)
 STATIC_FILES = {
     "/": "original-artifact-refined.html",
     "/original-artifact-refined.html": "original-artifact-refined.html",
+    "/quota-card-app.html": "quota-card-app.html",
     "/styles/mortal-seal-card.css": "styles/mortal-seal-card.css",
     "/scripts/quota-card.js": "scripts/quota-card.js",
+    "/scripts/quota-card-app.js": "scripts/quota-card-app.js",
     "/assets/hanli-nangong-background.png": "assets/hanli-nangong-background.png",
     "/assets/antigravity-nangong-background.jpg": "assets/antigravity-nangong-background.jpg",
+    "/.superpowers/brainstorm/sword-array-qingzhu-model-v6.html": ".superpowers/brainstorm/sword-array-qingzhu-model-v6.html",
 }
 # Credits are an account balance, rather than a percentage.  This cap rejects
 # obviously corrupt automation values without imposing a percentage limit.
 MAX_AI_CREDITS = 1_000_000_000
 LOGGER = logging.getLogger(__name__)
+CODEX_STALE_AFTER = timedelta(minutes=10)
+CODEX_TAIL_BYTES = 512 * 1024
+CODEX_SESSION_CANDIDATES = 32
 
 
 def _timestamp(value: datetime) -> str:
@@ -46,6 +55,112 @@ def _parse_timestamp(value: object) -> datetime | None:
         return datetime.fromisoformat(value.replace("Z", "+00:00")).astimezone(timezone.utc)
     except ValueError:
         return None
+
+
+class CodexQuotaReader:
+    """Read the newest public rate-limit snapshot from local Codex session events."""
+
+    def __init__(self, sessions_root: Path | str) -> None:
+        self.sessions_root = Path(sessions_root)
+
+    @staticmethod
+    def _tail_lines(path: Path) -> list[str]:
+        try:
+            with path.open("rb") as stream:
+                stream.seek(0, os.SEEK_END)
+                size = stream.tell()
+                stream.seek(max(0, size - CODEX_TAIL_BYTES))
+                data = stream.read()
+        except OSError:
+            return []
+        if size > CODEX_TAIL_BYTES:
+            data = data.split(b"\n", 1)[-1]
+        return data.decode("utf-8", errors="ignore").splitlines()
+
+    @staticmethod
+    def _event_payload(line: str) -> tuple[datetime, dict[str, Any]] | None:
+        try:
+            event = json.loads(line)
+        except (TypeError, json.JSONDecodeError):
+            return None
+        payload = event.get("payload") if isinstance(event, Mapping) else None
+        if not isinstance(payload, Mapping) or payload.get("type") != "token_count":
+            return None
+        limits = payload.get("rate_limits")
+        primary = limits.get("primary") if isinstance(limits, Mapping) else None
+        used = primary.get("used_percent") if isinstance(primary, Mapping) else None
+        timestamp = _parse_timestamp(event.get("timestamp"))
+        if timestamp is None or isinstance(used, bool) or not isinstance(used, (int, float)) or not 0 <= used <= 100:
+            return None
+
+        credits = limits.get("credits") if isinstance(limits, Mapping) else None
+        balance = credits.get("balance") if isinstance(credits, Mapping) else None
+        if balance is not None:
+            try:
+                parsed_balance = Decimal(str(balance))
+                balance = str(balance) if parsed_balance.is_finite() and parsed_balance >= 0 else None
+            except (InvalidOperation, ValueError):
+                balance = None
+        resets_at = primary.get("resets_at")
+        if isinstance(resets_at, bool) or not isinstance(resets_at, (int, float)) or resets_at < 0:
+            resets_at = None
+        window_minutes = primary.get("window_minutes")
+        if isinstance(window_minutes, bool) or not isinstance(window_minutes, (int, float)) or window_minutes <= 0:
+            window_minutes = None
+        data = {
+            "usedPercent": used,
+            "remainingPercent": 100 - used,
+            "windowMinutes": window_minutes,
+            "resetsAt": resets_at,
+            "creditBalance": balance,
+            "planType": limits.get("plan_type") if isinstance(limits.get("plan_type"), str) else None,
+        }
+        return timestamp, data
+
+    def public_payload(self, now: datetime | None = None) -> dict[str, Any]:
+        clock = (now or datetime.now(timezone.utc)).astimezone(timezone.utc)
+        newest: tuple[datetime, dict[str, Any]] | None = None
+        try:
+            files = sorted(
+                self.sessions_root.rglob("*.jsonl"),
+                key=lambda path: path.stat().st_mtime,
+                reverse=True,
+            )[:CODEX_SESSION_CANDIDATES]
+        except OSError:
+            files = []
+        for path in files:
+            for line in reversed(self._tail_lines(path)):
+                candidate = self._event_payload(line)
+                if candidate is not None:
+                    if newest is None or candidate[0] > newest[0]:
+                        newest = candidate
+                    break
+
+        empty = {
+            "source": "codex-local-session",
+            "status": "unavailable",
+            "usedPercent": None,
+            "remainingPercent": None,
+            "windowMinutes": None,
+            "resetsAt": None,
+            "creditBalance": None,
+            "planType": None,
+            "updatedAt": None,
+        }
+        if newest is None:
+            return empty
+        timestamp, values = newest
+        return {
+            "source": empty["source"],
+            "status": "stale" if clock - timestamp >= CODEX_STALE_AFTER else "fresh",
+            **values,
+            "updatedAt": _timestamp(timestamp),
+        }
+
+
+# Keep the original import name for the browser prototype and its callers while
+# using the shared two-window reader required by the desktop application.
+CodexQuotaReader = CodexSessionReader
 
 
 def _remaining(value: object) -> int | None:
@@ -282,6 +397,7 @@ def start_server(
     host: str = "127.0.0.1",
     port: int = 8765,
     now: Callable[[], datetime] | None = None,
+    codex_reader: Any | None = None,
 ) -> ThreadingHTTPServer:
     """Create a server that deliberately cannot be exposed beyond loopback."""
     if host != "127.0.0.1":
@@ -295,6 +411,16 @@ def start_server(
 
         def do_GET(self) -> None:  # noqa: N802 - required HTTP handler name
             request_path = urlparse(self.path).path
+            if request_path == "/api/codex-quota":
+                reader = getattr(self.server, "codex_reader")
+                body = json.dumps(reader.public_payload(clock()), ensure_ascii=False).encode("utf-8")
+                self.send_response(HTTPStatus.OK)
+                self.send_header("Content-Type", "application/json; charset=utf-8")
+                self.send_header("Content-Length", str(len(body)))
+                self.send_header("Cache-Control", "no-store")
+                self.end_headers()
+                self.wfile.write(body)
+                return
             if request_path == "/api/antigravity-quota":
                 body = json.dumps(store.public_payload(clock()), ensure_ascii=False).encode("utf-8")
                 self.send_response(HTTPStatus.OK)
@@ -316,7 +442,11 @@ def start_server(
         def log_message(self, format: str, *args: object) -> None:
             return
 
-    return ThreadingHTTPServer((host, port), Handler)
+    server = ThreadingHTTPServer((host, port), Handler)
+    server.codex_reader = codex_reader or CodexAccountProvider(
+        CodexAppServerClient(), CodexSessionReader(Path.home() / ".codex" / "sessions")
+    )
+    return server
 
 
 def main(argv: Sequence[str] | None = None) -> int:

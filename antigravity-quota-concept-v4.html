@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>反重力概念稿4 · 御气凌霄</title>
+<style>
+:root{--ink:#091b17;--jade:#8cbca5;--gold:#a68b52;--moon:#e7e7d6;--muted:#94a394}
+*{box-sizing:border-box}body{margin:0;background:#081410;color:var(--moon);font-family:Georgia,"Microsoft YaHei",serif;min-height:100dvh;padding:42px 20px}main{max-width:880px;margin:auto}
+.intro{display:flex;justify-content:space-between;align-items:end;margin-bottom:24px;border-bottom:1px solid #a68b5233;padding-bottom:16px}.intro p{margin:0;color:var(--gold);font:11px/1.6 Consolas,monospace;letter-spacing:.16em}.intro h1{margin:8px 0 0;font:24px KaiTi,STKaiti,serif;font-weight:400;letter-spacing:.12em}.intro span{font-size:11px;color:var(--muted)}
+.mount{padding:6px;background:#142720;outline:1px solid #a68b5238}.card{position:relative;container-type:inline-size;aspect-ratio:480/270;overflow:hidden;background:#091b17;isolation:isolate}
+.portrait{position:absolute;inset:0;background:url('assets/antigravity-nangong-background.jpg') center 44%/cover;z-index:-3}
+.shade{position:absolute;inset:0;z-index:-2;background:linear-gradient(90deg,#091b17f5 0%,#091b17c9 25%,#091b177a 45%,transparent 75%)}
+.brand{position:absolute;top:8%;left:5%;font:1.7cqw Consolas,monospace;letter-spacing:.24em;color:var(--jade)}
+.title{position:absolute;left:4.3%;top:15%;margin:0;font:8.6cqw/1.2 KaiTi,STKaiti,serif;letter-spacing:.1em;color:var(--moon);font-weight:400}.verse{position:absolute;left:5%;top:36%;font:1.8cqw KaiTi,STKaiti,serif;letter-spacing:.3em;color:#b5b8a1}
+.editorial-mark{position:absolute;right:4%;top:8%;writing-mode:vertical-rl;font:1.65cqw/1.8 KaiTi,serif;letter-spacing:.22em;color:#e7e7d6;opacity:.85}
+.instrument{position:absolute;left:2%;bottom:8%;width:29%;aspect-ratio:1;margin:0}.instrument svg{width:100%;height:100%;overflow:visible}.instrument .readout{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.8cqw}.readout small{font:1.5cqw Consolas,monospace;letter-spacing:.08em;color:var(--jade)}.readout strong{font:7.2cqw/.95 Georgia,serif;letter-spacing:-.065em;font-weight:400;color:var(--moon)}.readout strong span{font-size:3.4cqw;margin-left:.3cqw}.readout em{font:1.6cqw "Microsoft YaHei",sans-serif;color:var(--muted);font-style:normal}
+.progress{transition:stroke-dasharray 900ms cubic-bezier(.22,.8,.25,1)}
+.stats{position:absolute;left:35%;right:18%;top:48%;padding:0 1cqw;color:var(--moon)}
+.group{padding:1cqw 0 1.4cqw;border-top:1px solid #a68b5266;position:relative}.group:before{content:"";position:absolute;top:-2px;left:0;width:3px;height:3px;background:var(--gold)}
+.group button{display:block;padding:0;margin:0 0 .85cqw;background:none;border:0;color:var(--muted);font:2.25cqw/1.25 Georgia,serif;cursor:pointer;transition:color 300ms cubic-bezier(.22,.8,.25,1)}.group button[aria-pressed="true"]{color:var(--moon)}.group button:hover{color:var(--jade)}.group button:focus-visible{outline:1px solid var(--jade);outline-offset:3px}
+.measurements{display:grid;grid-template-columns:1fr 1fr;gap:2.5cqw}.metric{display:grid;grid-template-columns:auto 1fr;gap:.4cqw .9cqw;align-items:end}.metric label{grid-column:1/-1;font:1.55cqw/1.2 "Microsoft YaHei",sans-serif;color:var(--jade);letter-spacing:.09em}.metric strong{font:3.35cqw/1 Georgia,serif;letter-spacing:-.04em;color:#d2b476;font-weight:400}.metric time{font:1.65cqw/1.25 Consolas,"Microsoft YaHei",monospace;text-align:right;color:#c6cbb8;font-variant-numeric:tabular-nums}.metric time small{font:inherit;color:#9aab97}
+.foot{position:absolute;left:5%;right:4%;bottom:3.5%;display:flex;justify-content:space-between;align-items:center;font:1.45cqw/1.2 Consolas,"Microsoft YaHei",monospace;letter-spacing:.06em;color:#b0b79e}.foot span:first-child:before{content:"";display:inline-block;width:.6cqw;height:.6cqw;background:var(--gold);margin-right:1cqw}
+.caption{margin:18px 0 0;color:var(--muted);display:flex;justify-content:space-between;font:11px/1.8 "Microsoft YaHei",sans-serif}.caption a{color:var(--gold);text-decoration:none;border-bottom:1px solid #a68b5255}.caption a:focus-visible{outline:1px solid var(--jade)}
+@keyframes entrance{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}.mount{animation:entrance 850ms cubic-bezier(.22,.8,.25,1) both}
+@media(max-width:520px){body{padding:24px 12px}.intro{align-items:start}.intro span{max-width:100px;text-align:right}.mount{padding:3px}.caption{gap:12px}.intro h1{font-size:21px}}
+@media(prefers-reduced-motion:reduce){.mount{animation:none}.progress,.group button{transition:none}}
+
+/* Concept 04: preserve the portrait; refine only the instrument and data rhythm. */
+.stats{left:33%;right:17%;top:43%;padding:0 1cqw}
+.group{padding:1cqw 0 .8cqw;border-top:0}
+.group:after{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,#a68b5280,#a68b523b 65%,transparent)}
+.group:before{top:-1px;width:3px;height:3px;opacity:.7}
+.group button{font-size:2.45cqw;margin-bottom:1cqw;display:flex;align-items:center;gap:.8cqw;min-height:3cqw}
+.group button:after{content:"";width:.55cqw;height:.55cqw;border:1px solid var(--jade);transform:rotate(45deg);opacity:0;transition:opacity 300ms cubic-bezier(.22,.8,.25,1)}
+.group button[aria-pressed="true"]:after{opacity:1}
+.measurements{gap:2cqw}
+.metric{grid-template-columns:8.5cqw minmax(0,1fr);grid-template-rows:auto 5.2cqw;align-items:center;gap:.65cqw 1cqw}
+.metric label,.metric .reset-label{grid-column:auto;font:1.8cqw/1.2 "Microsoft YaHei",sans-serif;letter-spacing:.02em;color:var(--jade);white-space:nowrap}
+.metric strong{font-size:3.8cqw;line-height:1.2;font-variant-numeric:lining-nums tabular-nums;letter-spacing:-.035em}
+.metric time{font-size:1.9cqw;line-height:1.35;white-space:nowrap;color:#d3d5c4;text-align:left}
+.metric time small{font-size:1.65cqw;color:#a8b8a6}
+.readout small{font-size:1.6cqw}.readout em{font-size:1.8cqw}
+.instrument:before{content:"";position:absolute;inset:10%;border-radius:50%;background:radial-gradient(circle,#8cbca516,transparent 70%);animation:breathe 6s cubic-bezier(.45,0,.55,1) infinite;pointer-events:none}
+.spark{animation:breathe 6s cubic-bezier(.45,0,.55,1) infinite;transform-origin:146px 47px}
+@keyframes breathe{0%,100%{opacity:.35;transform:scale(.96)}50%{opacity:.9;transform:scale(1.04)}}
+@media(prefers-reduced-motion:reduce){.instrument:before,.spark{animation:none}.group button:after{transition:none}}
+
+/* Left-aligned editorial ledger, without the retired instrument. */
+.stats{left:5%;right:33%;top:43%;padding:0}
+.group{padding:.8cqw 0 .8cqw}
+.group h3{margin:0 0 1cqw;font:400 2.9cqw/1.2 STKaiti,KaiTi,serif;color:var(--moon);letter-spacing:.06em}
+.measurements{gap:2.6cqw}
+.metric{grid-template-columns:10.7cqw minmax(0,1fr);column-gap:1.3cqw}
+.metric label,.metric .reset-label{font-family:STKaiti,KaiTi,serif;font-size:2.25cqw;letter-spacing:.06em;color:rgba(113,226,220,.72)}
+.metric strong{font-family:STKaiti,KaiTi,serif;font-size:4.1cqw;font-weight:400;letter-spacing:.04em;color:rgba(213,181,100,.96)}
+.metric time{font-family:STKaiti,KaiTi,serif;font-size:2.4cqw;line-height:1.2;letter-spacing:.02em;font-variant-numeric:lining-nums tabular-nums;color:#b7c8bd}
+/* Keep the shared column labels accessible without repeating them visually. */
+.group + .group .metric{grid-template-rows:5.2cqw}
+.group + .group .metric label,.group + .group .reset-label{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+</style>
+</head>
+<body><main>
+<header class="intro"><div><p>ANTIGRAVITY / CONCEPT 04</p><h1>东方仙侠 · 深色编辑</h1></div><span>墨绿 / 玉青 / 暗金 / 月白</span></header>
+<div class="mount"><article class="card" aria-label="反重力概念稿4，示例额度">
+<div class="portrait" aria-hidden="true"></div><div class="shade" aria-hidden="true"></div>
+<div class="brand">ANTIGRAVITY</div><h2 class="title">御气凌霄</h2><div class="verse">遇事不决，可问春风</div><div class="editorial-mark">灵枢 · 观气</div>
+<section class="stats" aria-label="模型额度及重置时间">
+<section class="group"><h3>Gemini Models</h3><div class="measurements">
+<div class="metric"><label>周天余量</label><span class="reset-label">重置时间</span><strong>99%</strong><time datetime="2026-09-13T18:30:00+08:00">09/13 18:30</time></div>
+<div class="metric"><label>五时余量</label><span class="reset-label">重置时间</span><strong>94%</strong><time datetime="2026-09-06T21:30:00+08:00">09/06 21:30</time></div>
+</div></section>
+<section class="group"><h3>Claude &amp; GPT</h3><div class="measurements">
+<div class="metric"><label>周天余量</label><span class="reset-label">重置时间</span><strong>78%</strong><time datetime="2026-09-13T18:30:00+08:00">09/13 18:30</time></div>
+<div class="metric"><label>五时余量</label><span class="reset-label">重置时间</span><strong>100%</strong><time>待同步</time></div>
+</div></section>
+</section>
+<footer class="foot"><span>概念预览 · 非实时数据</span><span>周天 / 五时</span></footer>
+</article></div>
+<div class="caption"><span>480 × 270 比例 · 模型额度一览</span><a href="antigravity-quota-concept-v3.html">对比概念稿3</a></div>
+</main></body></html>

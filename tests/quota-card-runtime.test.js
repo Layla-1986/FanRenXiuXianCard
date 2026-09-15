@@ -39,15 +39,29 @@ function createStorage(initial = {}) {
 }
 
 async function flushAsyncWork() {
-  await Promise.resolve();
-  await Promise.resolve();
+  await new Promise((resolve) => setImmediate(resolve));
 }
 
-async function loadQuotaCard({ storage = createStorage(), fetchImpl = async () => ({ ok: true, json: async () => ({ status: 'fresh' }) }) } = {}) {
+async function loadQuotaCard({ storage = createStorage(), fetchImpl } = {}) {
+  const fetchCalls = [];
+  const intervals = [];
+  const defaultFetch = async (url) => ({
+    ok: true,
+    json: async () => url === '/api/codex-quota'
+      ? { status: 'fresh', remainingPercent: 80, usedPercent: 20, resetsAt: 1787897582, creditBalance: 984.94351 }
+      : { status: 'fresh' }
+  });
+  const request = async (...args) => {
+    fetchCalls.push(args);
+    return (fetchImpl || defaultFetch)(...args);
+  };
   const elements = {
     widget: createElement(),
     percent: createElement(),
     used: createElement(),
+    resetAt: createElement(),
+    balance: createElement(),
+    syncStatus: createElement(),
     unlockButton: createElement(),
     antigravityToggle: createElement(),
     antigravityPage: createElement(),
@@ -62,10 +76,10 @@ async function loadQuotaCard({ storage = createStorage(), fetchImpl = async () =
     agSyncStatus: createElement(),
     agSyncedAt: createElement()
   };
-  const swords = Array.from({ length: 12 }, createElement);
-  const states = ['.2', '.55', '.85'].map((used) => Object.assign(createElement(), { dataset: { used } }));
+  const states = ['80', '50', '20', '100'].map((remain) => Object.assign(createElement(), { dataset: { remain } }));
   const selectors = new Map([
     ['#widget', elements.widget], ['#percent', elements.percent], ['#used', elements.used],
+    ['#resetAt', elements.resetAt], ['#balance', elements.balance], ['#syncStatus', elements.syncStatus],
     ['#unlockButton', elements.unlockButton], ['#antigravityToggle', elements.antigravityToggle],
     ['.antigravity-page', elements.antigravityPage],
     ['#agGeminiWeekly', elements.agGeminiWeekly], ['#agGeminiFiveHour', elements.agGeminiFiveHour],
@@ -79,22 +93,37 @@ async function loadQuotaCard({ storage = createStorage(), fetchImpl = async () =
     Date,
     Promise,
     console,
-    fetch: fetchImpl,
+    fetch: request,
     sessionStorage: storage,
     document: {
       querySelector(selector) { return selectors.get(selector) || null; },
       querySelectorAll(selector) {
-        if (selector === '.formation-sword') return swords;
-        if (selector === '[data-used]') return states;
+        if (selector === '[data-remain]') return states;
         return [];
       }
     },
-    setInterval() { return 1; }
+    setInterval(callback, milliseconds) { intervals.push({ callback, milliseconds }); return intervals.length; }
   };
   sandbox.window = sandbox;
   vm.runInNewContext(source, sandbox, { filename: scriptPath });
   await flushAsyncWork();
-  return { elements, storage, window: sandbox };
+  return { elements, fetchCalls, intervals, storage, window: sandbox };
+}
+
+async function testCodexQuotaUsesReferenceVisualAndLiveDataContract() {
+  const runtime = await loadQuotaCard();
+  assert.equal(runtime.elements.percent.textContent, '80%');
+  assert.equal(runtime.elements.used.textContent, '已用 20%');
+  assert.equal(runtime.elements.balance.textContent, 'US$39.40');
+  assert.match(runtime.elements.resetAt.textContent, /重置$/);
+  assert.equal(runtime.elements.syncStatus.textContent, '实时');
+  assert.equal(runtime.fetchCalls.some(([url]) => url === '/api/codex-quota'), true);
+  assert.equal(runtime.intervals.some(({ milliseconds }) => milliseconds === 15000), true);
+
+  runtime.window.setUsed(.5);
+  assert.equal(runtime.elements.percent.textContent, '50%');
+  assert.equal(runtime.elements.used.textContent, '已用 50%');
+  assert.equal(runtime.elements.widget.dataset.energyState, 'waning');
 }
 
 async function testPageSwitchAndSessionRestore() {
@@ -166,6 +195,7 @@ async function testStaleAndExpiredHaveDistinctAccessibleOutcomes() {
 }
 
 const tests = [
+  ['Codex page preserves the co-branded live quota contract', testCodexQuotaUsesReferenceVisualAndLiveDataContract],
   ['page switching and session restoration', testPageSwitchAndSessionRestore],
   ['fetch failure renders a safe pending state', testFetchFailureRendersPendingWithoutNaN],
   ['null, empty, and invalid API values remain unavailable', testMissingValuesStayUnavailableInsteadOfZeroOrEpoch],

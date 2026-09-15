@@ -2,3 +2,8 @@
 .antigravity-quota-cache.json
 .antigravity-quota-cache.json.*.tmp
 __pycache__/
+.venv/
+.build-venv/
+build/
+dist/
+artifacts/verification/

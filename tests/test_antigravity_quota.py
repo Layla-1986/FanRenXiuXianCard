@@ -12,7 +12,7 @@ from datetime import datetime, timedelta, timezone
 from http.client import HTTPConnection
 from pathlib import Path
 
-from antigravity_quota import PollingService, QuotaStore, UiAutomationCollector, start_server
+from antigravity_quota import CodexQuotaReader, PollingService, QuotaStore, UiAutomationCollector, start_server
 
 
 UTC = timezone.utc
@@ -133,6 +133,7 @@ class LocalApiTest(unittest.TestCase):
             static_root=Path(__file__).resolve().parents[1],
             port=0,
             now=lambda: BASE_TIME,
+            codex_reader=CodexQuotaReader(Path(self.temp_dir.name) / "sessions"),
         )
         self.thread = threading.Thread(target=self.server.serve_forever, daemon=True)
         self.thread.start()
@@ -167,10 +168,13 @@ class LocalApiTest(unittest.TestCase):
         host, port = self.server.server_address
         for path in (
             "/original-artifact-refined.html",
+            "/quota-card-app.html",
             "/styles/mortal-seal-card.css",
             "/scripts/quota-card.js",
+            "/scripts/quota-card-app.js",
             "/assets/hanli-nangong-background.png",
             "/assets/antigravity-nangong-background.jpg",
+            "/.superpowers/brainstorm/sword-array-qingzhu-model-v6.html",
         ):
             connection = HTTPConnection(host, port, timeout=2)
             connection.request("GET", path)
@@ -185,6 +189,75 @@ class LocalApiTest(unittest.TestCase):
             self.assertEqual(404, connection.getresponse().status, path)
             connection.close()
 
+    def test_codex_api_returns_only_live_quota_fields(self):
+        sessions = Path(self.temp_dir.name) / "sessions" / "2026" / "08" / "21"
+        sessions.mkdir(parents=True)
+        event = {
+            "timestamp": "2026-08-21T08:08:30.571Z",
+            "type": "event_msg",
+            "payload": {
+                "type": "token_count",
+                "rate_limits": {
+                    "primary": {"used_percent": 8.0, "window_minutes": 10080, "resets_at": 1787897582},
+                    "secondary": {"used_percent": 3.0, "window_minutes": 300, "resets_at": 1787800000},
+                    "credits": {"has_credits": True, "unlimited": False, "balance": "984.9435100000"},
+                    "plan_type": "plus",
+                },
+            },
+        }
+        (sessions / "rollout.jsonl").write_text(json.dumps(event) + "\n", encoding="utf-8")
+        self.server.codex_reader = CodexQuotaReader(Path(self.temp_dir.name) / "sessions")
+
+        host, port = self.server.server_address
+        connection = HTTPConnection(host, port, timeout=2)
+        connection.request("GET", "/api/codex-quota")
+        response = connection.getresponse()
+        payload = json.loads(response.read())
+
+        self.assertEqual(200, response.status)
+        self.assertEqual(3, payload["usedPercent"])
+        self.assertEqual(97, payload["remainingPercent"])
+        self.assertEqual(8, payload["weekly"]["usedPercent"])
+        self.assertEqual("984.9435100000", payload["creditBalance"])
+        self.assertEqual("plus", payload["planType"])
+        self.assertEqual("2026-08-21T08:08:30Z", payload["updatedAt"])
+        self.assertEqual(
+            {"source", "status", "usedPercent", "remainingPercent", "windowMinutes", "resetsAt", "creditBalance", "fiveHour", "weekly", "credits", "planType", "updatedAt"},
+            set(payload),
+        )
+        self.assertNotIn("total_token_usage", json.dumps(payload))
+
+
+class CodexQuotaReaderTest(unittest.TestCase):
+    def test_selects_newest_valid_token_count_across_session_files(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            older = root / "older.jsonl"
+            newer = root / "newer.jsonl"
+            older.write_text(json.dumps({
+                "timestamp": "2026-08-21T07:00:00Z", "type": "event_msg",
+                "payload": {"type": "token_count", "rate_limits": {"primary": {"used_percent": 40, "window_minutes": 10080, "resets_at": 1787897000}}},
+            }) + "\n", encoding="utf-8")
+            newer.write_text("not-json\n" + json.dumps({
+                "timestamp": "2026-08-21T08:00:00Z", "type": "event_msg",
+                "payload": {"type": "token_count", "rate_limits": {"primary": {"used_percent": 12.5, "window_minutes": 10080, "resets_at": 1787897600}, "credits": {"balance": "39.36"}, "plan_type": "plus"}},
+            }) + "\n", encoding="utf-8")
+
+            payload = CodexQuotaReader(root).public_payload(datetime(2026, 8, 21, 8, 2, tzinfo=UTC))
+
+        self.assertIsNone(payload["usedPercent"])
+        self.assertEqual(12.5, payload["weekly"]["usedPercent"])
+        self.assertEqual(87.5, payload["weekly"]["remainingPercent"])
+        self.assertEqual("39.36", payload["creditBalance"])
+        self.assertEqual("fresh", payload["status"])
+
+    def test_reports_unavailable_without_inventing_quota(self):
+        with tempfile.TemporaryDirectory() as directory:
+            payload = CodexQuotaReader(Path(directory)).public_payload(BASE_TIME)
+
+        self.assertEqual("unavailable", payload["status"])
+        self.assertIsNone(payload["remainingPercent"])
+        self.assertIsNone(payload["creditBalance"])
 
 class CollectorTest(unittest.TestCase):
     def _collect_fixture(self, fixture):
