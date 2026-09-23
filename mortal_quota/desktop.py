@@ -20,6 +20,11 @@ WINDOW_WIDTH = 480
 WINDOW_HEIGHT = 270
 
 
+def window_visual_options() -> dict[str, Any]:
+    """Keep pixels outside the card's CSS-rounded outline transparent."""
+    return {"background_color": "#07130f", "transparent": True}
+
+
 class AppSettings:
     """Store only the user's page, position, and autostart preference."""
 

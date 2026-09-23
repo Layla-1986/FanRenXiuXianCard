@@ -14,7 +14,7 @@ from antigravity_quota import PollingService, QuotaStore, UiAutomationCollector,
 from mortal_quota.codex import CodexAccountProvider, CodexAppServerClient, CodexSessionReader
 from mortal_quota.desktop import (
     APP_NAME, WINDOW_HEIGHT, WINDOW_WIDTH, AppBridge, AppSettings, NativeDragThread, NativeWindowController,
-    app_data_dir, clamp_position, is_autostart_enabled, set_autostart,
+    app_data_dir, clamp_position, is_autostart_enabled, set_autostart, window_visual_options,
 )
 
 
@@ -133,7 +133,7 @@ class DesktopApplication:
         self.window = webview.create_window(
             "凡人额度卡", f"http://127.0.0.1:{self.server.server_port}/quota-card-app.html",
             width=WINDOW_WIDTH, height=WINDOW_HEIGHT, x=x, y=y, frameless=True,
-            easy_drag=False, resizable=False, on_top=True, background_color="#07130f",
+            easy_drag=False, resizable=False, on_top=True, **window_visual_options(),
         )
         self.controller = NativeWindowController(self.window)
         self.bridge = AppBridge(self.settings, self.controller)

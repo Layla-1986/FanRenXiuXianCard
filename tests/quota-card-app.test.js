@@ -12,6 +12,8 @@ const runtime = require(path.join(root, 'scripts', 'quota-card-app.js'));
 assert.match(html, /id="drag-surface" class="pywebview-drag-region"/);
 assert.match(html, /\.drag-surface\{position:absolute;inset:0;z-index:10/);
 assert.match(html, /\.pages>\.page-switch\{right:49px;top:15px\}/);
+assert.match(html, /html,body\{[^}]*background:transparent/);
+assert.match(html, /\.pages\{[^}]*border-radius:22px;overflow:hidden/);
 assert.match(html, /id="page-switch"/);
 assert.match(html, /id="lock-button"/);
 assert.ok(html.indexOf('id="drag-surface"') < html.indexOf('id="page-switch"'));

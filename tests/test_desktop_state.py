@@ -8,7 +8,7 @@ from types import SimpleNamespace
 from pathlib import Path
 
 import mortal_quota.desktop as desktop
-from mortal_quota.desktop import AppBridge, AppSettings, NativeDragThread, NativeWindowController, clamp_position
+from mortal_quota.desktop import AppBridge, AppSettings, NativeDragThread, NativeWindowController, clamp_position, window_visual_options
 
 
 class AppSettingsTest(unittest.TestCase):
@@ -37,6 +37,11 @@ class AppSettingsTest(unittest.TestCase):
 
 
 class ClampPositionTest(unittest.TestCase):
+    def test_window_uses_per_pixel_transparency_behind_rounded_card(self):
+        options = window_visual_options()
+
+        self.assertTrue(options["transparent"])
+
     def test_keeps_visible_position_and_moves_offscreen_position_to_primary_work_area(self):
         areas = [(0, 0, 1920, 1040), (1920, 0, 3840, 1040)]
         self.assertEqual((2100, 100), clamp_position(2100, 100, 480, 270, areas))
