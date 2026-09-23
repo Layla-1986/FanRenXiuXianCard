@@ -76,6 +76,7 @@ class BridgeTest(unittest.TestCase):
 class NativeWindowControllerTest(unittest.TestCase):
     def test_click_through_styles_are_removed_exactly_when_unlocked(self):
         calls = []
+        dwm_calls = []
         original = desktop.ctypes.windll
 
         class User32:
@@ -107,6 +108,14 @@ class NativeWindowControllerTest(unittest.TestCase):
                 rect._obj.left, rect._obj.top, rect._obj.right, rect._obj.bottom = 0, 0, 697, 348
                 return True
 
+            def ClientToScreen(self, _hwnd, point):
+                point._obj.x, point._obj.y = 0, 1
+                return True
+
+            def SetWindowRgn(self, _hwnd, region, redraw):
+                calls.append(("SetWindowRgn", region, redraw))
+                return True
+
             def GetDpiForWindow(self, _hwnd):
                 return 144
 
@@ -114,7 +123,19 @@ class NativeWindowControllerTest(unittest.TestCase):
             def ToInt32(self):
                 return 42
 
-        desktop.ctypes.windll = SimpleNamespace(user32=User32(), dwmapi=SimpleNamespace(DwmSetWindowAttribute=lambda *_: 0))
+        class Gdi32:
+            def CreateRoundRectRgn(self, *args):
+                calls.append(("CreateRoundRectRgn", args))
+                return 99
+
+            def DeleteObject(self, region):
+                calls.append(("DeleteObject", region))
+
+        desktop.ctypes.windll = SimpleNamespace(
+            user32=User32(),
+            dwmapi=SimpleNamespace(DwmSetWindowAttribute=lambda *args: dwm_calls.append(args) or 0),
+            gdi32=Gdi32(),
+        )
         try:
             controller = NativeWindowController(SimpleNamespace(native=SimpleNamespace(Handle=Handle())))
             controller.attach()
@@ -134,6 +155,10 @@ class NativeWindowControllerTest(unittest.TestCase):
         self.assertEqual(base, restored)
         self.assertTrue(any(entry[0] == "ReleaseCapture" for entry in calls if isinstance(entry, tuple)))
         self.assertTrue(any(entry[0] == "SendMessageW" and entry[1][1:3] == (0x00A1, 2) for entry in calls if isinstance(entry, tuple)))
+        self.assertEqual([33, 34], [entry[1] for entry in dwm_calls])
+        self.assertEqual(-2, dwm_calls[1][2]._obj.value, "the DWM system border must be disabled")
+        self.assertIn(("CreateRoundRectRgn", (0, 1, 698, 350, 66, 66)), calls)
+        self.assertIn(("SetWindowRgn", 99, True), calls)
         resize_calls = [entry for entry in calls if isinstance(entry, tuple) and entry[0] == "SetWindowPos"]
         self.assertTrue(
             any(entry[1][4:6] == (720, 407) for entry in resize_calls),

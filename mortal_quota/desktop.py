@@ -188,11 +188,37 @@ class NativeWindowController:
         if not self.hwnd:
             return
         try:
-            preference = ctypes.c_int(2)
+            # The card's own 22px radius defines the visible window shape.
+            preference = ctypes.c_int(1)
             ctypes.windll.dwmapi.DwmSetWindowAttribute(self.hwnd, 33, ctypes.byref(preference), ctypes.sizeof(preference))
+            # DWMWA_BORDER_COLOR with DWMWA_COLOR_NONE (Windows 11 22000+).
+            no_border = ctypes.c_int(-2)
+            ctypes.windll.dwmapi.DwmSetWindowAttribute(self.hwnd, 34, ctypes.byref(no_border), ctypes.sizeof(no_border))
         except (AttributeError, OSError):
-            region = ctypes.windll.gdi32.CreateRoundRectRgn(0, 0, WINDOW_WIDTH + 1, WINDOW_HEIGHT + 1, 18, 18)
-            ctypes.windll.user32.SetWindowRgn(self.hwnd, region, True)
+            pass
+
+        user32 = ctypes.windll.user32
+        window_rect = wintypes.RECT()
+        client_rect = wintypes.RECT()
+        client_origin = wintypes.POINT(0, 0)
+        if not (
+            user32.GetWindowRect(self.hwnd, ctypes.byref(window_rect))
+            and user32.GetClientRect(self.hwnd, ctypes.byref(client_rect))
+            and user32.ClientToScreen(self.hwnd, ctypes.byref(client_origin))
+        ):
+            return
+        left = client_origin.x - window_rect.left
+        top = client_origin.y - window_rect.top
+        width = client_rect.right - client_rect.left
+        height = client_rect.bottom - client_rect.top
+        dpi_reader = getattr(user32, "GetDpiForWindow", None)
+        dpi = int(dpi_reader(self.hwnd)) if dpi_reader else 96
+        diameter = round(44 * (dpi / 96 if dpi > 0 else 1))
+        region = ctypes.windll.gdi32.CreateRoundRectRgn(
+            left, top, left + width + 1, top + height + 1, diameter, diameter
+        )
+        if region and not user32.SetWindowRgn(self.hwnd, region, True):
+            ctypes.windll.gdi32.DeleteObject(region)
 
     def set_locked(self, locked: bool) -> None:
         with self._lock:
