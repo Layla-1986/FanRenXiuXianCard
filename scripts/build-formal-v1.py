@@ -13,6 +13,8 @@ for filename, selector in [('codex-five-hour-quota-concept-v3.html', 'seal-card'
     card = re.sub(r'<button class="seal-lock".*?</button>', '', card, flags=re.S)
     if filename == 'antigravity-quota-concept-v4.html':
         card = re.sub(r'<h2 class="title">.*?</h2>', '', card, flags=re.S)
+        card = card.replace('<div class="brand">ANTIGRAVITY</div>', '')
+        card = re.sub(r'<footer class="foot">.*?</footer>', '', card, flags=re.S)
     card = card.replace('反重力概念稿4，示例额度', 'Antigravity 额度卡，示例数据')
     head += '<style>html,body{margin:0!important;padding:0!important;width:480px!important;height:270px!important;min-height:0!important;overflow:hidden!important;background:transparent!important}body:before,body:after{display:none!important}.five-hour-concept{margin:0!important;padding:0!important;width:480px!important;max-width:none!important}.seal-card,.card{width:480px!important;height:270px!important;transform:none!important;zoom:1!important;margin:0!important}</style>'
     head += '<style>.five-hour-concept .account-actions{right:81px;top:13px;height:28px}.editorial-mark{top:24%}</style>'
@@ -72,8 +74,6 @@ def add_ag_ids(match):
     value_id, reset_id = next(counter)
     return f'<strong id="{value_id}">—</strong><time id="{reset_id}">待同步</time>'
 app_pages[1] = re.sub(r'<strong>.*?</strong><time(?: datetime="[^"]*")?>.*?</time>', add_ag_ids, app_pages[1], count=4)
-app_pages[1] = app_pages[1].replace('<footer class="foot"><span>概念预览 · 非实时数据</span>', '<footer class="foot"><span id="agCredits">可用灵石 —</span>')
-
 app_template = '''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=480,initial-scale=1">
 <title>凡人额度卡</title><style>
 *{box-sizing:border-box}html,body{margin:0;width:480px;height:270px;overflow:hidden;background:#07130f}.pages{position:relative;width:480px;height:270px;border-radius:0;overflow:hidden;background:#07130f;--ward-gold:#d5b564;--moon-white:#e7e7d6}iframe{display:block;width:480px;height:270px;border:0;background:#07130f}iframe[hidden]{display:none}.drag-surface{position:absolute;inset:0;z-index:10}.pages>.page-switch,.pages>.seal-lock{position:absolute;z-index:20;-webkit-app-region:no-drag}.pages>.page-switch{right:49px;top:15px}.pages>.seal-lock{right:14px;top:13px}.page-switch,.pages>.seal-lock{cursor:pointer}

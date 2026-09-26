@@ -23,9 +23,13 @@ assert.doesNotMatch(html, /正式版第一稿 · 示例数据/);
 assert.doesNotMatch(html, /<h1>凡人 · 额度图卷<\/h1>/);
 for (const id of [
   'weeklyPercent', 'fiveHourPercent', 'fiveHourReset', 'weeklyUsed', 'weeklyReset',
-  'creditBalance', 'resetCreditExpiry', 'agCredits', 'agGeminiWeekly',
+  'creditBalance', 'resetCreditExpiry', 'agGeminiWeekly',
   'agGeminiFiveHour', 'agClaudeWeekly', 'agClaudeFiveHour'
 ]) assert.ok(html.includes(`id=&quot;${id}&quot;`), id);
+assert.doesNotMatch(html, /id=&quot;agCredits&quot;/);
+assert.doesNotMatch(html, /&lt;div class=&quot;brand&quot;&gt;ANTIGRAVITY/);
+assert.doesNotMatch(html, /&lt;footer class=&quot;foot&quot;&gt;/);
+assert.doesNotMatch(html, /周天 \/ 五时/);
 
 assert.equal(runtime.percent(null), '—');
 assert.equal(runtime.percent(0), '0%');

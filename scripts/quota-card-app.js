@@ -64,7 +64,6 @@
   function renderAntigravity(doc, data) {
     const gemini = data && data.gemini || {};
     const claude = data && data.claudeGpt || {};
-    text(doc, 'agCredits', data && data.aiCredits != null ? `可用灵石 ${data.aiCredits}` : '可用灵石 —');
     const fields = [
       ['agGeminiWeekly', gemini.weeklyRemaining], ['agGeminiFiveHour', gemini.fiveHourRemaining],
       ['agClaudeWeekly', claude.weeklyRemaining], ['agClaudeFiveHour', claude.fiveHourRemaining]
