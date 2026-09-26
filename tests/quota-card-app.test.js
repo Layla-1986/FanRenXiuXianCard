@@ -12,8 +12,9 @@ const runtime = require(path.join(root, 'scripts', 'quota-card-app.js'));
 assert.match(html, /id="drag-surface" class="pywebview-drag-region"/);
 assert.match(html, /\.drag-surface\{position:absolute;inset:0;z-index:10/);
 assert.match(html, /\.pages>\.page-switch\{right:49px;top:15px\}/);
-assert.match(html, /html,body\{[^}]*background:transparent/);
-assert.match(html, /\.pages\{[^}]*border-radius:22px;overflow:hidden/);
+assert.match(html, /html,body\{[^}]*background:#07130f/);
+assert.match(html, /\.pages\{[^}]*border-radius:0;overflow:hidden;background:#07130f/);
+assert.match(html, /--card-radius:8px;border-radius:0!important;clip-path:none!important/);
 assert.match(html, /id="page-switch"/);
 assert.match(html, /id="lock-button"/);
 assert.ok(html.indexOf('id="drag-surface"') < html.indexOf('id="page-switch"'));
@@ -30,9 +31,14 @@ assert.equal(runtime.percent(null), '—');
 assert.equal(runtime.percent(0), '0%');
 assert.equal(runtime.percent(100), '100%');
 assert.equal(runtime.percent(Number.NaN), '—');
+assert.equal(runtime.dateLabel(1790817350), '10月1日 10:15');
 assert.equal(runtime.usdFromPoints('2500'), '$100.00');
 assert.equal(runtime.usdFromPoints(null), '—');
 assert.equal(runtime.resetCreditLabel({ availableResetCount: null }), '重置卡信息待同步');
 assert.equal(runtime.resetCreditLabel({ availableResetCount: 0 }), '暂无可用重置卡');
+assert.equal(
+  runtime.resetCreditLabel({ availableResetCount: 3, nearestResetCreditExpiresAt: 1791076556 }),
+  '3 张 · 10月4日 10:15 到期'
+);
 
 console.log('quota-card-app: 1 test passed');

@@ -4,6 +4,8 @@
   else root.MortalQuotaCard = api;
 })(typeof globalThis !== 'undefined' ? globalThis : this, function () {
   const POINTS_PER_USD = 25;
+  // Match the ChatGPT usage panel time display selected for this card (UTC+09:00).
+  const DISPLAY_TIME_ZONE = 'Asia/Tokyo';
 
   function finite(value) {
     if (value === null || value === undefined || value === '') return null;
@@ -27,7 +29,8 @@
     const date = new Date(seconds * 1000);
     if (Number.isNaN(date.getTime())) return '待同步';
     return new Intl.DateTimeFormat('zh-CN', {
-      month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit', hour12: false
+      timeZone: DISPLAY_TIME_ZONE, month: 'numeric', day: 'numeric',
+      hour: '2-digit', minute: '2-digit', hour12: false
     }).format(date).replace(/\//g, '月').replace(/日?\s/, '日 ');
   }
 

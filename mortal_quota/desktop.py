@@ -21,8 +21,8 @@ WINDOW_HEIGHT = 270
 
 
 def window_visual_options() -> dict[str, Any]:
-    """Keep pixels outside the card's CSS-rounded outline transparent."""
-    return {"background_color": "#07130f", "transparent": True}
+    """Give DWM an opaque surface to anti-alias at the window edge."""
+    return {"background_color": "#07130f", "transparent": False, "shadow": False}
 
 
 class AppSettings:
@@ -187,38 +187,48 @@ class NativeWindowController:
     def _round_corners(self) -> None:
         if not self.hwnd:
             return
+        user32 = ctypes.windll.user32
         try:
-            # The card's own 22px radius defines the visible window shape.
-            preference = ctypes.c_int(1)
-            ctypes.windll.dwmapi.DwmSetWindowAttribute(self.hwnd, 33, ctypes.byref(preference), ctypes.sizeof(preference))
-            # DWMWA_BORDER_COLOR with DWMWA_COLOR_NONE (Windows 11 22000+).
-            no_border = ctypes.c_int(-2)
-            ctypes.windll.dwmapi.DwmSetWindowAttribute(self.hwnd, 34, ctypes.byref(no_border), ctypes.sizeof(no_border))
+            # A window region is binary and leaves jagged edges at high DPI.
+            user32.SetWindowRgn(self.hwnd, None, True)
+            preference = ctypes.c_int(2)
+            result = ctypes.windll.dwmapi.DwmSetWindowAttribute(
+                self.hwnd, 33, ctypes.byref(preference), ctypes.sizeof(preference)
+            )
+            if result == 0:
+                no_border = ctypes.c_int(-2)
+                ctypes.windll.dwmapi.DwmSetWindowAttribute(
+                    self.hwnd, 34, ctypes.byref(no_border), ctypes.sizeof(no_border)
+                )
+                return
         except (AttributeError, OSError):
             pass
 
-        user32 = ctypes.windll.user32
-        window_rect = wintypes.RECT()
-        client_rect = wintypes.RECT()
-        client_origin = wintypes.POINT(0, 0)
-        if not (
-            user32.GetWindowRect(self.hwnd, ctypes.byref(window_rect))
-            and user32.GetClientRect(self.hwnd, ctypes.byref(client_rect))
-            and user32.ClientToScreen(self.hwnd, ctypes.byref(client_origin))
-        ):
-            return
-        left = client_origin.x - window_rect.left
-        top = client_origin.y - window_rect.top
-        width = client_rect.right - client_rect.left
-        height = client_rect.bottom - client_rect.top
-        dpi_reader = getattr(user32, "GetDpiForWindow", None)
-        dpi = int(dpi_reader(self.hwnd)) if dpi_reader else 96
-        diameter = round(44 * (dpi / 96 if dpi > 0 else 1))
-        region = ctypes.windll.gdi32.CreateRoundRectRgn(
-            left, top, left + width + 1, top + height + 1, diameter, diameter
-        )
-        if region and not user32.SetWindowRgn(self.hwnd, region, True):
-            ctypes.windll.gdi32.DeleteObject(region)
+        # Windows 10 does not offer DWM corner rounding.
+        try:
+            window_rect = wintypes.RECT()
+            client_rect = wintypes.RECT()
+            client_origin = wintypes.POINT(0, 0)
+            if not (
+                user32.GetWindowRect(self.hwnd, ctypes.byref(window_rect))
+                and user32.GetClientRect(self.hwnd, ctypes.byref(client_rect))
+                and user32.ClientToScreen(self.hwnd, ctypes.byref(client_origin))
+            ):
+                return
+            left = client_origin.x - window_rect.left
+            top = client_origin.y - window_rect.top
+            width = client_rect.right - client_rect.left
+            height = client_rect.bottom - client_rect.top
+            dpi_reader = getattr(user32, "GetDpiForWindow", None)
+            dpi = int(dpi_reader(self.hwnd)) if dpi_reader else 96
+            diameter = round(16 * (dpi / 96 if dpi > 0 else 1))
+            region = ctypes.windll.gdi32.CreateRoundRectRgn(
+                left, top, left + width + 1, top + height + 1, diameter, diameter
+            )
+            if region and not user32.SetWindowRgn(self.hwnd, region, True):
+                ctypes.windll.gdi32.DeleteObject(region)
+        except (AttributeError, OSError):
+            pass
 
     def set_locked(self, locked: bool) -> None:
         with self._lock:

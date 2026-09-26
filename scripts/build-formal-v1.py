@@ -55,6 +55,10 @@ def normalized_output(value):
 # The desktop entry contains the approved cards only. Stable IDs are injected
 # into the generated copies so the source concepts remain the visual baseline.
 app_pages = list(pages)
+app_pages[0] = app_pages[0].replace(
+    '</head>',
+    '<style>.five-hour-concept .seal-card{--card-radius:8px;border-radius:0!important;clip-path:none!important}</style></head>',
+)
 app_pages[0] = app_pages[0].replace('class="sync-status" data-state="preview"', 'class="sync-status" id="codexStatus" data-state="preview"')
 app_pages[0] = app_pages[0].replace('<span class="plan-mark">PLUS</span>', '<span class="plan-mark" id="planType">—</span>')
 app_pages[0] = app_pages[0].replace('<strong class="ledger-value">$39.36</strong>', '<strong class="ledger-value" id="creditBalance">—</strong>')
@@ -72,7 +76,7 @@ app_pages[1] = app_pages[1].replace('<footer class="foot"><span>概念预览 · 
 
 app_template = '''<!doctype html><html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=480,initial-scale=1">
 <title>凡人额度卡</title><style>
-*{box-sizing:border-box}html,body{margin:0;width:480px;height:270px;overflow:hidden;background:transparent}.pages{position:relative;width:480px;height:270px;border-radius:22px;overflow:hidden;--ward-gold:#d5b564;--moon-white:#e7e7d6}iframe{display:block;width:480px;height:270px;border:0;background:transparent}iframe[hidden]{display:none}.drag-surface{position:absolute;inset:0;z-index:10}.pages>.page-switch,.pages>.seal-lock{position:absolute;z-index:20;-webkit-app-region:no-drag}.pages>.page-switch{right:49px;top:15px}.pages>.seal-lock{right:14px;top:13px}.page-switch,.pages>.seal-lock{cursor:pointer}
+*{box-sizing:border-box}html,body{margin:0;width:480px;height:270px;overflow:hidden;background:#07130f}.pages{position:relative;width:480px;height:270px;border-radius:0;overflow:hidden;background:#07130f;--ward-gold:#d5b564;--moon-white:#e7e7d6}iframe{display:block;width:480px;height:270px;border:0;background:#07130f}iframe[hidden]{display:none}.drag-surface{position:absolute;inset:0;z-index:10}.pages>.page-switch,.pages>.seal-lock{position:absolute;z-index:20;-webkit-app-region:no-drag}.pages>.page-switch{right:49px;top:15px}.pages>.seal-lock{right:14px;top:13px}.page-switch,.pages>.seal-lock{cursor:pointer}
 APP_CONTROL_CSS</style></head><body><div class="pages">
 <iframe id="page-codex" title="Codex 额度卡" srcdoc="CODEX_PAGE"></iframe><iframe id="page-antigravity" title="Antigravity 额度卡" srcdoc="ANTIGRAVITY_PAGE" hidden></iframe>
 <div id="drag-surface" class="pywebview-drag-region" aria-hidden="true"></div>

@@ -37,10 +37,12 @@ class AppSettingsTest(unittest.TestCase):
 
 
 class ClampPositionTest(unittest.TestCase):
-    def test_window_uses_per_pixel_transparency_behind_rounded_card(self):
+    def test_window_uses_opaque_card_colored_surface_for_system_rounding(self):
         options = window_visual_options()
 
-        self.assertTrue(options["transparent"])
+        self.assertFalse(options["transparent"])
+        self.assertFalse(options["shadow"])
+        self.assertEqual("#07130f", options["background_color"])
 
     def test_keeps_visible_position_and_moves_offscreen_position_to_primary_work_area(self):
         areas = [(0, 0, 1920, 1040), (1920, 0, 3840, 1040)]
@@ -156,9 +158,10 @@ class NativeWindowControllerTest(unittest.TestCase):
         self.assertTrue(any(entry[0] == "ReleaseCapture" for entry in calls if isinstance(entry, tuple)))
         self.assertTrue(any(entry[0] == "SendMessageW" and entry[1][1:3] == (0x00A1, 2) for entry in calls if isinstance(entry, tuple)))
         self.assertEqual([33, 34], [entry[1] for entry in dwm_calls])
+        self.assertEqual(2, dwm_calls[0][2]._obj.value, "DWM must render anti-aliased corners")
         self.assertEqual(-2, dwm_calls[1][2]._obj.value, "the DWM system border must be disabled")
-        self.assertIn(("CreateRoundRectRgn", (0, 1, 698, 350, 66, 66)), calls)
-        self.assertIn(("SetWindowRgn", 99, True), calls)
+        self.assertIn(("SetWindowRgn", None, True), calls)
+        self.assertFalse(any(entry[0] == "CreateRoundRectRgn" for entry in calls if isinstance(entry, tuple)))
         resize_calls = [entry for entry in calls if isinstance(entry, tuple) and entry[0] == "SetWindowPos"]
         self.assertTrue(
             any(entry[1][4:6] == (720, 407) for entry in resize_calls),

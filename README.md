@@ -51,6 +51,8 @@
 
 窗口不依赖接口中的主次顺序，而是按 `windowMinutes=300` 和 `10080` 识别 5 小时与 7 天额度；剩余额度由已用百分比换算。重置卡只统计 `status=available` 的条目，并选取最早到期时间。余额按现有规则以 25 点折合 US$1 显示。
 
+当前卡片的重置时间按 ChatGPT 使用量面板采用的 UTC+9 显示；接口中的 Unix 时间戳保持原值。因此同一时间在 Windows 北京时间（UTC+8）下会早一小时。重置卡需要 `codex app-server` 在启动应用的 Windows 用户环境中取得已登录账户信息；桌面快捷方式从该用户环境启动。仅有本地会话 JSONL 时无法得知重置卡数量。
+
 如果 app-server 超时、鉴权不可用或返回异常，应用会扫描 `%USERPROFILE%\.codex\sessions` 下最近的本地 JSONL 会话，只读取 `token_count.rate_limits` 快照。它最多检查最近 32 个文件末尾各 512 KiB，避免遍历全部聊天内容。回退状态下仍显示能够确认的额度和余额，重置卡信息明确标记为“待同步”。
 
 整个流程只有读取操作，代码中没有调用 `account/rateLimitResetCredit/consume`。
